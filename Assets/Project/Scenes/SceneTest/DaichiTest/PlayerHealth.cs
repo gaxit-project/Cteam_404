@@ -2,31 +2,36 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    private bool isDamaged = false;        // ƒ_ƒ[ƒW‚ğó‚¯‚Ä‚¢‚é‚©
-    private bool isInvincible = false;     // –³“GŠÔ‚Å‚ ‚é‚©
-    private bool isDebug = false;          // ƒfƒoƒbƒOƒ‚[ƒh‚ª—LŒø‚©
-    private float damageTimer = 0f;        // ƒ_ƒ[ƒW‚ğó‚¯‚Ä‚©‚çŒo‰ßŠÔ
-    private float invincibilityTimer = 0f; // –³“Gó‘Ô‚ÌŒo‰ßŠÔ
-    private int damageCount = 0;           // ƒ_ƒ[ƒW‚ğó‚¯‚½‰ñ”
+    private bool isDamaged = false;        // ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã¦ã„ã‚‹ã‹
+    private bool isInvincible = false;     // ç„¡æ•µæ™‚é–“ã§ã‚ã‚‹ã‹
+    private bool isDebug = false;          // ãƒ‡ãƒãƒƒã‚°ãƒ¢ãƒ¼ãƒ‰ãŒæœ‰åŠ¹ã‹
+    private float damageTimer = 0f;        // ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã¦ã‹ã‚‰ã®çµŒéæ™‚é–“
+    private float invincibilityTimer = 0f; // ç„¡æ•µçŠ¶æ…‹ã®çµŒéæ™‚é–“
+    private int damageCount = 0;           // ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸå›æ•°
 
+    [Header("ãƒ€ãƒ¡ãƒ¼ã‚¸ã®ã‚¯ãƒ¼ãƒ«ãƒ€ã‚¦ãƒ³æ™‚é–“")]
     [SerializeField]
-    private float damageCooldownTime = 3f; // ƒ_ƒ[ƒW‚Ì‰ñ•œŠÔ
+    private float damageCooldownTime = 3f; // ãƒ€ãƒ¡ãƒ¼ã‚¸ã®å›å¾©æ™‚é–“
+
+    [Header("ç„¡æ•µæ™‚é–“")]
     [SerializeField]
-    private float invincibilityTime = 2f;  // –³“GŠÔ
+    private float invincibilityTime = 2f;  // ç„¡æ•µæ™‚é–“
 
     void Update()
     {
         HandleDamageRecovery();
         HandleInvincibility();
 
-        // ƒfƒoƒbƒO—pFDƒL[‚ÅƒfƒoƒbƒOƒ‚[ƒh‚ÌØ‚è‘Ö‚¦
+        // ãƒ‡ãƒãƒƒã‚°ï¼šDã‚­ãƒ¼ã§ãƒ‡ãƒãƒƒã‚°ãƒ¢ãƒ¼ãƒ‰ã®åˆ‡ã‚Šæ›¿ãˆ
         if (Input.GetKeyDown(KeyCode.D))
         {
             ToggleDebugMode();
         }
     }
 
-    // ƒ_ƒ[ƒW‚ğó‚¯‚Ä‚©‚ç‚Ì‰ñ•œŠÔ‚ğƒ`ƒFƒbƒN‚µAisDamaged‚ğXV
+    /// <summary>
+    /// ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã¦ã‹ã‚‰ã®å›å¾©æ™‚é–“ã‚’ãƒã‚§ãƒƒã‚¯ã—ï¼ŒisDamagedã‚’æ›´æ–°
+    /// </summary>
     private void HandleDamageRecovery()
     {
         if (isDamaged)
@@ -40,7 +45,9 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // –³“GŠÔ‚ğƒ`ƒFƒbƒN‚µAisInvincible‚ğXV
+    /// <summary>
+    /// ç„¡æ•µæ™‚é–“ã‚’ãƒã‚§ãƒƒã‚¯ã—ï¼ŒisInvincibleã‚’æ›´æ–°
+    /// </summary>
     private void HandleInvincibility()
     {
         if (isInvincible)
@@ -54,16 +61,18 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // ƒ_ƒ[ƒW‚ğó‚¯‚½Û‚Ìˆ—
+    /// <summary>
+    /// ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸæ™‚ã®å‡¦ç†
+    /// </summary>
     public void TakeDamage()
     {
-        // –³“G‚Ìê‡‚Íƒ_ƒ[ƒW‚ğ–³Œø‰»
+        // ç„¡æ•µã®å ´åˆã¯ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ç„¡åŠ¹åŒ–
         if (isInvincible)
         {
             return;
         }
 
-        // ƒ_ƒ[ƒW‚ğó‚¯‚Ä‚¢‚éÅ’†‚ÉÄ“xƒ_ƒ[ƒW‚ğó‚¯‚½‚çƒQ[ƒ€ƒI[ƒo[
+        // ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã¦ã„ã‚‹æœ€ä¸­ã«å†åº¦ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸã‚‰ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼
         if (isDamaged)
         {
             if (!isDebug)
@@ -73,21 +82,23 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
-        // ‰‰ñƒ_ƒ[ƒWˆ—
+        // åˆå›ãƒ€ãƒ¡ãƒ¼ã‚¸å‡¦ç†
         isDamaged = true;
         isInvincible = true;
-        damageTimer = 0f; // ƒ_ƒ[ƒWƒ^ƒCƒ}[‚ğƒŠƒZƒbƒg
-        invincibilityTimer = 0f; // –³“Gƒ^ƒCƒ}[‚ğƒŠƒZƒbƒg
+        damageTimer = 0f; // ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚¿ã‚¤ãƒãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆ
+        invincibilityTimer = 0f; // ç„¡æ•µã‚¿ã‚¤ãƒãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆ
         damageCount++;
     }
 
-    // ƒQ[ƒ€ƒI[ƒo[‚Ìˆ—
+    /// <summary>
+    /// ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼æ™‚ã®å‡¦ç†
+    /// </summary>
     public void GameOver()
     {
-        // ƒQ[ƒ€ƒI[ƒo[‚É‚È‚Á‚½‚É‹N‚±‚éƒCƒxƒ“ƒg‚È‚Ç‚ğ‘}“ü‚·‚é
+        //ã€€ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ã«ãªã£ãŸæ™‚ã«èµ·ã“ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆãªã©ã‚’æŒ¿å…¥ã™ã‚‹
     }
 
-    // ƒfƒoƒbƒOƒ‚[ƒh‚ÌØ‚è‘Ö‚¦
+    // ãƒ‡ãƒãƒƒã‚°ãƒ¢ãƒ¼ãƒ‰ã®åˆ‡ã‚Šæ›¿ãˆ
     private void ToggleDebugMode()
     {
         isDebug = !isDebug;
