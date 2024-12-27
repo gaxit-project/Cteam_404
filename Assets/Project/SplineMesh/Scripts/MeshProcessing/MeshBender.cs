@@ -8,8 +8,8 @@ namespace SplineMesh {
     /// <summary>
     /// A component that creates a deformed mesh from a given one along the given spline segment.
     /// The source mesh will always be bended along the X axis.
-    /// It can work on a cubic bezier curve or on any interval of a given spline.
-    /// On the given interval, the mesh can be place with original scale, stretched, or repeated.
+    /// It can work on a cubic bezier curve or on any _interval of a given spline.
+    /// On the given _interval, the mesh can be place with original scale, stretched, or repeated.
     /// The resulting mesh is stored in a MeshFilter component and automaticaly updated on the next update if the spline segment change.
     /// </summary>
     [DisallowMultipleComponent]
@@ -69,10 +69,10 @@ namespace SplineMesh {
         }
 
         /// <summary>
-        /// Sets a spline's interval along which the mesh will be bent.
-        /// If interval end is absent or set to 0, the interval goes from start to spline length.
+        /// Sets a spline's _interval along which the mesh will be bent.
+        /// If _interval end is absent or set to 0, the _interval goes from start to spline length.
         /// The mesh will be update if any of the curve changes on the spline, including curves
-        /// outside the given interval.
+        /// outside the given _interval.
         /// </summary>
         /// <param name="spline">The <see cref="SplineMesh"/> to bend the source mesh along.</param>
         /// <param name="intervalStart">Distance from the spline start to place the mesh minimum X.<param>
@@ -150,23 +150,23 @@ namespace SplineMesh {
         }
 
         /// <summary>
-        /// The mode used by <see cref="MeshBender"/> to bend meshes on the interval.
+        /// The mode used by <see cref="MeshBender"/> to bend meshes on the _interval.
         /// </summary>
         public enum FillingMode {
             /// <summary>
-            /// In this mode, source mesh will be placed on the interval by preserving mesh scale.
-            /// Vertices that are beyond interval end will be placed on the interval end.
+            /// In this mode, source mesh will be placed on the _interval by preserving mesh scale.
+            /// Vertices that are beyond _interval end will be placed on the _interval end.
             /// </summary>
             Once,
             /// <summary>
-            /// In this mode, the mesh will be repeated to fill the interval, preserving
+            /// In this mode, the mesh will be repeated to fill the _interval, preserving
             /// mesh scale.
             /// This filling process will stop when the remaining space is not enough to
-            /// place a whole mesh, leading to an empty interval.
+            /// place a whole mesh, leading to an empty _interval.
             /// </summary>
             Repeat,
             /// <summary>
-            /// In this mode, the mesh is deformed along the X axis to fill exactly the interval.
+            /// In this mode, the mesh is deformed along the X axis to fill exactly the _interval.
             /// </summary>
             StretchToInterval
         }

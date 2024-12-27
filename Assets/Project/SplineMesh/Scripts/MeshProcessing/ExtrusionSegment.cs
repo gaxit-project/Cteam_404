@@ -141,7 +141,7 @@ namespace SplineMesh {
         private List<CurveSample> GetPath() {
             var path = new List<CurveSample>();
             if (useSpline) {
-                // calculate path from spline interval
+                // calculate path from spline _interval
                 float d = intervalStart;
                 while (d < intervalEnd) {
                     path.Add(spline.GetSampleAtDistance(d));

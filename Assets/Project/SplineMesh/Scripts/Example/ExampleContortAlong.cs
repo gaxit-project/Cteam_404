@@ -6,7 +6,7 @@ using UnityEngine;
 namespace SplineMesh {
     /// <summary>
     /// Example of component to show the deformation of a mesh in a changing
-    /// interval in spline space.
+    /// _interval in spline space.
     /// 
     /// This component is only for demo purpose and is not intended to be used as-is.
     /// </summary>

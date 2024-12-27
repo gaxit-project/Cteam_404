@@ -6,7 +6,7 @@ using UnityEngine;
 namespace SplineMesh {
     /// <summary>
     /// Example of component to show the deformation of the mesh on a changing
-    /// interval and changing spline nodes.
+    /// _interval and changing spline nodes.
     /// 
     /// In this example, as the MeshBender is working on spline space, it will update
     /// the mesh if one of the curve change. Each change make the MeshBender "dirty" and
