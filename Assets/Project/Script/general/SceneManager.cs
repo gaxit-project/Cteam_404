@@ -1,22 +1,23 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class NewMonoBehaviourScript : MonoBehaviour
 {
-    [SerializeField] private string _SceneName;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] private string _sceneName;
 
-    // Update is called once per frame
-    void Update()
+    public void ChangeScene() // シーンチェンジ
     {
-        
+        SceneManager.LoadScene( _sceneName );
     }
-    public void ChangeScene()
+    public void EndScene() // ゲーム終了
     {
-        SceneManager.LoadScene( _SceneName );
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false; // ゲーム終了
+        #else
+            Application.Quit(); // ゲーム終了
+        #endif
     }
 }
