@@ -1,69 +1,94 @@
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using SplineMesh;
 
 public class RailManager : MonoBehaviour
 {
-    [Header("�Q�Ɨp�I�u�W�F�N�g�̊Ԋu (���[�g���P��)")]
-    [SerializeField] private float _interval = 1f;
+    [Header("対象のレール")]
+    public Spline TargetRail;             // 管理対象のレール
 
-    [Header("�Q�Ɨp�I�u�W�F�N�g�̃v���n�u")]
-    [SerializeField] private GameObject _referencePointPrefab;
+    [Header("参照用オブジェクト")]
+    [SerializeField] private GameObject _referencePrefab; // レール上に配置する参照用オブジェクトのプレハブ
+    [SerializeField] private float _spacing = 1f;         // 参照用オブジェクトの間隔（メートル単位）
 
-    private Spline _spline;
-    private List<Transform> _referencePoints = new List<Transform>();
+    public GameObject[] ReferenceObjects;  // 配置した参照用オブジェクトの配列
+    public float[] RailPositions;          // 各オブジェクトに対応するスプライン上の位置（0〜1）
 
     void Start()
     {
-        _spline = GetComponent<Spline>();
-        if (_spline == null)
-        {
-            Debug.LogError("RailManager��Spline�R���|�[�l���g�ƈꏏ�Ɏg�p����K�v������܂��B");
-            return;
-        }
-
-        GenerateReferencePoints();
+        GenerateReferenceObjects();
     }
 
     /// <summary>
-    /// ���[����Ɉ��Ԋu�ŎQ�Ɨp�I�u�W�F�N�g��z�u
+    /// レール上に参照用オブジェクトを生成し、対応するスプライン位置を計算
     /// </summary>
-    private void GenerateReferencePoints()
+    private void GenerateReferenceObjects()
     {
-        float totalLength = _spline.Length;
+        // レールの長さを取得
+        float railLength = TargetRail.Length;
 
-        for (float distance = 0f; distance <= totalLength; distance += _interval)
+        // 必要なオブジェクトの数を計算
+        int objectCount = Mathf.CeilToInt(railLength / _spacing);
+
+        // 配列を初期化
+        ReferenceObjects = new GameObject[objectCount];
+        RailPositions = new float[objectCount];
+
+        // 参照用オブジェクトを生成
+        for (int i = 0; i < objectCount; i++)
         {
-            // ���[����̈ʒu���v�Z
-            var sample = _spline.GetSampleAtDistance(distance);
-            Vector3 position = sample.location;
+            // レール上の距離を計算
+            float distance = i * _spacing;
 
-            // �Q�Ɨp�I�u�W�F�N�g�𐶐�
-            GameObject referencePoint = Instantiate(_referencePointPrefab, position, Quaternion.identity, transform);
-            _referencePoints.Add(referencePoint.transform);
+            // スプライン上の位置情報を取得
+            var sample = TargetRail.GetSampleAtDistance(distance);
+
+            // オブジェクトを生成して配置
+            GameObject referenceObject = Instantiate(_referencePrefab, sample.location, Quaternion.identity, transform);
+            referenceObject.transform.forward = sample.tangent; // レールの進行方向に向きを設定
+
+            // 配列に保存
+            ReferenceObjects[i] = referenceObject;
+            RailPositions[i] = distance / railLength; // スプライン全体での位置を0〜1で保存
         }
     }
 
     /// <summary>
-    /// ���݂̈ʒu�ɍł��߂��Q�Ɨp�I�u�W�F�N�g��Ԃ�
+    /// 最も近い参照用オブジェクトを取得
     /// </summary>
-    /// <param name="position">���݂̃��[���h���W</param>
-    /// <returns>�ł��߂��Q�Ɨp�I�u�W�F�N�g��Transform</returns>
-    public Transform GetClosestReferencePoint(Vector3 position)
+    /// <param name="position">基準となる3D位置</param>
+    /// <returns>最も近いオブジェクトの配列インデックス</returns>
+    public int GetClosestReferenceIndex(Vector3 position)
     {
-        Transform closestPoint = null;
+        int closestIndex = -1;
         float closestDistance = float.MaxValue;
 
-        foreach (Transform point in _referencePoints)
+        for (int i = 0; i < ReferenceObjects.Length; i++)
         {
-            float distance = Vector3.Distance(position, point.position);
+            float distance = Vector3.Distance(position, ReferenceObjects[i].transform.position);
+
             if (distance < closestDistance)
             {
-                closestPoint = point;
                 closestDistance = distance;
+                closestIndex = i;
             }
         }
 
-        return closestPoint;
+        return closestIndex;
+    }
+
+    /// <summary>
+    /// 指定したインデックスの参照用オブジェクトに対応するスプライン上の位置を取得
+    /// </summary>
+    /// <param name="index">オブジェクトの配列インデックス</param>
+    /// <returns>スプライン上の位置（0〜1）</returns>
+    public float GetRailPositionAtIndex(int index)
+    {
+        if (index >= 0 && index < RailPositions.Length)
+        {
+            return RailPositions[index];
+        }
+
+        Debug.LogWarning("指定されたインデックスが範囲外です。");
+        return -1f; // 範囲外の場合のエラー値
     }
 }

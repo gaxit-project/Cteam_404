@@ -794,6 +794,7 @@ GameObject:
   - component: {fileID: 246610448}
   - component: {fileID: 246610450}
   - component: {fileID: 246610449}
+  - component: {fileID: 246610451}
   m_Layer: 0
   m_Name: Spline2
   m_TagString: Untagged
@@ -964,6 +965,23 @@ MonoBehaviour:
   CurveChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &246610451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246610447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdd0e6af45646d64ab5ca945fe6dff07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetRail: {fileID: 246610450}
+  referencePrefab: {fileID: 4701876129565549845, guid: 6c1101e52bbf65745bd61fe1ec1eb21c, type: 3}
+  spacing: 1
+  referenceObjects: []
+  railPositions: []
 --- !u!43 &248501323
 Mesh:
   m_ObjectHideFlags: 8
@@ -1160,12 +1178,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba250d96b01bc1489a38bfeac4eed75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentRail: {fileID: 246610450}
-  speed: 10
-  connectedRails:
-  - {fileID: 450993118}
-  - {fileID: 246610450}
-  snapDistance: 1.5
+  _jumpHeight: 2
+  _jumpDuration: 0.5
+  _snapDistance: 4
+  _speed: 5
+  CurrentRail: {fileID: 450993118}
 --- !u!4 &281408154
 Transform:
   m_ObjectHideFlags: 0
@@ -1788,6 +1805,7 @@ GameObject:
   - component: {fileID: 450993116}
   - component: {fileID: 450993118}
   - component: {fileID: 450993117}
+  - component: {fileID: 450993119}
   m_Layer: 0
   m_Name: Spline1
   m_TagString: Untagged
@@ -1998,6 +2016,23 @@ MonoBehaviour:
   CurveChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &450993119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450993115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdd0e6af45646d64ab5ca945fe6dff07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetRail: {fileID: 450993118}
+  referencePrefab: {fileID: 4701876129565549845, guid: 6c1101e52bbf65745bd61fe1ec1eb21c, type: 3}
+  spacing: 1
+  referenceObjects: []
+  railPositions: []
 --- !u!1 &547687684
 GameObject:
   m_ObjectHideFlags: 0

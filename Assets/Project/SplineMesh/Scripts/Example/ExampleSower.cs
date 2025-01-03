@@ -8,10 +8,10 @@ namespace SplineMesh {
     /// <summary>
     /// Example of component to places assets along a spline. This component can be used as-is but will most likely be a base for your own component.
     /// 
-    /// In this example, the user gives the prefab to place, a spacing value between two placements, the prefab scale and an horizontal offset to the spline.
+    /// In this example, the user gives the prefab to place, a _spacing value between two placements, the prefab scale and an horizontal offset to the spline.
     /// These three last values have an additional range, allowing to add some randomness. for each placement, the computed value will be between value and value+range.
     /// 
-    /// Prefabs are placed from the start of the spline at computed spacing, unitl there is no lentgh remaining. Prefabs are stored, destroyed
+    /// Prefabs are placed from the start of the spline at computed _spacing, unitl there is no lentgh remaining. Prefabs are stored, destroyed
     /// and built again each time the spline or one of its curves change.
     /// 
     /// A random seed is used to obtain the same random numbers at each update. The user can specify the seed to test some other random number set.
@@ -85,7 +85,7 @@ namespace SplineMesh {
                 go.transform.localPosition = Vector3.zero;
                 go.transform.localScale = Vector3.one;
 
-                // move along spline, according to spacing + random
+                // move along spline, according to _spacing + random
                 go.transform.localPosition = sample.location;
                 // apply scale + random
                 float rangedScale = scale + UnityEngine.Random.Range(0, scaleRange);
