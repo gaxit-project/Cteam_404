@@ -98,30 +98,30 @@ public class RailMove : MonoBehaviour
                 // 現在のレールはスキップ
                 if (manager.TargetRail == CurrentRail) continue;
 
-                int closestIndex = manager.GetClosestReferenceIndex(transform.position);
+                int closestIndex = manager.GetNearPositionIndex(transform.position);
                 if (closestIndex == -1) continue; // 有効な参照がない場合スキップ
 
                 for (int i = 0; i < manager.ReferenceObjects.Length; i++)
                 {
-                    var referenceObject = manager.ReferenceObjects[i];
-                    float distance = Vector3.Distance(transform.position, referenceObject.transform.position);
+                    Vector3 referenceObject = manager.GetNearPosition(i);
+                    float distance = Vector3.Distance(transform.position, referenceObject);
 
                     if (distance > _snapDistance) continue; // スナップ距離外の場合スキップ
 
-                    Vector3 toObject = referenceObject.transform.position - transform.position;
+                    Vector3 toObject = referenceObject - transform.position;
                     float dot = Vector3.Dot(Vector3.right, toObject.normalized);
 
                     if (dot < -0.5f && !_leftPosition) // 左側
                     {
                         _leftPosition = true;
                         _leftRail = manager.TargetRail;
-                        _leftRailPosition = manager.GetRailPositionAtIndex(i);
+                        _leftRailPosition = manager.GetNearRailPosition(i);
                     }
                     else if (dot > 0.5f && !_rightPosition) // 右側
                     {
                         _rightPosition = true;
                         _rightRail = manager.TargetRail;
-                        _rightRailPosition = manager.GetRailPositionAtIndex(i);
+                        _rightRailPosition = manager.GetNearRailPosition(i);
                     }
                 }
             }

@@ -57,7 +57,7 @@ public class RailManager : MonoBehaviour
     /// </summary>
     /// <param name="position">基準となる3D位置</param>
     /// <returns>最も近いオブジェクトの配列インデックス</returns>
-    public int GetClosestReferenceIndex(Vector3 position)
+    public int GetNearPositionIndex(Vector3 position)
     {
         int closestIndex = -1;
         float closestDistance = float.MaxValue;
@@ -75,13 +75,23 @@ public class RailManager : MonoBehaviour
 
         return closestIndex;
     }
+    /// <summary>
+    /// indexに対応した参照用オブジェクトのpositionを取得
+    /// </summary>
+    /// <param name="index">参照用オブジェクトのindex</param>
+    /// <returns>参照用オブジェクトのposition(Vector3型)</returns>
+    public Vector3 GetNearPosition(int index)
+    {
+        Debug.Assert(index < 0 || ReferenceObjects.Length < index ,"要素数外を参照しようとしています");
+        return ReferenceObjects[index].transform.position;
+    }
 
     /// <summary>
-    /// 指定したインデックスの参照用オブジェクトに対応するスプライン上の位置を取得
+    /// indexに対応した参照用オブジェクトのレールポジション取得
     /// </summary>
     /// <param name="index">オブジェクトの配列インデックス</param>
     /// <returns>スプライン上の位置（0〜1）</returns>
-    public float GetRailPositionAtIndex(int index)
+    public float GetNearRailPosition(int index)
     {
         if (index >= 0 && index < RailPositions.Length)
         {
