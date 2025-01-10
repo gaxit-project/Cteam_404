@@ -34,7 +34,7 @@ public class RailMove : MonoBehaviour
 
             // レールに沿った移動処理
             _railPosition += _speed * Time.deltaTime / CurrentRail.Length;
-            if (_railPosition >= 0.99f)
+            if (_railPosition >= 0.99999999999f)
             {
                 _railPosition = 0f; // レールをループする場合
             }

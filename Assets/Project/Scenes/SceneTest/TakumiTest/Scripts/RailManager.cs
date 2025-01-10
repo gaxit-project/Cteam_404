@@ -82,7 +82,7 @@ public class RailManager : MonoBehaviour
     /// <returns>参照用オブジェクトのposition(Vector3型)</returns>
     public Vector3 GetNearPosition(int index)
     {
-        Debug.Assert(index < 0 || ReferenceObjects.Length < index ,"要素数外を参照しようとしています");
+        //Debug.Assert(index < 0 || ReferenceObjects.Length < index ,"要素数外を参照しようとしています");
         return ReferenceObjects[index].transform.position;
     }
 
