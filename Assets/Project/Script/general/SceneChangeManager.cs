@@ -3,8 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[DisallowMultipleComponent]
 public class SceneChangeManager : MonoBehaviour
 {
+    public static SceneChangeManager Instance = null;
+    #region シングルトン
+
+    public static SceneChangeManager GetInstance()
+    {
+        if(Instance == null)
+        {
+            Instance = FindObjectOfType<SceneChangeManager>();
+        }
+        return Instance;
+    }
+    private void Awake()
+    {
+        if(this != GetInstance())
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        DontDestroyOnLoad(this.gameObject);
+    }
+    #endregion
+    
     [SerializeField] private string _sceneName;
     public void SceneChange() // startボタンを押すとメインシーンに遷移
     {

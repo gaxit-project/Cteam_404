@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+[DisallowMultipleComponent]
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance = null;
@@ -25,7 +26,7 @@ public class AudioManager : MonoBehaviour
     float seVolume;
     float bgmVolume;
 
-    #region シングルドン
+    #region シングルトン
     public static AudioManager GetInstance()
     {
         if (Instance == null)
@@ -122,7 +123,9 @@ public class AudioManager : MonoBehaviour
 
     #region SE・BGM操作
 
-    // SEの値が変更されたときの処理
+    /// <summary>
+    /// SEの値が変更されたときの処理
+    /// </summary>
     public void OnSEVolumeChange()
     {
         seVolume = SESlider.value;
@@ -130,7 +133,9 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.SetFloat("SEVolume", seVolume);
     }
 
-    // BGMの値が変更されたときの処理
+    /// <summary>
+    /// BGMの値が変更されたときの処理
+    /// </summary>
     public void OnBGMVolumeChange()
     {
         bgmVolume = BGMSlider.value;
@@ -150,41 +155,60 @@ public class AudioManager : MonoBehaviour
         get { return _audioSourceSE.volume; }
         set { _audioSourceSE.volume = value; }
     }
-
-    public void PlaySound(int index)  // SE再生
+    /// <summary>
+    ///SE再生
+    /// </summary>
+    /// <param name="index"></param>
+    public void PlaySound(int index)
     {
         _audioSourceSE.clip = _seLists[index];
         _audioSourceSE.PlayOneShot(_seLists[index]);
     }
-
-    public void PlayBGM(int index)  // BGM再生
+    /// <summary>
+    /// BGM再生
+    /// </summary>
+    /// <param name="index"></param>
+    public void PlayBGM(int index)
     {
         _audioSourceBGM.clip = _bgmLists[index];
         _audioSourceBGM.Play();
     }
-
-    public void StopBGM()  // BGM停止
+    /// <summary>
+    /// BGM停止
+    /// </summary>
+    public void StopBGM()  
     {
         _audioSourceBGM.Stop();
     }
 
     ///<summary>
     ///オーバーライド
+    ///SE再生
     ///</summary>
-
-    public void PlaySound(int index, AudioSource _audioSource)  // SE再生
+    public void PlaySound(int index, AudioSource _audioSource)  
     {
         _audioSourceSE.clip = _seLists[index];
         _audioSourceSE.PlayOneShot(_seLists[index]);
     }
-
-    public void PlayBGM(int index, AudioSource _audioSource)  // BGM再生
+    /// <summary>
+    /// オーバーライド
+    /// BGM再生
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="_audioSource"></param>
+    public void PlayBGM(int index, AudioSource _audioSource)
     {
         _audioSourceBGM.clip = _bgmLists[index];
         _audioSourceBGM.Play();
     }
 
-    public void StopBGM(AudioSource _audioSource)  // BGM停止
+    /// <summary>
+    /// オーバーライド
+    /// BGM停止
+    /// </summary>
+    /// <param name="_audioSource"></param>
+
+    public void StopBGM(AudioSource _audioSource)
     {
         _audioSourceBGM.Stop();
     }
