@@ -52,6 +52,11 @@ public class RailManager : MonoBehaviour
         }
     }
 
+    public Spline GetRail()
+    {
+        return TargetRail;
+    }
+
     /// <summary>
     /// 最も近い参照用オブジェクトを取得
     /// </summary>

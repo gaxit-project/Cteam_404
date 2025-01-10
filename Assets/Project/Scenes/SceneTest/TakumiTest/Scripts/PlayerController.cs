@@ -1,61 +1,100 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.Audio;
 
 public class PlayerController : MonoBehaviour
 {
 
     public float Speed;
 
+    public float RotateSpeed;
+
     private Vector3 MoveValue;
 
+    private bool isAttacking = false; // æ”»æ’ƒä¸­ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
+    private bool canRide = false; // æ”»æ’ƒä¸­ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
 
-    // ‹‚ß‚½‚¢•ûŒü¬•ª‚ÌƒxƒNƒgƒ‹
-    private Vector3 _direction = Vector3.forward;
-    // 1ƒtƒŒ[ƒ€‘O‚ÌˆÊ’u
-    private Vector3 _prevPosition;
+    // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
+    private Animator animator;
 
     Rigidbody rb;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
 
-        // ‰ŠúˆÊ’u‚ğ•Û
-        _prevPosition = transform.position;
-
-        // •ûŒü¬•ª‚ÌƒxƒNƒgƒ‹‚ğ³‹K‰»
-        _direction.Normalize();
     }
 
     void Update()
     {
-        // deltaTime‚ª0‚Ìê‡‚Í‰½‚à‚µ‚È‚¢
-        if (Mathf.Approximately(Time.deltaTime, 0))
-            return;
-
-        // Œ»İˆÊ’uæ“¾
-        var position = transform.position;
-
-        // Œ»İ‘¬“xŒvZ
-        var velocity = (position - _prevPosition) / Time.deltaTime;
-
-        // •ûŒü¬•ª‚ÌƒxƒNƒgƒ‹‚Æ‘¬“x‚Ì“àÏ‚ğ‹‚ß‚é
-        var directionalVelocity = Vector3.Dot(velocity, _direction);
-
-        // Œ‹‰Ê•\¦
-        print($"directionalVelocity = {directionalVelocity}");
-
-        // ‘OƒtƒŒ[ƒ€ˆÊ’u‚ğXV
-        _prevPosition = position;
+        // Enterã‚­ãƒ¼ã§æ”»æ’ƒ
+        if (Input.GetKeyDown(KeyCode.Return) && !isAttacking && !canRide)
+        {
+            if(!isAttacking && !canRide)
+            {
+                Attack();
+            }
+            else if(!isAttacking && canRide)
+            {
+                PlayerPrefs.SetInt("isRide", 1);
+            }
+            
+        }
     }
 
     void FixedUpdate()
     {
 
 
-        MoveValue = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-        MoveValue.Normalize();
+        animator.SetFloat("speed", MoveValue.magnitude);
+        Debug.Log("é€Ÿåº¦" +  MoveValue.magnitude);
 
+        MoveValue = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical")).normalized;
 
+        rb.linearVelocity = MoveValue * Speed;
 
-        rb.AddForce(MoveValue * Speed);
+        // å…¥åŠ›ãŒã‚ã‚‹å ´åˆã®ã¿å›è»¢ã‚’æ›´æ–°
+        if (MoveValue.magnitude > 0)
+        {
+            // ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚’ç§»å‹•æ–¹å‘ã«å›è»¢
+            Quaternion targetRotation = Quaternion.LookRotation(MoveValue);
+            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, Time.deltaTime * RotateSpeed);
+        }
+    }
+
+    void Attack()
+    {
+        // æ”»æ’ƒãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
+        isAttacking = true;
+
+        // æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿ
+        animator.SetBool("isAttack", isAttacking);
+
+        // Debug.Logã§æ”»æ’ƒã‚’å‡ºåŠ›
+        Debug.Log("æ”»æ’ƒ!");
+    }
+
+    // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã¾ãŸã¯é…å»¶å‡¦ç†ã§æ”»æ’ƒçµ‚äº†ã‚’æ¤œçŸ¥
+    public void EndAttack()
+    {
+        isAttacking = false; // æ”»æ’ƒçµ‚äº†ã‚’è¨±å¯
+        animator.SetBool("isAttack", isAttacking);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("RailArea"))
+        {
+            canRide = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("RailArea"))
+        {
+            canRide = false;
+        }
     }
 }

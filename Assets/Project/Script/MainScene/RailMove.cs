@@ -2,7 +2,7 @@
 using SplineMesh;
 using System.Linq;
 
-public class RailMove : MonoBehaviour
+public class PlayerMove : MonoBehaviour
 {
     #region 
     [Header("ジャンプの高さ")]
@@ -15,6 +15,22 @@ public class RailMove : MonoBehaviour
     public float _speed = 5f; // レール上の移動速度
     [Header("現在のレール")]
     public Spline CurrentRail; // 現在のレール
+
+    public float RotateSpeed;
+
+    private Vector3 MoveValue;
+
+    private bool isAttacking = false; // 攻撃中かどうかのフラグ
+    private bool canRide = false; // 攻撃中かどうかのフラグ
+
+    // アニメーターコンポーネント
+    private Animator animator;
+
+    Rigidbody rb;
+
+    public static bool isRide = false;
+
+
     #endregion
 
     private float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
@@ -25,37 +41,100 @@ public class RailMove : MonoBehaviour
     private Spline _rightRail = null;       // 右側のレール
     private float _leftRailPosition = 0f;   // 左レールの位置 (0〜1で表現)
     private float _rightRailPosition = 0f;  // 右レールの位置 (0〜1で表現)
+    private bool canFall = false;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+    }
+
+
+
 
     void Update()
     {
-        try
+        Debug.Log("isRide : " + isRide);
+        Debug.Log("canRide : " + canRide);
+        Debug.Log("canFall : " + canFall);
+        animator.SetBool("isRide", isRide);
+        if (isRide)
         {
-            if (_isJumping) return; // ジャンプ中は他の処理をスキップ
-
-            // レールに沿った移動処理
-            _railPosition += _speed * Time.deltaTime / CurrentRail.Length;
-            if (_railPosition >= 0.99999999999f)
+            
+            try
             {
-                _railPosition = 0f; // レールをループする場合
+                if (_isJumping) return; // ジャンプ中は他の処理をスキップ
+
+                // レールに沿った移動処理
+                _railPosition += _speed * Time.deltaTime / CurrentRail.Length;
+                if (_railPosition >= 0.99999999999f)
+                {
+                    if (canFall)
+                    {
+                        isRide = !isRide;
+                        canFall = false;
+                        _railPosition = 0f;
+                    }
+                    else
+                    {
+                        _railPosition = 0f; // レールをループする場合
+                    }
+
+                }
+
+                MoveAlongRail(); // レール上の移動
+                UpdateReferencePositions(); // 左右のレール位置を更新
+
+                // 左右入力でジャンプ処理
+                if (Input.GetKeyDown("a") && _leftPosition)
+                {
+                    JumpToRail(_leftRail, _leftRailPosition);
+                }
+                else if (Input.GetKeyDown("d") && _rightPosition)
+                {
+                    JumpToRail(_rightRail, _rightRailPosition);
+                }
             }
-
-            MoveAlongRail(); // レール上の移動
-            UpdateReferencePositions(); // 左右のレール位置を更新
-
-            // 左右入力でジャンプ処理
-            if (Input.GetKeyDown("a") && _leftPosition)
+            catch (System.Exception ex)
             {
-                JumpToRail(_leftRail, _leftRailPosition);
-            }
-            else if (Input.GetKeyDown("d") && _rightPosition)
-            {
-                JumpToRail(_rightRail, _rightRailPosition);
+                Debug.LogError("Update内で例外が発生しました: " + ex.Message);
             }
         }
-        catch (System.Exception ex)
+        /*
+        else
         {
-            Debug.LogError("Update内で例外が発生しました: " + ex.Message);
+            // Enterキーで攻撃
+            if (Input.GetKeyDown("h"))
+            {
+                if (!isAttacking && !canRide)
+                {
+                    Attack();
+                }
+                else if (!isAttacking && canRide)
+                {
+                    isRide = !isRide;
+                    
+                    canRide = false;
+                }
+
+            }
+        }*/
+        // Enterキーで攻撃
+        if (Input.GetKeyDown("h"))
+        {
+            if (!isAttacking && !canRide)
+            {
+                Attack();
+            }
+            else if (!isAttacking && canRide)
+            {
+                isRide = !isRide;
+
+                canRide = false;
+            }
+
         }
+
     }
 
     /// <summary>
@@ -64,16 +143,20 @@ public class RailMove : MonoBehaviour
     #region レール上の現在の位置と向きを更新
     void MoveAlongRail()
     {
-        try
+        if (isRide)
         {
-            var splineSample = CurrentRail.GetSampleAtDistance(_railPosition * CurrentRail.Length);
-            transform.position = splineSample.location;
-            transform.forward = splineSample.tangent;
+            try
+            {
+                var splineSample = CurrentRail.GetSampleAtDistance(_railPosition * CurrentRail.Length);
+                transform.position = splineSample.location;
+                transform.forward = splineSample.tangent;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError("MoveAlongRailで例外が発生しました: " + ex.Message);
+            }
         }
-        catch (System.Exception ex)
-        {
-            Debug.LogError("MoveAlongRailで例外が発生しました: " + ex.Message);
-        }
+
     }
     #endregion
 
@@ -192,4 +275,86 @@ public class RailMove : MonoBehaviour
         onComplete?.Invoke();
     }
     #endregion
+
+
+
+    void FixedUpdate()
+    {
+
+        if (!isRide)
+        {
+            animator.SetFloat("speed", MoveValue.magnitude);
+            Debug.Log("速度" + MoveValue.magnitude);
+
+            MoveValue = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical")).normalized;
+
+            rb.linearVelocity = MoveValue * _speed;
+
+            // 入力がある場合のみ回転を更新
+            if (MoveValue.magnitude > 0)
+            {
+                // キャラクターを移動方向に回転
+                Quaternion targetRotation = Quaternion.LookRotation(MoveValue);
+                rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, Time.deltaTime * RotateSpeed);
+            }
+        }
+
+    }
+
+    void Attack()
+    {
+        // 攻撃フラグを立てる
+        isAttacking = true;
+
+        // 攻撃アニメーションを再生
+        animator.SetTrigger("isAttack");
+
+        // Debug.Logで攻撃を出力
+        Debug.Log("攻撃!");
+
+        Invoke(nameof(EndAttack), 1f);
+
+    }
+
+    // アニメーションイベントまたは遅延処理で攻撃終了を検知
+    public void EndAttack()
+    {
+        isAttacking = false; // 攻撃終了を許可
+        /*
+        animator.SetBool("isAttack", isAttacking);
+        if (isRide)
+        {
+            animator.SetBool("RideAttack", true);
+        }
+        else
+        {
+            animator.SetBool("IdleAttack", true);
+        }
+        animator.SetBool("RideAttack", false);
+        animator.SetBool("IdleAttack", false);
+        */
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("RailArea"))
+        {
+            canRide = true;
+        }
+        if (other.CompareTag("FallArea") && isRide)
+        {
+
+            canFall = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("RailArea"))
+        {
+            canRide = false;
+        }
+    }
+
+
 }
