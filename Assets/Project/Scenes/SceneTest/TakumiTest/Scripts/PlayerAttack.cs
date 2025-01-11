@@ -4,7 +4,7 @@ public class PlayerAttack : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("MOOB"))
+        if (collision.collider.CompareTag("Mob"))
         {
             Debug.Log("”j‰ó");
             Destroy(collision.gameObject);
@@ -13,7 +13,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("MOOB"))
+        if (other.CompareTag("Mob"))
         {
             Debug.Log("”j‰ó");
             Destroy(other.gameObject);

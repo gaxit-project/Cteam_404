@@ -80,6 +80,37 @@ public class RailManager : MonoBehaviour
 
         return closestIndex;
     }
+
+    /// <summary>
+    /// 最も近い参照用オブジェクトを取得
+    /// </summary>
+    /// <param name="position">基準となる3D位置</param>
+    /// <returns>最も近いオブジェクトの配列インデックス</returns>
+    public int GetMobPositionIndex(Vector3 position)
+    {
+        int closestIndex = -1;
+        float closestDistance = float.MaxValue;
+
+        for (int i = 0; i < ReferenceObjects.Length; i++)
+        {
+            float distance = Vector3.Distance(position, ReferenceObjects[i].transform.position);
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestIndex = i;
+            }
+        }
+
+        if(5 < ReferenceObjects.Length - closestIndex)
+        {
+            closestIndex += 3;
+        }
+
+
+
+        return closestIndex;
+    }
     /// <summary>
     /// indexに対応した参照用オブジェクトのpositionを取得
     /// </summary>

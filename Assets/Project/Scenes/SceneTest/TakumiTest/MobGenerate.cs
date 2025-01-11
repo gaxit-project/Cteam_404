@@ -51,9 +51,12 @@ public class MobGenerate : MonoBehaviour
         TargetRail = selectedRail.TargetRail;
 
         // プレイヤーに最も近いインデックスを取得
-        int nearestIndex = selectedRail.GetNearPositionIndex(player.transform.position);
+        int nearestIndex = selectedRail.GetMobPositionIndex(player.transform.position);
         if (nearestIndex == -1) return; // 有効な位置がない場合は終了
         Debug.Log("Gen2");
+
+        // 場所取得
+        Vector3 refarence = selectedRail.GetNearPosition(nearestIndex);
 
         // 最近傍のスプライン上の位置を取得
         float nearestDistance = selectedRail.GetNearRailPosition(nearestIndex);
@@ -65,13 +68,16 @@ public class MobGenerate : MonoBehaviour
         //if (distanceToPlayer > _distance) return; // プレイヤーとの距離が探知範囲外なら生成しない
         Debug.Log("Gen4");
 
+        // 位置調整
+        refarence = refarence - new Vector3(0f, 2f, 0f);
+
         // オブジェクトを生成して配置
-        GameObject enemyObject = Instantiate(MobEnemy, sample.location, Quaternion.identity);
+        GameObject enemyObject = Instantiate(MobEnemy, refarence , Quaternion.identity);
 
         Debug.Log("せいせい");
 
         // プレイヤーの方向を向かせる
-        Vector3 toPlayer = player.transform.position - sample.location;
+        Vector3 toPlayer = player.transform.position - refarence;
         enemyObject.transform.rotation = Quaternion.LookRotation(toPlayer.normalized);
     }
 }
