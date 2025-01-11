@@ -28,7 +28,7 @@ public class PlayerMove : MonoBehaviour
 
     Rigidbody rb;
 
-    public static bool isRide = false;
+    public static bool isRide = true;
 
 
     #endregion
