@@ -6,7 +6,9 @@ using UnityEngine.SceneManagement;
 [DisallowMultipleComponent]
 public class SceneChangeManager : MonoBehaviour
 {
-    public static SceneChangeManager Instance = null;
+    public static SceneChangeManager Instance {  get; private set; }
+
+
     #region シングルトン
 
     public static SceneChangeManager GetInstance()
@@ -27,11 +29,11 @@ public class SceneChangeManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
     #endregion
-    
-    [SerializeField] private string _sceneName;
-    public void SceneChange() // startボタンを押すとメインシーンに遷移
+
+
+    public void SceneChange(string sceneName) // startボタンを押すとメインシーンに遷移
     {
-        SceneManager.LoadScene(_sceneName);
+        SceneManager.LoadScene(sceneName);
     }
     public void ApplicationEnd() // quitボタンを押すとゲームを終了
     {
@@ -41,4 +43,7 @@ public class SceneChangeManager : MonoBehaviour
             Application.Quit(); // ゲーム終了
         #endif
     }
+
+
+    
 }
