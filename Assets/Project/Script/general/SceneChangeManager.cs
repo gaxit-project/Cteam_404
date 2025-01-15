@@ -20,7 +20,7 @@ public class SceneChangeManager : MonoBehaviour
         return Instance;
     }
     private void Awake()
-    {
+    {   
         if(this != GetInstance())
         {
             Destroy(this.gameObject);
@@ -31,18 +31,44 @@ public class SceneChangeManager : MonoBehaviour
     #endregion
 
 
+    #region クリア判定
+    private void Update()
+    {
+        int BuildIndex = SceneManager.GetActiveScene().buildIndex;
+        Debug.Log(BuildIndex);
+
+        if(BuildIndex == 2)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                GameOver();
+            }
+            else if (Input.GetKeyDown(KeyCode.RightShift))
+            {
+                GameClear();
+            }
+        }
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("Game Over");
+        SceneManager.LoadScene("GameOver");
+    }
+
+    public void GameClear()
+    {
+        Debug.Log("Game Clear");
+        SceneManager.LoadScene("GameClear");
+    }
+
+    #endregion
     public void SceneChange(string sceneName) // startボタンを押すとメインシーンに遷移
     {
-        SceneManager.LoadScene(sceneName);
+        SceneManager.LoadSceneAsync(sceneName);
     }
-    public void ApplicationEnd() // quitボタンを押すとゲームを終了
-    {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false; // ゲーム終了
-        #else
-            Application.Quit(); // ゲーム終了
-        #endif
-    }
+
+
 
 
     
