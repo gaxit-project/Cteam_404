@@ -23,8 +23,10 @@ public class AudioManager : MonoBehaviour
     public Slider SESlider;
     public Slider BGMSlider;
     
-    float seVolume;
-    float bgmVolume;
+    float seVolume = 0.5f;
+    float bgmVolume = 0.5f;
+
+    
 
     #region ƒVƒ“ƒOƒ‹ƒgƒ“
     public static AudioManager GetInstance()
@@ -64,22 +66,17 @@ public class AudioManager : MonoBehaviour
     }
     private void Update()
     {
-
-        if (SESlider == null && BGMSlider == null)
+        int BuildIndex = PlayerPrefs.GetInt("CurrentSceneKey");
+        if (BuildIndex == 1)
         {
+            if (SESlider == null && BGMSlider == null)
+            {
 
-            SESlider.onValueChanged.AddListener(delegate { OnSEVolumeChange(); });
-            BGMSlider.onValueChanged.AddListener(delegate { OnBGMVolumeChange(); });
+                SESlider.onValueChanged.AddListener(delegate { OnSEVolumeChange(); });
+                BGMSlider.onValueChanged.AddListener(delegate { OnBGMVolumeChange(); });
 
+            }
         }
-
-
-
-        if (Input.GetKeyDown("m"))
-        {
-            PlaySound(0);
-        }
-        
     }
 
     /// <summary>
