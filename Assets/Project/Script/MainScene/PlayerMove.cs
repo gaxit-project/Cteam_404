@@ -33,7 +33,7 @@ public class PlayerMove : MonoBehaviour
 
     #endregion
 
-    private float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
+    public float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
     private bool _isJumping = false;        // ジャンプ中かどうかのフラグ
     private bool _leftPosition = false;     // 左側にレールがあるか
     private bool _rightPosition = false;    // 右側にレールがあるか
