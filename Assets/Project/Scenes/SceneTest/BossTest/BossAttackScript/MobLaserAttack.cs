@@ -57,7 +57,7 @@ public class MobLaserAttack : MonoBehaviour, IBossAttack
 
     private void FireBeam()
     {
-        Debug.Log("モブがビームを発射！");
+        Debug.Log("モブの攻撃");
         // ビーム発射ロジックを追加
     }
 
