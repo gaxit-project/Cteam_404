@@ -22,9 +22,9 @@ public class AudioManager : MonoBehaviour
     [Header("スライダー")]
     public Slider SESlider;
     public Slider BGMSlider;
-    
-    float seVolume = 0.5f;
-    float bgmVolume = 0.5f;
+
+    private float seVolume = 0.5f;
+    private float bgmVolume = 0.5f; 
 
     
 
@@ -49,6 +49,8 @@ public class AudioManager : MonoBehaviour
     #endregion
     void Start()
     {
+        LoadVolumeSetting();
+
         if (SESlider != null && BGMSlider != null)
         {
             InitializeSliders();
@@ -210,4 +212,44 @@ public class AudioManager : MonoBehaviour
         _audioSourceBGM.Stop();
     }
     #endregion
+
+    #region BGM・SEをゲーム終了時に保存・ロードする
+    
+    ///<sumaary>
+    ///音量を保存する
+    /// </sumaary>
+
+    private void SaveVolumeSettings()
+    {
+        PlayerPrefs.SetFloat("SEVolume", seVolume);
+        PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
+        PlayerPrefs.Save();
+    }
+
+    ///<summary>
+    ///音量設定をロードする
+    /// </summary>
+    
+    private void LoadVolumeSetting()
+    {
+        if(PlayerPrefs.HasKey("SEVolume") && PlayerPrefs.HasKey("BGMVolume"))
+        {
+            seVolume = PlayerPrefs.GetFloat("SEVolume");
+            bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
+        }
+
+        _audioSourceSE.volume  = seVolume;
+        _audioSourceBGM.volume = bgmVolume;
+    }
+
+    ///<summary>
+    ///ゲーム終了時に音量保存
+    /// </summary>
+
+    private void OnApplicationQuit()
+    {
+        SaveVolumeSettings();
+    }
+    #endregion
+
 }
