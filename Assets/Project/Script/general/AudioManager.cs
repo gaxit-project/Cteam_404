@@ -69,7 +69,7 @@ public class AudioManager : MonoBehaviour
     private void Update()
     {
         int BuildIndex = PlayerPrefs.GetInt("CurrentSceneKey");
-        if (BuildIndex == 1)
+        if (BuildIndex == 1 || BuildIndex == 2)
         {
             if (SESlider == null && BGMSlider == null)
             {
@@ -113,7 +113,7 @@ public class AudioManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name == "Setting") // Settingシーンにいるときだけ処理を実行
+        if(scene.name == "Setting" || scene.name == "MainScene") // Settingシーンにいるときだけ処理を実行
         {
             InitializeSliders();
         }
