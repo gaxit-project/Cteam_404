@@ -62,7 +62,7 @@ MonoBehaviour:
   _seLists:
   - {fileID: 8300000, guid: 047c70dfb38184f4cbc8d30152dc5ddd, type: 3}
   _bgmLists:
-  - {fileID: 8300000, guid: 51eb6f3207786cc4d9f2c2d212d9a076, type: 3}
+  - {fileID: 8300000, guid: cd10c6038b73b3d4ba37a68a068b38e9, type: 3}
   _audioSourceSE: {fileID: 428016393658043902}
   _audioSourceBGM: {fileID: 7864623128911793347}
   SESlider: {fileID: 0}
@@ -80,9 +80,9 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -177,7 +177,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
