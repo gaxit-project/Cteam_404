@@ -22,9 +22,11 @@ public class AudioManager : MonoBehaviour
     [Header("スライダー")]
     public Slider SESlider;
     public Slider BGMSlider;
+
+    private float seVolume = 0.5f;
+    private float bgmVolume = 0.5f; 
+
     
-    float seVolume;
-    float bgmVolume;
 
     #region シングルトン
     public static AudioManager GetInstance()
@@ -47,6 +49,8 @@ public class AudioManager : MonoBehaviour
     #endregion
     void Start()
     {
+        LoadVolumeSetting();
+
         if (SESlider != null && BGMSlider != null)
         {
             InitializeSliders();
@@ -64,22 +68,17 @@ public class AudioManager : MonoBehaviour
     }
     private void Update()
     {
-
-        if (SESlider == null && BGMSlider == null)
+        int BuildIndex = PlayerPrefs.GetInt("CurrentSceneKey");
+        if (BuildIndex == 1 || BuildIndex == 2)
         {
+            if (SESlider == null && BGMSlider == null)
+            {
 
-            SESlider.onValueChanged.AddListener(delegate { OnSEVolumeChange(); });
-            BGMSlider.onValueChanged.AddListener(delegate { OnBGMVolumeChange(); });
+                SESlider.onValueChanged.AddListener(delegate { OnSEVolumeChange(); });
+                BGMSlider.onValueChanged.AddListener(delegate { OnBGMVolumeChange(); });
 
+            }
         }
-
-
-
-        if (Input.GetKeyDown("m"))
-        {
-            PlaySound(0);
-        }
-        
     }
 
     /// <summary>
@@ -114,7 +113,7 @@ public class AudioManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name == "Setting") // Settingシーンにいるときだけ処理を実行
+        if(scene.name == "Setting" || scene.name == "MainScene") // Settingシーンにいるときだけ処理を実行
         {
             InitializeSliders();
         }
@@ -213,4 +212,44 @@ public class AudioManager : MonoBehaviour
         _audioSourceBGM.Stop();
     }
     #endregion
+
+    #region BGM・SEをゲーム終了時に保存・ロードする
+    
+    ///<sumaary>
+    ///音量を保存する
+    /// </sumaary>
+
+    private void SaveVolumeSettings()
+    {
+        PlayerPrefs.SetFloat("SEVolume", seVolume);
+        PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
+        PlayerPrefs.Save();
+    }
+
+    ///<summary>
+    ///音量設定をロードする
+    /// </summary>
+    
+    private void LoadVolumeSetting()
+    {
+        if(PlayerPrefs.HasKey("SEVolume") && PlayerPrefs.HasKey("BGMVolume"))
+        {
+            seVolume = PlayerPrefs.GetFloat("SEVolume");
+            bgmVolume = PlayerPrefs.GetFloat("BGMVolume");
+        }
+
+        _audioSourceSE.volume  = seVolume;
+        _audioSourceBGM.volume = bgmVolume;
+    }
+
+    ///<summary>
+    ///ゲーム終了時に音量保存
+    /// </summary>
+
+    private void OnApplicationQuit()
+    {
+        SaveVolumeSettings();
+    }
+    #endregion
+
 }

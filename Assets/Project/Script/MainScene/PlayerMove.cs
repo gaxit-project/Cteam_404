@@ -33,10 +33,12 @@ public class PlayerMove : MonoBehaviour
 
     #endregion
 
-    private float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
+    public float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
     private bool _isJumping = false;        // ジャンプ中かどうかのフラグ
     private bool _leftPosition = false;     // 左側にレールがあるか
     private bool _rightPosition = false;    // 右側にレールがあるか
+    private Vector3 left;
+    private Vector3 right;
     private Spline _leftRail = null;        // 左側のレール
     private Spline _rightRail = null;       // 右側のレール
     private float _leftRailPosition = 0f;   // 左レールの位置 (0〜1で表現)
@@ -88,11 +90,11 @@ public class PlayerMove : MonoBehaviour
                 // 左右入力でジャンプ処理
                 if (Input.GetKeyDown("a") && _leftPosition)
                 {
-                    JumpToRail(_leftRail, _leftRailPosition);
+                    JumpToRail(_leftRail, _leftRailPosition, left);
                 }
                 else if (Input.GetKeyDown("d") && _rightPosition)
                 {
-                    JumpToRail(_rightRail, _rightRailPosition);
+                    JumpToRail(_rightRail, _rightRailPosition, right);
                 }
             }
             catch (System.Exception ex)
@@ -100,25 +102,7 @@ public class PlayerMove : MonoBehaviour
                 Debug.LogError("Update内で例外が発生しました: " + ex.Message);
             }
         }
-        /*
-        else
-        {
-            // Enterキーで攻撃
-            if (Input.GetKeyDown("h"))
-            {
-                if (!isAttacking && !canRide)
-                {
-                    Attack();
-                }
-                else if (!isAttacking && canRide)
-                {
-                    isRide = !isRide;
-                    
-                    canRide = false;
-                }
 
-            }
-        }*/
         // Enterキーで攻撃
         if (Input.GetKeyDown("h"))
         {
@@ -194,17 +178,19 @@ public class PlayerMove : MonoBehaviour
                     Vector3 toObject = referenceObject - transform.position;
                     float dot = Vector3.Dot(Vector3.right, toObject.normalized);
 
-                    if (dot < -0.5f && !_leftPosition) // 左側
+                    if (dot > 0.5f && !_rightPosition) // 左側
                     {
                         _leftPosition = true;
                         _leftRail = manager.TargetRail;
                         _leftRailPosition = manager.GetNearRailPosition(i);
+                        left = manager.GetNearPosition(i);
                     }
-                    else if (dot > 0.5f && !_rightPosition) // 右側
+                    else if (dot < -0.5f && !_leftPosition) // 右側
                     {
                         _rightPosition = true;
                         _rightRail = manager.TargetRail;
                         _rightRailPosition = manager.GetNearRailPosition(i);
+                        right = manager.GetNearPosition(i);
                     }
                 }
             }
@@ -224,7 +210,7 @@ public class PlayerMove : MonoBehaviour
     /// <param name="targetRail"></param>
     /// <param name="targetPosition"></param>
     #region 指定したレールにジャンプする
-    void JumpToRail(Spline targetRail, float targetPosition)
+    void JumpToRail(Spline targetRail, float targetPosition, Vector3 target)
     {
         try
         {
@@ -234,7 +220,14 @@ public class PlayerMove : MonoBehaviour
             var splineSample = targetRail.GetSampleAtDistance(targetPosition * targetRail.Length);
             Vector3 endPosition = splineSample.location;
 
-            StartCoroutine(JumpCoroutine(startPosition, endPosition, () =>
+            // ジャンプ先のレール進行方向
+            Vector3 jumpDirection = splineSample.tangent;
+
+            // ジャンプ開始時に進行方向を更新
+            Quaternion targetRotation = Quaternion.LookRotation(jumpDirection);
+            transform.rotation = targetRotation;
+
+            StartCoroutine(JumpCoroutine(startPosition, endPosition, jumpDirection, () =>
             {
                 CurrentRail = targetRail;
                 _railPosition = targetPosition;
@@ -246,6 +239,7 @@ public class PlayerMove : MonoBehaviour
             Debug.LogError("JumpToRailで例外が発生しました: " + ex.Message);
         }
     }
+
     #endregion
 
     /// <summary>
@@ -256,7 +250,7 @@ public class PlayerMove : MonoBehaviour
     /// <param name="onComplete"></param>
     /// <returns></returns>
     #region ジャンプアニメーション
-    private System.Collections.IEnumerator JumpCoroutine(Vector3 start, Vector3 end, System.Action onComplete)
+    private System.Collections.IEnumerator JumpCoroutine(Vector3 start, Vector3 end, Vector3 direction, System.Action onComplete)
     {
         float elapsed = 0f;
 
@@ -269,11 +263,16 @@ public class PlayerMove : MonoBehaviour
             float height = Mathf.Sin(t * Mathf.PI) * _jumpHeight;
             transform.position = Vector3.Lerp(start, end, t) + Vector3.up * height;
 
+            // 進行方向をスムーズに更新
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, t);
+
             yield return null;
         }
 
         onComplete?.Invoke();
     }
+
     #endregion
 
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class PlayerHealth : MonoBehaviour
     private float _damageTimer = 0f;        // ダメージを受けてからの経過時間
     private float _invincibilityTimer = 0f; // 無敵状態の経過時間
     private int _damageCount = 0;           // ダメージを受けた回数
+    private string _enemyTag = "Mob";       // 敵オブジェクトを識別するタグ
 
     [Header("ダメージのクールダウン時間")]
     [SerializeField]
@@ -17,13 +19,27 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField]
     private float _invincibilityTime = 2f;  // 無敵時間
 
+    [Header("ダメージ時に色が変わる画面")]
+    [SerializeField] 
+    Image DamageImg;
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Mob"))
+        {
+            TakeDamage();
+        }
+    }
+
     void Update()
     {
         HandleDamageRecovery();
         HandleInvincibility();
 
-        // デバッグ：Dキーでデバッグモードの切り替え
-        if (Input.GetKeyDown(KeyCode.D))
+        DamageImg.color = Color.Lerp(DamageImg.color, Color.clear, Time.deltaTime);
+
+        // デバッグ：Rキーでデバッグモードの切り替え
+        if (Input.GetKeyDown(KeyCode.R))
         {
             ToggleDebugMode();
         }
@@ -82,12 +98,15 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
+        DamageImg.color = new Color(0.7f, 0, 0, 0.7f);
+
         // 初回ダメージ処理
         _isDamaged = true;
         _isInvincible = true;
         _damageTimer = 0f; // ダメージタイマーをリセット
         _invincibilityTimer = 0f; // 無敵タイマーをリセット
         _damageCount++;
+
     }
 
     /// <summary>
