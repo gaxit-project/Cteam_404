@@ -1,20 +1,33 @@
 ﻿using UnityEngine;
 using SplineMesh;
+using Unity.VisualScripting;
 
 public class RailManager : MonoBehaviour
 {
     [Header("対象のレール")]
     public Spline TargetRail;             // 管理対象のレール
 
+    [Header("対象のレール")]
+    public LineRenderer line;             // 管理対象のレール
+
     [Header("参照用オブジェクト")]
     [SerializeField] private GameObject _referencePrefab; // レール上に配置する参照用オブジェクトのプレハブ
-    [SerializeField] private float _spacing = 1f;         // 参照用オブジェクトの間隔（メートル単位）
+    [SerializeField] private float _spacing = 0.2f;         // 参照用オブジェクトの間隔（メートル単位）
 
     public GameObject[] ReferenceObjects;  // 配置した参照用オブジェクトの配列
     public float[] RailPositions;          // 各オブジェクトに対応するスプライン上の位置（0〜1）
 
     void Start()
     {
+        TargetRail = GetComponent<Spline>();
+        this.AddComponent<LineRenderer>();
+        line = GetComponent<LineRenderer>();
+
+        //線の幅を決める
+        this.line.startWidth = 0.1f;
+        this.line.endWidth = 0.1f;
+
+
         GenerateReferenceObjects();
     }
 
@@ -33,6 +46,9 @@ public class RailManager : MonoBehaviour
         ReferenceObjects = new GameObject[objectCount];
         RailPositions = new float[objectCount];
 
+        //頂点の数を決める
+        this.line.positionCount = objectCount;
+
         // 参照用オブジェクトを生成
         for (int i = 0; i < objectCount; i++)
         {
@@ -49,6 +65,12 @@ public class RailManager : MonoBehaviour
             // 配列に保存
             ReferenceObjects[i] = referenceObject;
             RailPositions[i] = distance / railLength; // スプライン全体での位置を0〜1で保存
+
+            if(i != 0)
+            {
+                line.SetPosition(i - 1, ReferenceObjects[i - 1].transform.position);
+                line.SetPosition(i, ReferenceObjects[i].transform.position);
+            }
         }
     }
 
