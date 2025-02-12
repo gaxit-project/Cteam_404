@@ -32,11 +32,11 @@ public partial class Player
             owner.MoveAlongRail();
             owner.UpdateReferencePositions();
 
-            if (Input.GetKeyDown(KeyCode.A) && owner._leftPosition)
+            if (Input.GetKeyDown(KeyCode.W) && owner._leftPosition)
             {
                 owner.ChangeState(new StateJump(owner._leftRail, owner._leftRailPosition, owner.left));
             }
-            else if (Input.GetKeyDown(KeyCode.D) && owner._rightPosition)
+            else if (Input.GetKeyDown(KeyCode.S) && owner._rightPosition)
             {
                 owner.ChangeState(new StateJump(owner._rightRail, owner._rightRailPosition, owner.right));
             }
@@ -111,15 +111,15 @@ public partial class Player
                     {
                         _leftPosition = true;
                         _leftRail = manager.TargetRail;
-                        _leftRailPosition = manager.GetNearRailPosition(i);
-                        left = manager.GetNearPosition(i);
+                        _leftRailPosition = manager.GetJumpRailPosition(i);
+                        left = manager.GetJumpPosition(i);
                     }
                     else if (dot < -0.5f && !_leftPosition) // ‰E‘¤
                     {
                         _rightPosition = true;
                         _rightRail = manager.TargetRail;
-                        _rightRailPosition = manager.GetNearRailPosition(i);
-                        right = manager.GetNearPosition(i);
+                        _rightRailPosition = manager.GetJumpRailPosition(i);
+                        right = manager.GetJumpPosition(i);
                     }
                 }
             }

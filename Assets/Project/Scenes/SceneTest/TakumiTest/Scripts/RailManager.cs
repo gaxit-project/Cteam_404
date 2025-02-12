@@ -14,6 +14,8 @@ public class RailManager : MonoBehaviour
     [SerializeField] private GameObject _referencePrefab; // レール上に配置する参照用オブジェクトのプレハブ
     [SerializeField] private float _spacing = 0.2f;         // 参照用オブジェクトの間隔（メートル単位）
 
+    private int jumpIndex = 10;
+
     public GameObject[] ReferenceObjects;  // 配置した参照用オブジェクトの配列
     public float[] RailPositions;          // 各オブジェクトに対応するスプライン上の位置（0〜1）
 
@@ -151,7 +153,41 @@ public class RailManager : MonoBehaviour
     /// <returns>スプライン上の位置（0〜1）</returns>
     public float GetNearRailPosition(int index)
     {
-        if (index >= 0 && index < RailPositions.Length)
+        if (0 <= index && index < RailPositions.Length)
+        {
+            return RailPositions[index];
+        }
+
+        Debug.LogWarning("指定されたインデックスが範囲外です。");
+        return -1f; // 範囲外の場合のエラー値
+    }
+
+
+    public Vector3 GetJumpPosition(int index)
+    {
+        if(index+jumpIndex >= ReferenceObjects.Length)
+        {
+            index = (index + jumpIndex) - ReferenceObjects.Length;
+        }
+        else
+        {
+            index += jumpIndex;
+        }
+        return ReferenceObjects[index].transform.position;
+    }
+
+    public float GetJumpRailPosition(int index)
+    {
+        if (index + jumpIndex >= ReferenceObjects.Length)
+        {
+            index = (index + jumpIndex) - ReferenceObjects.Length;
+        }
+        else
+        {
+            index += jumpIndex;
+        }
+
+        if (0 <= index && index < RailPositions.Length)
         {
             return RailPositions[index];
         }
