@@ -21,12 +21,10 @@ public partial class Player
 
         public override void OnEnter(Player owner, PlayerStateBase prevState)
         {
-            owner._isJumping = true;
             owner.StartCoroutine(owner.JumpCoroutine(owner, owner.transform.position, target, owner.transform.forward, () =>
             {
                 owner.CurrentRail = targetRail;
                 owner._railPosition = targetPosition;
-                owner._isJumping = false;
                 owner.ChangeState(new StateRailMove());
             }));
         }

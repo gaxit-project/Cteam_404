@@ -5,22 +5,24 @@ using Unity.VisualScripting;
 
 public partial class  Player : MonoBehaviour
 {
-    public Spline CurrentRail;
-    public float Speed = 5f;
+    [Header("現在のレール")]
+    public  Spline CurrentRail;
+    [Header("レール上スピード")]
+    public float Speed = 10f;
+    [Header("ジャンプ高さ")]
     public float JumpHeight = 2f;
+    [Header("ジャンプ時間")]
     public float JumpDuration = 0.5f;
+    [Header("現在のレール")]
     public float RotateSpeed;
     [Header("レールへの吸着が発生する距離")]
-    public float _snapDistance = 1.5f; // 吸着が有効となる距離
+    public float _snapDistance = 8f; // 吸着が有効となる距離
 
     private Rigidbody rb;
     private Animator animator;
     private PlayerStateBase currentState;
 
-    public Vector3 po = Vector3.zero;
-
-    public float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
-    private bool _isJumping = false;        // ジャンプ中かどうかのフラグ
+    protected float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
     private bool _leftPosition = false;     // 左側にレールがあるか
     private bool _rightPosition = false;    // 右側にレールがあるか
     private Vector3 left;
@@ -31,16 +33,15 @@ public partial class  Player : MonoBehaviour
     private float _rightRailPosition = 0f;  // 右レールの位置 (0〜1で表現)
     private bool canFall = false;
 
-    public bool isRide = true;
+    protected bool isRide = true;
 
 
-    public bool isAttacking = false; // 攻撃中かどうかのフラグ
-    public bool canRide = false; // 攻撃中かどうかのフラグ
+    protected bool isAttacking = false; // 攻撃中かどうかのフラグ
+    protected bool canRide = false; // 攻撃中かどうかのフラグ
 
 
 
     private static readonly StateRailMove stateRailMove = new StateRailMove();
-    //private static readonly StateJump stateJump = new StateJump(null, 0f, );
     private static readonly StateAttack stateAttack = new StateAttack();
 
 

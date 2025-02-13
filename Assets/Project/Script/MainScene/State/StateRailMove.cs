@@ -14,6 +14,9 @@ public partial class Player
 
         public override void OnUpdate(Player owner)
         {
+
+            Debug.Log("現在のレール : " + owner.CurrentRail);
+
             owner._railPosition += owner.Speed * Time.deltaTime / owner.CurrentRail.Length;
             if (owner._railPosition >= 0.9999f)
             {
@@ -32,6 +35,9 @@ public partial class Player
             owner.MoveAlongRail();
             owner.UpdateReferencePositions();
 
+            #region プレイヤーレール操作
+
+            // レール移動
             if (Input.GetKeyDown(KeyCode.W) && owner._leftPosition)
             {
                 owner.ChangeState(new StateJump(owner._leftRail, owner._leftRailPosition, owner.left));
@@ -41,12 +47,23 @@ public partial class Player
                 owner.ChangeState(new StateJump(owner._rightRail, owner._rightRailPosition, owner.right));
             }
 
-            // Enterキーで攻撃
+            // レール加減速
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                
+            }
+            else if (Input.GetKeyDown(KeyCode.D))
+            {
+                
+            }
+
+            // 攻撃
             if (Input.GetKeyDown("h"))
             {
                 Debug.Log("攻撃");
                 owner.ChangeState(stateAttack);
             }
+            #endregion
         }
     }
 
@@ -97,7 +114,41 @@ public partial class Player
                 int closestIndex = manager.GetNearPositionIndex(transform.position);
                 if (closestIndex == -1) continue; // 有効な参照がない場合スキップ
 
-                for (int i = 0; i < manager.ReferenceObjects.Length; i++)
+                Vector3 referenceObject = manager.GetNearPosition(closestIndex);
+                float distance = Vector3.Distance(transform.position, referenceObject);
+
+                if (distance > _snapDistance) continue; // スナップ距離外の場合スキップ
+
+                Vector3 toObject = referenceObject - transform.position;
+                float dot = Vector3.Dot(transform.right, toObject.normalized);
+
+                if (dot < -0.5f && !_leftPosition) // 左側
+                {
+                    _leftPosition = true;
+                    _leftRail = manager.TargetRail;
+                    _leftRailPosition = manager.GetJumpRailPosition(closestIndex);
+                    left = manager.GetJumpPosition(closestIndex);
+                }
+                else if (dot > 0.5f && !_rightPosition) // 右側
+                {
+                    _rightPosition = true;
+                    _rightRail = manager.TargetRail;
+                    _rightRailPosition = manager.GetJumpRailPosition(closestIndex);
+                    right = manager.GetJumpPosition(closestIndex);
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+                /*for (int i = 0; i < manager.ReferenceObjects.Length; i++)
                 {
                     Vector3 referenceObject = manager.GetNearPosition(i);
                     float distance = Vector3.Distance(transform.position, referenceObject);
@@ -105,23 +156,23 @@ public partial class Player
                     if (distance > _snapDistance) continue; // スナップ距離外の場合スキップ
 
                     Vector3 toObject = referenceObject - transform.position;
-                    float dot = Vector3.Dot(Vector3.right, toObject.normalized);
+                    float dot = Vector3.Dot(transform.right, toObject.normalized);
 
-                    if (dot > 0.5f && !_rightPosition) // 左側
+                    if (dot < -0.5f && !_leftPosition) // 左側
                     {
                         _leftPosition = true;
                         _leftRail = manager.TargetRail;
                         _leftRailPosition = manager.GetJumpRailPosition(i);
                         left = manager.GetJumpPosition(i);
                     }
-                    else if (dot < -0.5f && !_leftPosition) // 右側
+                    else if (dot > 0.5f && !_rightPosition) // 右側
                     {
                         _rightPosition = true;
                         _rightRail = manager.TargetRail;
                         _rightRailPosition = manager.GetJumpRailPosition(i);
                         right = manager.GetJumpPosition(i);
                     }
-                }
+                }*/
             }
         }
         catch (System.Exception ex)

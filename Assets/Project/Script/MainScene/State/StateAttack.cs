@@ -12,7 +12,7 @@ public partial class Player
         float time = 0;
         public override void OnEnter(Player owner, PlayerStateBase prevState)
         {
-            float time = 0;
+            time = 0;
             owner.animator.SetTrigger("isAttack");
         }
 
