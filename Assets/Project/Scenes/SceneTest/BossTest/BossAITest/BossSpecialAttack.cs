@@ -3,6 +3,7 @@ using UnityEngine;
 public class BossSpecialAttack : MonoBehaviour
 {
     [SerializeField] private ParticleSystem specialEffect; // 必殺技のパーティクルエフェクト
+    [SerializeField] private Collider attackCollider;
 
     private void Update()
     {
@@ -20,6 +21,12 @@ public class BossSpecialAttack : MonoBehaviour
             specialEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             specialEffect.Play(); // パーティクルを再生
             Debug.Log("必殺技発動！");
+
+            if (attackCollider != null)
+            {
+                attackCollider.enabled = true;
+            }
+
             Invoke(nameof(StopSpecialEffect), 3f);
         }
         else
@@ -34,6 +41,19 @@ public class BossSpecialAttack : MonoBehaviour
         {
             specialEffect.Stop();
             Debug.Log("必殺技終了");
+        }
+
+        if(attackCollider != null)
+        {
+            attackCollider.enabled = false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("プレイヤーに当たった");
         }
     }
 }
