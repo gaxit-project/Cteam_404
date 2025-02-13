@@ -358,6 +358,7 @@ MonoBehaviour:
   specialAttackScript: {fileID: 884749850}
   firstPhaseAttackInterval: 5
   secondPhaseAttackInterval: 2.5
+  chargeTime: 3
   isSecondPhase: 0
 --- !u!1 &1504262197
 GameObject:
@@ -496,6 +497,10 @@ PrefabInstance:
     - target: {fileID: 2267751200672894311, guid: ffd3f42a25f44bf4ab47cc57b151c720, type: 3}
       propertyPath: m_Name
       value: SpecialLaser
+      objectReference: {fileID: 0}
+    - target: {fileID: 2267751200672894311, guid: ffd3f42a25f44bf4ab47cc57b151c720, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2380252216030446196, guid: ffd3f42a25f44bf4ab47cc57b151c720, type: 3}
       propertyPath: playOnAwake

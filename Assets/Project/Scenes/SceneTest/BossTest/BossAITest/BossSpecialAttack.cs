@@ -4,14 +4,11 @@ public class BossSpecialAttack : MonoBehaviour
 {
     [SerializeField] private ParticleSystem specialEffect; // 必殺技のパーティクルエフェクト
     [SerializeField] private Collider attackCollider;
+    private BossStateAI bossAI;
 
-    private void Update()
+    private void Start()
     {
-        // Kキーが押されたら必殺技発動
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            ExecuteAttack();
-        }
+        bossAI = FindObjectOfType<BossStateAI>();
     }
 
     public void ExecuteAttack()
@@ -47,6 +44,8 @@ public class BossSpecialAttack : MonoBehaviour
         {
             attackCollider.enabled = false;
         }
+
+        bossAI.SpecialAttackFinished();
     }
 
     private void OnTriggerEnter(Collider other)

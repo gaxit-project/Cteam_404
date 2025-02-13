@@ -6,17 +6,21 @@ public class BossStateAI : MonoBehaviour
     enum State
     {
         doNothing,
+        charging,
+        specialAttack,
         attack
     }
 
     [SerializeField] private List<MonoBehaviour> attackScripts; // 攻撃スクリプト
-    [SerializeField] private MonoBehaviour specialAttackScript; // 必殺技スクリプト
+    [SerializeField] private BossSpecialAttack specialAttackScript; // 必殺技スクリプト
     [SerializeField] private float firstPhaseAttackInterval = 5f; // 第一形態の攻撃間隔
     [SerializeField] private float secondPhaseAttackInterval = 2.5f; // 第二形態の攻撃間隔
+    [SerializeField] private float chargeTime = 3f; // 必殺技チャージ時間
     [SerializeField] private bool isSecondPhase = false; // 第二形態に移行するか
 
     private float attackInterval;
     private float attackTimer = 0f;
+    private float chargeTimer = 0f;
     private State currentState = State.doNothing;
     private bool stateEnter = true;
 
@@ -28,6 +32,7 @@ public class BossStateAI : MonoBehaviour
 
     private void Update()
     {
+
         attackTimer += Time.deltaTime;
 
         // 数字の2キーで第二形態へ移行（テスト用）
@@ -36,10 +41,10 @@ public class BossStateAI : MonoBehaviour
             EnterSecondPhase();
         }
 
-        // Kキーで必殺技を発動
+        // Kキーで必殺技を発動（テスト用）
         if (Input.GetKeyDown(KeyCode.K))
         {
-            ExecuteSpecialAttack();
+            ChangeState(State.charging);
         }
 
         switch (currentState)
@@ -55,6 +60,29 @@ public class BossStateAI : MonoBehaviour
                 {
                     ChangeState(State.attack);
                     return;
+                }
+                break;
+
+            case State.charging:
+                if (stateEnter)
+                {
+                    stateEnter = false;
+                    chargeTimer = 0f;
+                    Debug.Log("必殺技チャージ中");
+                }
+
+                chargeTimer += Time.deltaTime;
+                if(chargeTimer >= chargeTime)
+                {
+                    ChangeState(State.specialAttack);
+                }
+                break;
+
+            case State.specialAttack:
+                if (stateEnter)
+                {
+                    stateEnter = false;
+                    ExecuteSpecialAttack();
                 }
                 break;
 
@@ -97,17 +125,20 @@ public class BossStateAI : MonoBehaviour
 
     private void ExecuteSpecialAttack()
     {
-        if (specialAttackScript == null) return;
-
-        var method = specialAttackScript.GetType().GetMethod("ExecuteAttack");
-        if (method != null)
+        if (specialAttackScript != null)
         {
-            method.Invoke(specialAttackScript, null);
+            specialAttackScript.ExecuteAttack();
+            Debug.Log("必殺技開始");
         }
         else
         {
             Debug.LogWarning($"{specialAttackScript.name} に ExecuteAttack メソッドがありません！");
         }
+    }
+    
+    public void SpecialAttackFinished()
+    {
+        ChangeState(State.doNothing);
     }
 
     /// <summary>
