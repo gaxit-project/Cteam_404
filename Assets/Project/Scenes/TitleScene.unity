@@ -633,6 +633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: 
+  Canvas: {fileID: 0}
 --- !u!114 &422520960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1320,6 +1321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: MainScene
+  Canvas: {fileID: 0}
 --- !u!1 &1422571893
 GameObject:
   m_ObjectHideFlags: 0
@@ -1559,6 +1561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: Setting
+  Canvas: {fileID: 0}
 --- !u!1001 &4422147810230005331
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1567,17 +1570,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 428016393658043902, guid: 0824162a52a74704c9a39d5af1527554, type: 3}
-      propertyPath: m_Volume
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 1316551798493742681, guid: 0824162a52a74704c9a39d5af1527554, type: 3}
       propertyPath: m_Name
       value: Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 7864623128911793347, guid: 0824162a52a74704c9a39d5af1527554, type: 3}
-      propertyPath: m_Volume
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7893099625307894494, guid: 0824162a52a74704c9a39d5af1527554, type: 3}
       propertyPath: m_LocalPosition.x
