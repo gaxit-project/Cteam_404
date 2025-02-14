@@ -24,7 +24,10 @@ public class AudioManager : MonoBehaviour
     public Slider BGMSlider;
 
     private float seVolume = 0.5f;
-    private float bgmVolume = 0.5f; 
+    private float bgmVolume = 0.5f;
+
+    private int BuildIndex;
+
 
     
 
@@ -66,26 +69,30 @@ public class AudioManager : MonoBehaviour
         PlayBGM(0);
         PlaySound(0);
     }
-    private void Update()
+    public void Update()
     {
-        int BuildIndex = PlayerPrefs.GetInt("CurrentSceneKey");
-        if (BuildIndex == 1 || BuildIndex == 2)
+        PauseManager pauseManager = PauseManager.GetInstance();  // PauseManagerのインスタンスを取得
+        if(pauseManager != null)
         {
-            if (SESlider == null && BGMSlider == null)
+            GameObject canvas = pauseManager.GetCanvas(); // pauseManagerからCanvasを取得
+            if (BuildIndex == 1 || (BuildIndex == 2 && canvas != null && canvas.activeSelf))
             {
+                if (SESlider != null && BGMSlider != null)
+                {
 
-                SESlider.onValueChanged.AddListener(delegate { OnSEVolumeChange(); });
-                BGMSlider.onValueChanged.AddListener(delegate { OnBGMVolumeChange(); });
-
+                    SESlider.onValueChanged.AddListener(delegate { OnSEVolumeChange(); });
+                    BGMSlider.onValueChanged.AddListener(delegate { OnBGMVolumeChange(); });
+                }
             }
         }
+        
     }
 
     /// <summary>
     /// スライダー初期化
     /// </summary>
     
-    private void InitializeSliders()
+    public void InitializeSliders()
     {
         SESlider = GameObject.Find("Canvas/seSlider").GetComponent<Slider>();
         BGMSlider = GameObject.Find("Canvas/bgmSlider").GetComponent<Slider>();
@@ -113,7 +120,9 @@ public class AudioManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name == "Setting" || scene.name == "MainScene") // Settingシーンにいるときだけ処理を実行
+        BuildIndex = scene.buildIndex; //ビルド番号を取得
+        
+        if(scene.name == "Setting") // Settingシーンにいるときだけ処理を実行
         {
             InitializeSliders();
         }
@@ -130,6 +139,7 @@ public class AudioManager : MonoBehaviour
         seVolume = SESlider.value;
         _audioSourceSE.volume = SESlider.value;
         PlayerPrefs.SetFloat("SEVolume", seVolume);
+        PlayerPrefs.Save();
     }
 
     /// <summary>
