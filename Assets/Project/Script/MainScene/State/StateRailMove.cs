@@ -7,31 +7,17 @@ public partial class Player
     /// </summary>
     public class StateRailMove : PlayerStateBase
     {
+        private float _currentSpeed;
+
+
         public override void OnEnter(Player owner, PlayerStateBase prevState)
         {
             owner.animator.SetBool("isRide", true);
+            _currentSpeed = owner.Speed;
         }
 
         public override void OnUpdate(Player owner)
         {
-
-            Debug.Log("現在のレール : " + owner.CurrentRail);
-
-            owner._railPosition += owner.Speed * Time.deltaTime / owner.CurrentRail.Length;
-            if (owner._railPosition >= 0.9999f)
-            {
-                if (owner.canFall)
-                {
-                    owner.isRide = false;
-                    owner.canFall = false;
-                    owner._railPosition = 0f;
-                }
-                else
-                {
-                    owner._railPosition = 0f; // ループ処理
-                }
-            }
-
             owner.MoveAlongRail();
             owner.UpdateReferencePositions();
 
@@ -48,13 +34,14 @@ public partial class Player
             }
 
             // レール加減速
-            if (Input.GetKeyDown(KeyCode.A))
+            _currentSpeed = owner.Speed;
+            if (Input.GetKey(KeyCode.A))
             {
-                
+                _currentSpeed = owner.MinSpeed;
             }
-            else if (Input.GetKeyDown(KeyCode.D))
+            else if (Input.GetKey(KeyCode.D))
             {
-                
+                _currentSpeed = owner.MaxSpeed;
             }
 
             // 攻撃
@@ -64,6 +51,23 @@ public partial class Player
                 owner.ChangeState(stateAttack);
             }
             #endregion
+
+            Debug.Log("現在の速度:" + _currentSpeed);
+
+            owner._railPosition += _currentSpeed * Time.deltaTime / owner.CurrentRail.Length;
+            if (owner._railPosition >= 0.9999f)
+            {
+                if (owner.canFall)
+                {
+                    owner.isRide = false;
+                    owner.canFall = false;
+                    owner._railPosition = 0f;
+                }
+                else
+                {
+                    owner._railPosition = 0f; // ループ処理
+                }
+            }
         }
     }
 

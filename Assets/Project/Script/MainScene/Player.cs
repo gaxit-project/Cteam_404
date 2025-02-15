@@ -2,6 +2,7 @@
 using SplineMesh;
 using UnityEngine.UIElements;
 using Unity.VisualScripting;
+using UnityEditor;
 
 public partial class  Player : MonoBehaviour
 {
@@ -9,12 +10,16 @@ public partial class  Player : MonoBehaviour
     public  Spline CurrentRail;
     [Header("レール上スピード")]
     public float Speed = 10f;
+    private float MinSpeed = 5f;
+    private float MaxSpeed = 15f;
+
+
     [Header("ジャンプ高さ")]
     public float JumpHeight = 2f;
     [Header("ジャンプ時間")]
     public float JumpDuration = 0.5f;
-    [Header("現在のレール")]
-    public float RotateSpeed;
+    //[Header("現在のレール")]
+    //public float RotateSpeed;
     [Header("レールへの吸着が発生する距離")]
     public float _snapDistance = 8f; // 吸着が有効となる距離
 
