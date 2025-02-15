@@ -11,23 +11,48 @@ public class BossStateAI : MonoBehaviour
         attack
     }
 
-    [SerializeField] private List<MonoBehaviour> attackScripts; // 攻撃スクリプト
-    [SerializeField] private BossSpecialAttack specialAttackScript; // 必殺技スクリプト
-    [SerializeField] private float firstPhaseAttackInterval = 5f; // 第一形態の攻撃間隔
+    [Header("通常攻撃")]
+    [InspectorName("通常攻撃スクリプト")]
+    [SerializeField] private List<MonoBehaviour> attackScripts;
+
+    [Header("必殺技")]
+    [InspectorName("必殺技スクリプト")]
+    [SerializeField] private BossSpecialAttack specialAttackScript;
+    [InspectorName("チャージSE")]
+    [SerializeField] private AudioSource chargeSound;
+    [InspectorName("チャージエフェクト")]
+    [SerializeField] private ParticleSystem chargeEffect;
+    [InspectorName("チャージエフェクト停止タイミング")]
+    [SerializeField, Range(0f, 1f)] private float chargeEffectStopRatio = 0.8f;
+    [InspectorName("必殺技チャージ時間")]
+    [SerializeField] private float chargeTime = 3f;
+
+    [Header("第一形態ステータス")]
+    [InspectorName("攻撃頻度")]
+    [SerializeField] private float firstPhaseAttackInterval = 5f;
+
+    [Header("第二形態ステータス")]
+    [SerializeField] private bool isSecondPhase = false;
+    [InspectorName("攻撃頻度")]
     [SerializeField] private float secondPhaseAttackInterval = 2.5f; // 第二形態の攻撃間隔
-    [SerializeField] private float chargeTime = 3f; // 必殺技チャージ時間
-    [SerializeField] private bool isSecondPhase = false; // 第二形態に移行するか
 
     private float attackInterval;
     private float attackTimer = 0f;
     private float chargeTimer = 0f;
     private State currentState = State.doNothing;
     private bool stateEnter = true;
+    private Animator animator;
 
     private void Start()
     {
         // 初期状態の攻撃間隔を設定
         attackInterval = isSecondPhase ? secondPhaseAttackInterval : firstPhaseAttackInterval;
+        animator = GetComponent<Animator>();
+
+        if(chargeEffect != null)
+        {
+            chargeEffect.Stop();
+        }
     }
 
     private void Update()
@@ -69,9 +94,39 @@ public class BossStateAI : MonoBehaviour
                     stateEnter = false;
                     chargeTimer = 0f;
                     Debug.Log("必殺技チャージ中");
+
+                    if (chargeEffect != null)
+                    {
+                        chargeEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear); ;
+                        chargeEffect.Play();
+                    }
+
+                    if(chargeSound != null)
+                    {
+                        chargeSound.Play();
+                    }
+
+                    if (animator != null)
+                    {
+                        animator.SetTrigger("Charge");
+                    }
                 }
 
                 chargeTimer += Time.deltaTime;
+
+                if(chargeTimer >= chargeTime * chargeEffectStopRatio)
+                {
+                    if(chargeEffect != null && chargeEffect.isPlaying)
+                    {
+                        chargeEffect.Stop();
+                    }
+
+                    if (chargeEffect != null && chargeEffect.isPlaying)
+                    {
+                        chargeSound.Stop();
+                    }
+                }
+
                 if(chargeTimer >= chargeTime)
                 {
                     ChangeState(State.specialAttack);
@@ -102,6 +157,28 @@ public class BossStateAI : MonoBehaviour
     {
         currentState = newState;
         stateEnter = true;
+
+        if(currentState != State.charging)
+        {
+            StopChargeEffect();
+            StopSound();
+        }
+    }
+
+    private void StopChargeEffect()
+    {
+        if(chargeSound != null)
+        {
+            chargeEffect.Stop();
+        }
+    }
+
+    private void StopSound()
+    {
+        if(chargeSound != null)
+        {
+            chargeSound.Stop();
+        }
     }
 
     private void ExecuteRandomAttack()
@@ -133,6 +210,11 @@ public class BossStateAI : MonoBehaviour
         else
         {
             Debug.LogWarning($"{specialAttackScript.name} に ExecuteAttack メソッドがありません！");
+        }
+
+        if(chargeEffect != null)
+        {
+            chargeEffect.Stop();
         }
     }
     
