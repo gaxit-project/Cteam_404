@@ -12,11 +12,14 @@ public class MobGenerate : MonoBehaviour
     [Header("プレイヤーオブジェクト")]
     [SerializeField] private GameObject player; // プレイヤーオブジェクト
 
-    [Header("探知距離")]
-    [SerializeField] private float _distance = 10f; // プレイヤーとの最大探知距離
-
     [Header("生成間隔 (秒)")]
-    [SerializeField] private float spawnInterval = 5f; // 生成間隔
+    [SerializeField] private float spawnInterval = 10f; // 生成間隔
+
+    [Header("出現距離")]
+    [SerializeField] private int _distance = 40; // プレイヤーと出現位置の距離
+
+    [Header("削除タイミング(秒)")]
+    [SerializeField] private float _destroyDelay = 20f; // 出現後削除するまでの時間(秒)
 
     private float _timer;
 
@@ -41,7 +44,7 @@ public class MobGenerate : MonoBehaviour
 
     private void Generate()
     {
-        RailManager[] railManagers = FindObjectsOfType<RailManager>();
+        RailManager[] railManagers = FindObjectsByType<RailManager>(FindObjectsSortMode.None);
         if (railManagers.Length == 0) return;
         Debug.Log("Gen1");
 
@@ -51,8 +54,9 @@ public class MobGenerate : MonoBehaviour
         TargetRail = selectedRail.TargetRail;
 
         // プレイヤーに最も近いインデックスを取得
-        int nearestIndex = selectedRail.GetMobPositionIndex(player.transform.position);
+        int nearestIndex = selectedRail.GetNearPositionIndex(player.transform.position);
         if (nearestIndex == -1) return; // 有効な位置がない場合は終了
+        nearestIndex += _distance;
         Debug.Log("Gen2");
 
         // 場所取得
@@ -73,6 +77,8 @@ public class MobGenerate : MonoBehaviour
 
         // オブジェクトを生成して配置
         GameObject enemyObject = Instantiate(MobEnemy, refarence , Quaternion.identity);
+
+        Destroy(enemyObject, _destroyDelay);
 
         Debug.Log("せいせい");
 

@@ -25,7 +25,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("Mob"))
+        if(collision.gameObject.CompareTag(_enemyTag))
         {
             TakeDamage();
         }
@@ -82,6 +82,7 @@ public class PlayerHealth : MonoBehaviour
     /// </summary>
     public void TakeDamage()
     {
+        Debug.Log("ダメージ！");
         // 無敵の場合はダメージを無効化
         if (_isInvincible)
         {
@@ -115,6 +116,7 @@ public class PlayerHealth : MonoBehaviour
     public void GameOver()
     {
         //　ゲームオーバーになった時に起こるイベントなどを挿入する
+        SceneChangeManager.Instance.GameOver();
     }
 
     // デバッグモードの切り替え
