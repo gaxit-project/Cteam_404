@@ -35,7 +35,7 @@ public class SceneChangeManager : MonoBehaviour
     private void Update()
     {
         int BuildIndex = SceneManager.GetActiveScene().buildIndex;
-        Debug.Log(BuildIndex);
+        
 
         if(BuildIndex == 2)
         {
