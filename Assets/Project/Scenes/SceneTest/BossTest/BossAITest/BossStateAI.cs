@@ -231,7 +231,7 @@ public class BossStateAI : MonoBehaviour
         if (!isSecondPhase)
         {
             isSecondPhase = true;
-            attackInterval = secondPhaseAttackInterval; // 攻撃スピード変更
+            attackInterval = secondPhaseAttackInterval;
             Debug.Log("Bossは第二形態に進化した！");
         }
     }

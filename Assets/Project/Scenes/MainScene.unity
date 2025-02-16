@@ -1819,7 +1819,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 261180276}
-  - component: {fileID: 261180277}
   m_Layer: 0
   m_Name: BossAttack
   m_TagString: Untagged
@@ -1836,38 +1835,15 @@ Transform:
   m_GameObject: {fileID: 261180275}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0005493164, y: -49.18451, z: 229.91394}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 473.3337, y: -174.09225, z: -381.39072}
+  m_LocalScale: {x: 0.6666667, y: 0.5, z: 0.6666667}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2054337286}
   - {fileID: 777212107}
   - {fileID: 1686426206}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2027227761}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &261180277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 261180275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34ed52c656017a34f9e668da051cfc5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackScripts:
-  - {fileID: 2054337285}
-  - {fileID: 777212106}
-  specialAttackScript: {fileID: 1686426207}
-  chargeSound: {fileID: 1128220525}
-  chargeEffect: {fileID: 1128220522}
-  chargeEffectStopRatio: 0.8
-  chargeTime: 3
-  firstPhaseAttackInterval: 5
-  isSecondPhase: 0
-  secondPhaseAttackInterval: 2.5
 --- !u!43 &284397024
 Mesh:
   m_ObjectHideFlags: 8
@@ -4359,7 +4335,6 @@ MonoBehaviour:
   Speed: 10
   JumpHeight: 2
   JumpDuration: 0.5
-  RotateSpeed: 0
   _snapDistance: 8
 --- !u!1 &931007342
 GameObject:
@@ -15855,6 +15830,9 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 3436220754313051031, guid: a75bc6a9359045148a55a6987cd7e382, type: 3}
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5192734662630476933, guid: a75bc6a9359045148a55a6987cd7e382, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 261180276}
     - targetCorrespondingSourceObject: {fileID: 8067830784143010446, guid: a75bc6a9359045148a55a6987cd7e382, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1140368545}
@@ -15865,10 +15843,63 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1513260645}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1377065018809765641, guid: a75bc6a9359045148a55a6987cd7e382, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2027227763}
+    - targetCorrespondingSourceObject: {fileID: 1377065018809765641, guid: a75bc6a9359045148a55a6987cd7e382, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2027227762}
     - targetCorrespondingSourceObject: {fileID: 4844130388739117136, guid: a75bc6a9359045148a55a6987cd7e382, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1644250970}
   m_SourcePrefab: {fileID: 100100000, guid: a75bc6a9359045148a55a6987cd7e382, type: 3}
+--- !u!1 &2027227760 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1377065018809765641, guid: a75bc6a9359045148a55a6987cd7e382, type: 3}
+  m_PrefabInstance: {fileID: 2027227759}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2027227761 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5192734662630476933, guid: a75bc6a9359045148a55a6987cd7e382, type: 3}
+  m_PrefabInstance: {fileID: 2027227759}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2027227762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027227760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34ed52c656017a34f9e668da051cfc5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackScripts:
+  - {fileID: 2054337285}
+  - {fileID: 777212106}
+  specialAttackScript: {fileID: 1686426207}
+  chargeSound: {fileID: 1128220525}
+  chargeEffect: {fileID: 1128220522}
+  chargeEffectStopRatio: 0.8
+  chargeTime: 3
+  firstPhaseAttackInterval: 5
+  isSecondPhase: 0
+  secondPhaseAttackInterval: 2.5
+--- !u!114 &2027227763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027227760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28d212a4b1b055b439795d0bd723a48a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  phaseTwoThreshold: 50
 --- !u!1 &2054337284
 GameObject:
   m_ObjectHideFlags: 0
@@ -16113,7 +16144,6 @@ SceneRoots:
   - {fileID: 492454767}
   - {fileID: 192180832}
   - {fileID: 2027227759}
-  - {fileID: 261180276}
   - {fileID: 1862989189}
   - {fileID: 1054549637}
   - {fileID: 1352356382}
