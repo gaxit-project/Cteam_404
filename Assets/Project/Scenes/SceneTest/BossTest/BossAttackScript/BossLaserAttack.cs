@@ -2,67 +2,83 @@ using UnityEngine;
 
 public class BossLaserAttack : MonoBehaviour
 {
-    public Transform centerObject; // 円の中心
-    public Transform player; // プレイヤー
-    public float lookBackTime = 0.5f; // どれくらい前の位置を取得するか
-    public float attackDuration = 3f; // 攻撃が続く時間（秒）
+    [Header("円設定")]
+    [InspectorName("円の中心")]
+    public Transform centerObject;
+    [InspectorName("プレイヤーオブジェクト")]
+    public Transform player;
 
-    private Vector3 predictedPlayerPosition; // 予測したプレイヤーの少し前の座標
+    [Header("レーザー設定")]
+    [InspectorName("レーザーパーティクル")]
+    public ParticleSystem laserParticle;
+    [InspectorName("レーザー発射角度(度数法)")]
+    public float forwardOffsetAngle = 10f;
+    [InspectorName("攻撃時間")]
+    public float attackDuration = 3f;
+
+    private Vector3 targetPosition; // 固定されたターゲット位置
     private bool isAttacking = false;
     private float attackTimer = 0f;
-    private float previousAngle = 0f; // プレイヤーの前フレームの角度
 
     void Update()
     {
         if (isAttacking)
         {
-            // 攻撃中は座標を固定する
             attackTimer -= Time.deltaTime;
             if (attackTimer <= 0)
             {
-                isAttacking = false; // 攻撃終了
+                isAttacking = false;
+                laserParticle.Stop();
             }
+            Debug.DrawLine(centerObject.position, targetPosition, Color.red); // ターゲット位置
         }
-        else
-        {
-            // プレイヤーの円周上の情報を取得
-            Vector3 toPlayer = player.position - centerObject.position;
-            float radius = toPlayer.magnitude;
-
-            // 現在の角度を求める (XZ平面)
-            float currentAngle = Mathf.Atan2(toPlayer.z, toPlayer.x);
-
-            // プレイヤーの角速度を計算（前フレームとの差分）
-            float angularVelocity = (currentAngle - previousAngle) / Time.deltaTime;
-
-            // 過去の角度を計算
-            float pastAngle = currentAngle - angularVelocity * lookBackTime;
-
-            // 円周上の「少し前の位置」を計算
-            predictedPlayerPosition = centerObject.position + new Vector3(Mathf.Cos(pastAngle), 0, Mathf.Sin(pastAngle)) * radius;
-
-            // 角度を更新
-            previousAngle = currentAngle;
-        }
-
-        // デバッグ用の表示
-        Debug.DrawLine(centerObject.position, player.position, Color.green); // 現在の位置
-        Debug.DrawLine(centerObject.position, predictedPlayerPosition, Color.red); // 少し前の位置
     }
 
-    // 外部から呼び出し可能な攻撃開始メソッド
     public void StartAttack()
     {
         if (!isAttacking)
         {
             isAttacking = true;
             attackTimer = attackDuration;
+
+            // 攻撃開始時にターゲット位置を固定
+            targetPosition = PredictPlayerFuturePosition();
+
+            // パーティクルシステムの位置と向きを設定
+            laserParticle.transform.position = centerObject.position;
+            laserParticle.transform.LookAt(targetPosition);
+
+            // パーティクルシステムを再生
+            laserParticle.Play();
         }
     }
 
-    // 攻撃対象の座標を取得
-    public Vector3 GetTargetPosition()
+    /// <summary>
+    /// プレイヤーの未来位置を予測するメソッド
+    /// </summary>
+    /// <returns></returns>
+    private Vector3 PredictPlayerFuturePosition()
     {
-        return predictedPlayerPosition;
+        // プレイヤーの現在の半径（円周の大きさ）を取得
+        float dynamicRadius = Vector3.Distance(centerObject.position, player.position);
+
+        // プレイヤーの現在の位置から円の中心へのベクトルを求める
+        Vector3 radiusVector = (player.position - centerObject.position).normalized;
+
+        // プレイヤーの現在の角度を求める
+        float currentAngle = Mathf.Atan2(radiusVector.z, radiusVector.x) * Mathf.Rad2Deg;
+
+        // 指定した角度分、進行方向に前方の座標を求める
+        float targetAngle = currentAngle + forwardOffsetAngle;
+        float radians = targetAngle * Mathf.Deg2Rad;
+
+        // 動的な半径に基づいて円周上の新しい位置を計算
+        Vector3 predictedPosition = new Vector3(
+            centerObject.position.x + Mathf.Cos(radians) * dynamicRadius,
+            player.position.y, // 高さはプレイヤーと同じ
+            centerObject.position.z + Mathf.Sin(radians) * dynamicRadius
+        );
+
+        return predictedPosition;
     }
 }
