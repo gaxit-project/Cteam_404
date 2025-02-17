@@ -6,13 +6,14 @@ public class BossHealth : EnemyHealth
     [SerializeField] private int phaseTwoThreshold;
     private bool isPhaseTwo = false;
     private BossStateAI bossStateAI;
+    private BossHealthUI bossHealthUI;
 
     protected override void Start()
     {
         base.Start();
         bossStateAI =  GetComponent<BossStateAI>();
+        bossHealthUI = FindObjectOfType<BossHealthUI>();
     }
-
 
     /// <summary>
     /// テスト用のため後日削除
@@ -37,6 +38,15 @@ public class BossHealth : EnemyHealth
         if(!isPhaseTwo && currentHealth <= phaseTwoThreshold)
         {
             EnterPhaseTwo();
+        }
+    }
+
+    protected override void Die()
+    {
+        base.Die();
+        if(bossHealthUI != null)
+        {
+            bossHealthUI.DestroyHealthBar();
         }
     }
 

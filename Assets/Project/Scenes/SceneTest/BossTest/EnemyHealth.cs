@@ -11,6 +11,11 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = maxHealth;　//HP初期化
     }
 
+    public int GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+
     /// <summary>
     /// ダメージを受ける処理
     /// </summary>
