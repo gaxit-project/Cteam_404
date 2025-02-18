@@ -66,6 +66,7 @@ public class SceneChangeManager : MonoBehaviour
     public void SceneChange(string sceneName) // startボタンを押すとメインシーンに遷移
     {
         SceneManager.LoadSceneAsync(sceneName);
+        Time.timeScale = 1.0f;
     }
 
 
