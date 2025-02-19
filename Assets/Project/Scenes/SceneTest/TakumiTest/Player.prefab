@@ -105,7 +105,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65f8296d734d7cc448926542190f3a6c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6870069875488514787}
+      addedObject: {fileID: 5445898944116675913}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65f8296d734d7cc448926542190f3a6c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3758199679271197621}
@@ -115,9 +115,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65f8296d734d7cc448926542190f3a6c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8857481707651914676}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65f8296d734d7cc448926542190f3a6c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1086779967630688650}
   m_SourcePrefab: {fileID: 100100000, guid: 65f8296d734d7cc448926542190f3a6c, type: 3}
 --- !u!4 &2557281578196759063 stripped
 Transform:
@@ -129,7 +126,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 65f8296d734d7cc448926542190f3a6c, type: 3}
   m_PrefabInstance: {fileID: 4235889168602533343}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6870069875488514787
+--- !u!114 &5445898944116675913
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,15 +135,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 3893800653708308622}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ba250d96b01bc1489a38bfeac4eed75, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a349fe042135ed4f9173a90cccb5bf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpHeight: 2
-  _jumpDuration: 0.5
-  _snapDistance: 4
-  _speed: 5
   CurrentRail: {fileID: 0}
-  RotateSpeed: 10
+  Speed: 10
+  JumpHeight: 2
+  JumpDuration: 0.5
+  RotateSpeed: 0
+  _snapDistance: 8
+  po: {x: 0, y: 0, z: 0}
+  _railPosition: 0
+  isRide: 1
+  isAttacking: 0
+  canRide: 0
 --- !u!95 &3758199679271197621
 Animator:
   serializedVersion: 7
@@ -219,20 +221,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &1086779967630688650
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3893800653708308622}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4ce241c7236b46449176e2b66b4becd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 4
-  RotateSpeed: 10
 --- !u!1001 &6334611896124834044
 PrefabInstance:
   m_ObjectHideFlags: 0
