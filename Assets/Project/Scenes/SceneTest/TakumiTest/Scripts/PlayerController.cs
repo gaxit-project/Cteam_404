@@ -15,6 +15,11 @@ public class PlayerController : MonoBehaviour
     private bool isAttacking = false; // 攻撃中かどうかのフラグ
     private bool canRide = false; // 攻撃中かどうかのフラグ
 
+    public bool IsAttacking()
+    {
+        return isAttacking;
+    }
+    
     // アニメーターコンポーネント
     private Animator animator;
 
@@ -31,15 +36,15 @@ public class PlayerController : MonoBehaviour
         // Enterキーで攻撃
         if (Input.GetKeyDown(KeyCode.Return) && !isAttacking && !canRide)
         {
-            if(!isAttacking && !canRide)
+            if (!isAttacking && !canRide)
             {
                 Attack();
             }
-            else if(!isAttacking && canRide)
+            else if (!isAttacking && canRide)
             {
                 PlayerPrefs.SetInt("isRide", 1);
             }
-            
+
         }
     }
 
@@ -48,7 +53,7 @@ public class PlayerController : MonoBehaviour
 
 
         animator.SetFloat("speed", MoveValue.magnitude);
-        Debug.Log("速度" +  MoveValue.magnitude);
+        //Debug.Log("速度" +  MoveValue.magnitude);
 
         MoveValue = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical")).normalized;
 
@@ -73,6 +78,9 @@ public class PlayerController : MonoBehaviour
 
         // Debug.Logで攻撃を出力
         Debug.Log("攻撃!");
+
+        //1秒後にEndattackを呼び出して終了
+        Invoke("EndAttack", 1.0f);
     }
 
     // アニメーションイベントまたは遅延処理で攻撃終了を検知
@@ -84,7 +92,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("RailArea"))
+        if (other.CompareTag("RailArea"))
         {
             canRide = true;
         }
