@@ -23,8 +23,8 @@ public class AudioManager : MonoBehaviour
     public Slider SESlider;
     public Slider BGMSlider;
 
-    private float seVolume = 0.5f;
-    private float bgmVolume = 0.5f;
+    private float seVolume = 0.25f;
+    private float bgmVolume = 0.25f;
 
     private int BuildIndex;
 
