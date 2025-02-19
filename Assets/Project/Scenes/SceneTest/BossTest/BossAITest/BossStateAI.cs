@@ -78,7 +78,6 @@ public class BossStateAI : MonoBehaviour
                 if (stateEnter)
                 {
                     stateEnter = false;
-                    Debug.Log("Boss‚Í”÷Î‚ñ‚Å‚¢‚é");
                 }
 
                 if (attackTimer >= attackInterval)
