@@ -7,20 +7,22 @@ public class CameraController : MonoBehaviour
     public Transform boss;   // ボスのTransform
 
     [Header("カメラ移動設定")]
-    public float baseDistance = 5f; // プレイヤーからの基本距離
-    public float minDistance = 3f;  // 最小距離
-    public float maxDistance = 12f; // 最大距離
-    public float heightOffset = 1.5f; // プレイヤーの頭上位置
-    public float lateralOffset = 1.0f; // カメラの横位置補正
+    public float baseDistance = 10f; // プレイヤーからの基本距離
+    public float minDistance = 5f;  // 最小距離
+    public float maxDistance = 23f; // 最大距離
+    public float heightOffset = 20f; // プレイヤーの頭上位置
+    public float lateralOffset = 1f; // カメラの横位置補正
+    public float cameraMinDistance = 50f; // カメラが最も近づく距離
+    public float cameraMaxDistance = 70f; // カメラが最も遠ざかる距離
 
     [Header("ばねカメラ設定")]
     public float springStrength = 10f; // ばねの強さ
     public float damping = 5f;         // 減衰（ダンピング）
 
     [Header("FOV設定")]
-    public float minFOV = 40f;  // 最小FOV
-    public float maxFOV = 80f;  // 最大FOV
-    public float fovPadding = 2f; // 余白
+    public float minFOV = 50f;  // 最小FOV
+    public float maxFOV = 90f;  // 最大FOV
+    public float fovPadding = 5f; // 余白
     public float fovSmoothing = 5f; // FOVのスムージング
 
     private Vector3 velocity; // カメラ移動の速度
@@ -35,19 +37,16 @@ public class CameraController : MonoBehaviour
     {
         if (player == null || boss == null) return;
 
-        // 1. プレイヤーとボスの中間点を取得
-        Vector3 midpoint = (player.position + boss.position) / 2;
+        // 1. プレイヤーとボスの距離を取得
+        float playerToBossDistance = Vector3.Distance(player.position, boss.position);
 
-        // 2. カメラの視点位置を計算（プレイヤーの後方に配置）
+        // 2. カメラの距離を動的に変更（ボスが近ければ遠ざけ、ボスが遠ければ近づける）
+        float dynamicDistance = Mathf.Lerp(cameraMaxDistance, cameraMinDistance, playerToBossDistance / maxDistance);
+        dynamicDistance = Mathf.Clamp(dynamicDistance, cameraMinDistance, cameraMaxDistance);
+
+        // 3. カメラのターゲット位置を計算
         Vector3 playerToBoss = (boss.position - player.position).normalized; // プレイヤー→ボスの方向
-        Vector3 targetCameraPosition = player.position
-                                      - playerToBoss * baseDistance // プレイヤーの後ろに配置
-                                      + Vector3.up * heightOffset   // 少し上にオフセット
-                                      + Vector3.right * lateralOffset; // 横方向の補正
-
-        // 3. プレイヤーとボスの距離に応じてカメラの距離を調整
-        float dynamicDistance = Mathf.Clamp(Vector3.Distance(player.position, boss.position), minDistance, maxDistance);
-        targetCameraPosition = player.position - playerToBoss * dynamicDistance + Vector3.up * heightOffset;
+        Vector3 targetCameraPosition = player.position - playerToBoss * dynamicDistance + Vector3.up * heightOffset + Vector3.right * lateralOffset;
 
         // 4. ばねカメラの移動計算
         Vector3 springForce = (targetCameraPosition - transform.position) * springStrength;
@@ -58,14 +57,17 @@ public class CameraController : MonoBehaviour
         // 5. ボスを見つめるようにカメラを回転
         transform.LookAt(boss.position);
 
-        // 6. FOVを調整してプレイヤーとボスを収める
-        AdjustFOV();
+        // 6. FOVを調整して3レーンを常に視界に入れる
+        AdjustFOV(playerToBossDistance);
     }
 
-    private void AdjustFOV()
+    private void AdjustFOV(float playerToBossDistance)
     {
-        float targetDistance = Vector3.Distance(player.position, boss.position);
-        float targetFOV = Mathf.Clamp(targetDistance + fovPadding, minFOV, maxFOV);
+        // 3レーンが視界に収まるようにFOVを調整
+        float targetFOV = Mathf.Lerp(maxFOV, minFOV, playerToBossDistance / maxDistance);
+        targetFOV = Mathf.Clamp(targetFOV + fovPadding, minFOV, maxFOV);
+
+        // なめらかに補間
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, targetFOV, Time.deltaTime * fovSmoothing);
     }
 }

@@ -3,29 +3,33 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    private bool _isDamaged = false;        // ダメージを受けているか
-    private bool _isInvincible = false;     // 無敵時間であるか
-    private bool _isDebug = false;          // デバッグモードが有効か
-    private float _damageTimer = 0f;        // ダメージを受けてからの経過時間
-    private float _invincibilityTimer = 0f; // 無敵状態の経過時間
-    private int _damageCount = 0;           // ダメージを受けた回数
-    private string _enemyTag = "Mob";       // 敵オブジェクトを識別するタグ
+    private bool _isDamaged = false;
+    private bool _isInvincible = false;
+    private bool _isDebug = false;
+    private float _damageTimer = 0f;
+    private float _invincibilityTimer = 0f;
+    private int _damageCount = 0;
+    private string _enemyTag = "Mob";
 
     [Header("ダメージのクールダウン時間")]
     [SerializeField]
-    private float _damageCooldownTime = 3f; // ダメージの回復時間
+    private float _damageCooldownTime = 3f;
 
     [Header("無敵時間")]
     [SerializeField]
-    private float _invincibilityTime = 2f;  // 無敵時間
+    private float _invincibilityTime = 2f;
 
     [Header("ダメージ時に色が変わる画面")]
-    [SerializeField] 
-    Image DamageImg;
+    [SerializeField]
+    private Image _damageImg;
+
+    [Header("ダメージエフェクトの点滅速度")]
+    [SerializeField]
+    private float _blinkSpeed = 5f; // 点滅速度
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("Mob"))
+        if (collision.gameObject.CompareTag(_enemyTag))
         {
             TakeDamage();
         }
@@ -35,8 +39,7 @@ public class PlayerHealth : MonoBehaviour
     {
         HandleDamageRecovery();
         HandleInvincibility();
-
-        DamageImg.color = Color.Lerp(DamageImg.color, Color.clear, Time.deltaTime);
+        HandleDamageEffect();
 
         // デバッグ：Rキーでデバッグモードの切り替え
         if (Input.GetKeyDown(KeyCode.R))
@@ -46,8 +49,21 @@ public class PlayerHealth : MonoBehaviour
     }
 
     /// <summary>
-    /// ダメージを受けてからの回復時間をチェックし，isDamagedを更新
+    /// ダメージエフェクトの処理
     /// </summary>
+    private void HandleDamageEffect()
+    {
+        if (_isDamaged)
+        {
+            float alpha = (Mathf.Sin(Time.time * _blinkSpeed) + 1f) / 2f; // 0～1の範囲で変化
+            _damageImg.color = new Color(0.7f, 0, 0, alpha * 0.7f); // 最大0.7の透明度で点滅
+        }
+        else
+        {
+            _damageImg.color = Color.clear;
+        }
+    }
+
     private void HandleDamageRecovery()
     {
         if (_isDamaged)
@@ -61,9 +77,6 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 無敵時間をチェックし，isInvincibleを更新
-    /// </summary>
     private void HandleInvincibility()
     {
         if (_isInvincible)
@@ -77,18 +90,15 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// ダメージを受けた時の処理
-    /// </summary>
     public void TakeDamage()
     {
-        // 無敵の場合はダメージを無効化
+        Debug.Log("ダメージ！");
+
         if (_isInvincible)
         {
             return;
         }
 
-        // ダメージを受けている最中に再度ダメージを受けたらゲームオーバー
         if (_isDamaged)
         {
             if (!_isDebug)
@@ -98,26 +108,18 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
-        DamageImg.color = new Color(0.7f, 0, 0, 0.7f);
-
-        // 初回ダメージ処理
         _isDamaged = true;
         _isInvincible = true;
-        _damageTimer = 0f; // ダメージタイマーをリセット
-        _invincibilityTimer = 0f; // 無敵タイマーをリセット
+        _damageTimer = 0f;
+        _invincibilityTimer = 0f;
         _damageCount++;
-
     }
 
-    /// <summary>
-    /// ゲームオーバー時の処理
-    /// </summary>
     public void GameOver()
     {
-        //　ゲームオーバーになった時に起こるイベントなどを挿入する
+        SceneChangeManager.Instance.GameOver();
     }
 
-    // デバッグモードの切り替え
     private void ToggleDebugMode()
     {
         _isDebug = !_isDebug;

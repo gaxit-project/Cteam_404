@@ -35,7 +35,7 @@ public class SceneChangeManager : MonoBehaviour
     private void Update()
     {
         int BuildIndex = SceneManager.GetActiveScene().buildIndex;
-        Debug.Log(BuildIndex);
+        
 
         if(BuildIndex == 2)
         {
@@ -66,6 +66,7 @@ public class SceneChangeManager : MonoBehaviour
     public void SceneChange(string sceneName) // startボタンを押すとメインシーンに遷移
     {
         SceneManager.LoadSceneAsync(sceneName);
+        Time.timeScale = 1.0f;
     }
 
 

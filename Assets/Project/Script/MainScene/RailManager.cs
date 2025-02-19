@@ -2,7 +2,6 @@
 using SplineMesh;
 using Unity.VisualScripting;
 using System;
-using UnityEditor.Search;
 
 public class RailManager : MonoBehaviour
 {
@@ -91,9 +90,6 @@ public class RailManager : MonoBehaviour
     public int GetNearPositionIndex(Vector3 position)
     {
         int closestIndex = -1;
-        int left = 0;
-        int right = ReferenceObjects.Length - 1;
-        int middle = 0;
 
         float closestDistance = float.MaxValue;
 
@@ -107,7 +103,6 @@ public class RailManager : MonoBehaviour
                 closestIndex = i;
             }
         }
-
         return closestIndex;
     }
 
