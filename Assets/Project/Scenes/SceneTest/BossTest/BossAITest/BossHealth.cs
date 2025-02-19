@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BossHealth : EnemyHealth
 {
@@ -48,6 +49,8 @@ public class BossHealth : EnemyHealth
         {
             bossHealthUI.DestroyHealthBar();
         }
+
+        SceneManager.LoadScene("GameClear");
     }
 
     private void EnterPhaseTwo()
