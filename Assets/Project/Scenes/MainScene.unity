@@ -17102,7 +17102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28d212a4b1b055b439795d0bd723a48a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 150
   phaseTwoThreshold: 50
 --- !u!114 &2027227764
 MonoBehaviour:
