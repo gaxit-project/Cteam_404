@@ -21,6 +21,8 @@ public class NormalLaser : MonoBehaviour
     public AudioClip warningSound;
     private AudioSource audioSource;
 
+    public LayerMask playerLayer;
+
     private Vector3 laserStart;
     private Vector3 laserEnd;
     private Collider warningCollider;
@@ -87,11 +89,13 @@ public class NormalLaser : MonoBehaviour
                 audioSource.Play();
             }
 
+            // メッシュレンダーをONにして可視化
             if (warningRenderer != null)
             {
                 warningRenderer.enabled = true;
             }
 
+            // コライダーを有効化（ビームが消えるまで残す）
             if (warningCollider != null)
             {
                 warningCollider.enabled = true;
@@ -104,9 +108,6 @@ public class NormalLaser : MonoBehaviour
     private IEnumerator LaserWarningCoroutine()
     {
         yield return new WaitForSeconds(warningDuration);
-
-        // レーザー発射の瞬間に警告エリアのコライダー内にいるプレイヤーを判定
-        ApplyLaserDamage();
 
         // 警告エリアの見た目だけ消す（コライダーは残す）
         if (warningRenderer != null)
@@ -129,16 +130,11 @@ public class NormalLaser : MonoBehaviour
         }
     }
 
-    private void ApplyLaserDamage()
+    void OnTriggerEnter(Collider other)
     {
-        if (player == null) return;
-
-        Collider playerCollider = player.GetComponent<Collider>();
-        if (playerCollider == null || warningCollider == null) return;
-
-        if (warningCollider.bounds.Intersects(playerCollider.bounds))
+        if (other.CompareTag("Player"))
         {
-            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage();
