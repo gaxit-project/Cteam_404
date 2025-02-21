@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,6 +27,8 @@ public class BossStateAI : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float chargeEffectStopRatio = 0.8f;
     [InspectorName("必殺技チャージ時間")]
     [SerializeField] private float chargeTime = 3f;
+    [InspectorName("必殺技発動間隔")]
+    [SerializeField] private float specialAttackInterval = 30f;
 
     [Header("第一形態ステータス")]
     [InspectorName("攻撃頻度")]
@@ -34,7 +37,9 @@ public class BossStateAI : MonoBehaviour
     [Header("第二形態ステータス")]
     [SerializeField] private bool isSecondPhase = false;
     [InspectorName("攻撃頻度")]
-    [SerializeField] private float secondPhaseAttackInterval = 2.5f; // 第二形態の攻撃間隔
+    [SerializeField] private float secondPhaseAttackInterval = 2.5f;
+    
+    private bool isSpecialAttackReady = true;
 
     private float attackInterval;
     private float attackTimer = 0f;
@@ -45,31 +50,30 @@ public class BossStateAI : MonoBehaviour
 
     private void Start()
     {
-        // 初期状態の攻撃間隔を設定
         attackInterval = isSecondPhase ? secondPhaseAttackInterval : firstPhaseAttackInterval;
         animator = GetComponent<Animator>();
 
-        if(chargeEffect != null)
+        if (chargeEffect != null)
         {
             chargeEffect.Stop();
         }
+
+        StartCoroutine(DelayedSpecialAttackStart());
+    }
+
+    private IEnumerator DelayedSpecialAttackStart()
+    {
+        yield return new WaitForSeconds(30f);
+        StartCoroutine(AutomaticSpecialAttack());
     }
 
     private void Update()
     {
-
         attackTimer += Time.deltaTime;
 
-        // 数字の2キーで第二形態へ移行（テスト用）
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             EnterSecondPhase();
-        }
-
-        // Kキーで必殺技を発動（テスト用）
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            ChangeState(State.charging);
         }
 
         switch (currentState)
@@ -92,7 +96,6 @@ public class BossStateAI : MonoBehaviour
                 {
                     stateEnter = false;
                     chargeTimer = 0f;
-                    Debug.Log("必殺技チャージ中");
 
                     if (chargeEffect != null)
                     {
@@ -100,7 +103,7 @@ public class BossStateAI : MonoBehaviour
                         chargeEffect.Play();
                     }
 
-                    if(chargeSound != null)
+                    if (chargeSound != null)
                     {
                         chargeSound.Play();
                     }
@@ -113,9 +116,9 @@ public class BossStateAI : MonoBehaviour
 
                 chargeTimer += Time.deltaTime;
 
-                if(chargeTimer >= chargeTime * chargeEffectStopRatio)
+                if (chargeTimer >= chargeTime * chargeEffectStopRatio)
                 {
-                    if(chargeEffect != null && chargeEffect.isPlaying)
+                    if (chargeEffect != null && chargeEffect.isPlaying)
                     {
                         chargeEffect.Stop();
                     }
@@ -126,7 +129,7 @@ public class BossStateAI : MonoBehaviour
                     }
                 }
 
-                if(chargeTimer >= chargeTime)
+                if (chargeTimer >= chargeTime)
                 {
                     ChangeState(State.specialAttack);
                 }
@@ -157,7 +160,7 @@ public class BossStateAI : MonoBehaviour
         currentState = newState;
         stateEnter = true;
 
-        if(currentState != State.charging)
+        if (currentState != State.charging)
         {
             StopChargeEffect();
             StopSound();
@@ -166,7 +169,7 @@ public class BossStateAI : MonoBehaviour
 
     private void StopChargeEffect()
     {
-        if(chargeSound != null)
+        if (chargeSound != null)
         {
             chargeEffect.Stop();
         }
@@ -174,7 +177,7 @@ public class BossStateAI : MonoBehaviour
 
     private void StopSound()
     {
-        if(chargeSound != null)
+        if (chargeSound != null)
         {
             chargeSound.Stop();
         }
@@ -193,10 +196,6 @@ public class BossStateAI : MonoBehaviour
             method.Invoke(attackScript, null);
             attackTimer = 0f; // タイマーをリセット
         }
-        else
-        {
-            Debug.LogWarning($"{attackScript.name} に ExecuteAttack メソッドがありません！");
-        }
     }
 
     private void ExecuteSpecialAttack()
@@ -204,19 +203,14 @@ public class BossStateAI : MonoBehaviour
         if (specialAttackScript != null)
         {
             specialAttackScript.ExecuteAttack();
-            Debug.Log("必殺技開始");
-        }
-        else
-        {
-            Debug.LogWarning($"{specialAttackScript.name} に ExecuteAttack メソッドがありません！");
         }
 
-        if(chargeEffect != null)
+        if (chargeEffect != null)
         {
             chargeEffect.Stop();
         }
     }
-    
+
     public void SpecialAttackFinished()
     {
         ChangeState(State.doNothing);
@@ -232,6 +226,24 @@ public class BossStateAI : MonoBehaviour
             isSecondPhase = true;
             attackInterval = secondPhaseAttackInterval;
             Debug.Log("Bossは第二形態に進化した！");
+        }
+    }
+
+    /// <summary>
+    /// 30秒ごとに必殺技を発動するコルーチン
+    /// </summary>
+    private IEnumerator AutomaticSpecialAttack()
+    {
+        while (true)
+        {
+            if (isSpecialAttackReady)
+            {
+                ChangeState(State.charging);
+                isSpecialAttackReady = false;
+                yield return new WaitForSeconds(specialAttackInterval);
+                isSpecialAttackReady = true;
+            }
+            yield return null;
         }
     }
 }

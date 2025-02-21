@@ -21,7 +21,7 @@ public class BossHealth : EnemyHealth
     /// </summary>
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.O))
         {
             Debug.Log("ボスに10ダメージ");
             TakeDamage(10);

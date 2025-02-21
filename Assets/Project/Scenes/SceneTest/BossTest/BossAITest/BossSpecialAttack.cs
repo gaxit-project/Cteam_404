@@ -3,9 +3,11 @@ using System.Collections;
 
 public class BossSpecialAttack : MonoBehaviour
 {
-    [SerializeField] private ParticleSystem specialEffect; // 必殺技のパーティクルエフェクト
+    [SerializeField] private ParticleSystem specialEffect;
     [SerializeField] private Collider attackCollider;
     [SerializeField] private AudioSource specialAttackSound;
+    [SerializeField] private int damageAmount = 10;
+
     private BossStateAI bossAI;
 
     private void Start()
@@ -15,12 +17,10 @@ public class BossSpecialAttack : MonoBehaviour
 
     public void ExecuteAttack()
     {
-        // 溜めが終わった後、必殺技発動
         if (specialEffect != null)
         {
             specialEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             specialEffect.Play();
-            Debug.Log("必殺技発動！");
 
             if(specialAttackSound != null)
             {
@@ -34,10 +34,6 @@ public class BossSpecialAttack : MonoBehaviour
 
             Invoke(nameof(StopSpecialEffect), 3f);
         }
-        else
-        {
-            Debug.LogWarning("必殺技エフェクトがアタッチされていません！");
-        }
     }
 
     private void StopSpecialEffect()
@@ -45,7 +41,6 @@ public class BossSpecialAttack : MonoBehaviour
         if(specialEffect != null)
         {
             specialEffect.Stop();
-            Debug.Log("必殺技終了");
         }
 
         if(attackCollider != null)
@@ -61,11 +56,15 @@ public class BossSpecialAttack : MonoBehaviour
         bossAI.SpecialAttackFinished();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider collision)
     {
-        if (other.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("プレイヤーに当たった");
+            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage();
+            }
         }
     }
 }
