@@ -35,7 +35,6 @@ public class NormalLaser : MonoBehaviour
         }
         audioSource.clip = warningSound;
 
-        // 警告エリアのコライダーとメッシュレンダーを取得（最初は非表示）
         warningCollider = warningArea.GetComponent<Collider>();
         warningRenderer = warningArea.GetComponent<MeshRenderer>();
 
@@ -47,7 +46,7 @@ public class NormalLaser : MonoBehaviour
 
         if (warningRenderer != null)
         {
-            warningRenderer.enabled = false; // 初期状態では非表示
+            warningRenderer.enabled = false;
         }
     }
 
@@ -88,13 +87,11 @@ public class NormalLaser : MonoBehaviour
                 audioSource.Play();
             }
 
-            // メッシュレンダーをONにして可視化
             if (warningRenderer != null)
             {
                 warningRenderer.enabled = true;
             }
 
-            // コライダーを有効化（ビームが消えるまで残す）
             if (warningCollider != null)
             {
                 warningCollider.enabled = true;
@@ -139,14 +136,12 @@ public class NormalLaser : MonoBehaviour
         Collider playerCollider = player.GetComponent<Collider>();
         if (playerCollider == null || warningCollider == null) return;
 
-        // 警告エリアのコライダー内にプレイヤーがいるか確認
         if (warningCollider.bounds.Intersects(playerCollider.bounds))
         {
             PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage();
-                Debug.Log("Playerがレーザーダメージを受けた");
             }
         }
     }
