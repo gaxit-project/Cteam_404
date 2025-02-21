@@ -21,11 +21,9 @@ public class NormalLaser : MonoBehaviour
     public AudioClip warningSound;
     private AudioSource audioSource;
 
-    public LayerMask playerLayer;
-
     private Vector3 laserStart;
     private Vector3 laserEnd;
-    private Collider warningCollider;
+    private BoxCollider warningCollider;
     private MeshRenderer warningRenderer;
 
     void Start()
@@ -37,18 +35,19 @@ public class NormalLaser : MonoBehaviour
         }
         audioSource.clip = warningSound;
 
-        warningCollider = warningArea.GetComponent<Collider>();
+        // 警告エリアのコライダーとメッシュレンダーを取得（最初は非表示）
+        warningCollider = warningArea.GetComponent<BoxCollider>();
         warningRenderer = warningArea.GetComponent<MeshRenderer>();
 
         if (warningCollider != null)
         {
-            warningCollider.isTrigger = true;
-            warningCollider.enabled = false;
+            warningCollider.isTrigger = true; // トリガーとして設定
+            warningCollider.enabled = false;  // 警告エリアのコライダーは最初無効
         }
 
         if (warningRenderer != null)
         {
-            warningRenderer.enabled = false;
+            warningRenderer.enabled = false; // 初期状態では非表示
         }
     }
 
@@ -82,7 +81,8 @@ public class NormalLaser : MonoBehaviour
 
             warningArea.transform.position = warningCenter;
             warningArea.transform.rotation = Quaternion.LookRotation(laserEnd - laserStart);
-            warningArea.transform.localScale = new Vector3(warningArea.transform.localScale.x, warningArea.transform.localScale.y, laserLength);
+            warningArea.transform.localScale = Vector3.one; // スケールを(1,1,1)にリセット
+            warningCollider.size = new Vector3(1f, 5f, laserLength); // Yサイズを5に変更（プレイヤーの高さに合わせる）
 
             if (!audioSource.isPlaying)
             {
@@ -109,11 +109,11 @@ public class NormalLaser : MonoBehaviour
     {
         yield return new WaitForSeconds(warningDuration);
 
-        // 警告エリアの見た目だけ消す（コライダーは残す）
-        if (warningRenderer != null)
-        {
-            warningRenderer.enabled = false;
-        }
+        // 警告エリアの見た目を維持（必要に応じてコメントアウト）
+        // if (warningRenderer != null)
+        // {
+        //     warningRenderer.enabled = false;
+        // }
 
         // レーザー発射
         laserLine.SetPosition(0, laserStart);
@@ -128,17 +128,41 @@ public class NormalLaser : MonoBehaviour
         {
             warningCollider.enabled = false;
         }
+        if (warningRenderer != null)
+        {
+            warningRenderer.enabled = false; // レーザー終了後に非表示
+        }
     }
 
+    // 警告エリアにプレイヤーが触れたときの処理
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        Debug.Log($"OnTriggerEnter が呼ばれました: {other.gameObject.name}, Tag: {other.tag}, Position: {other.transform.position}, Collider: {other.GetType().Name}, Is Trigger: {other.isTrigger}");
+
+        // warningArea自身を除外し、プレイヤーのみを検知
+        if (other.CompareTag("Player") && other.gameObject != warningArea)
         {
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage();
+                Debug.Log("Playerがレーザーダメージを受けた");
             }
+            else
+            {
+                Debug.LogError("PlayerHealth component not found on player!");
+            }
+        }
+    }
+
+    // デバッグ用：BoxColliderの範囲をGizmosで表示
+    private void OnDrawGizmos()
+    {
+        if (warningCollider != null && warningCollider.enabled)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.matrix = warningCollider.transform.localToWorldMatrix;
+            Gizmos.DrawWireCube(Vector3.zero, warningCollider.size);
         }
     }
 }
