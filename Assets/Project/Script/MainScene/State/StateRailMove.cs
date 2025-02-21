@@ -1,4 +1,6 @@
+using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public partial class Player
 {
@@ -8,7 +10,6 @@ public partial class Player
     public class StateRailMove : PlayerStateBase
     {
         private float _currentSpeed;
-
 
         public override void OnEnter(Player owner, PlayerStateBase prevState)
         {
@@ -23,32 +24,59 @@ public partial class Player
 
             #region プレイヤーレール操作
 
-            // レール移動
-            if (Input.GetKeyDown(KeyCode.W) && owner._leftPosition)
+            _currentSpeed = owner.Speed;
+
+            Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            float angle = Mathf.Atan2(input.y, input.x) * Mathf.Rad2Deg;
+            if (input.magnitude > 0.1f) // 適当な閾値
             {
-                owner.ChangeState(new StateJump(owner._leftRail, owner._leftRailPosition, owner.left));
-            }
-            else if (Input.GetKeyDown(KeyCode.S) && owner._rightPosition)
-            {
-                owner.ChangeState(new StateJump(owner._rightRail, owner._rightRailPosition, owner.right));
+                if (angle >= 45 && angle < 135) // 上
+                {
+                    if (owner._leftPosition)
+                    {
+                        owner.ChangeState(new StateJump(owner._leftRail, owner._leftRailPosition, owner.left));
+                    }
+                }
+                else if (angle >= -135 && angle < -45) // 下
+                {
+                    if (owner._rightPosition)
+                    {
+                        owner.ChangeState(new StateJump(owner._rightRail, owner._rightRailPosition, owner.right));
+                    }
+                }
+                else if (angle >= -45 && angle < 45) // 右
+                {
+                    _currentSpeed = owner.MaxSpeed;
+                }
+                else // 左
+                {
+                    _currentSpeed = owner.MinSpeed;
+                }
             }
 
-            // レール加減速
-            _currentSpeed = owner.Speed;
-            if (Input.GetKey(KeyCode.A))
-            {
-                _currentSpeed = owner.MinSpeed;
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                _currentSpeed = owner.MaxSpeed;
-            }
+
 
             // 攻撃
-            if (Input.GetKeyDown("h"))
+            if (owner.isJumping)
             {
-                Debug.Log("攻撃");
+                owner.isJumping = !owner.isJumping;
                 owner.ChangeState(stateAttack);
+            }
+
+            if (owner.canULT)
+            {
+                // 長押しの進捗を取得
+                progress = owner._holdAction.GetTimeoutCompletionPercentage();
+                // 進捗が1以上になったときの処理
+                if (progress >= 1 && !gaugeActivated)
+                {                    
+                    owner._holdAction.Disable();  // Actionを一旦無効化
+                    owner._holdAction.Enable();   // すぐに有効化して次の入力に備える
+                    progress = 0.0f;
+
+                    Debug.Log("ULT発動");
+                    owner.ChangeState(stateUltAttack);
+                }
             }
             #endregion
 
@@ -83,7 +111,14 @@ public partial class Player
             {
                 var splineSample = CurrentRail.GetSampleAtDistance(_railPosition * CurrentRail.Length);
                 transform.position = splineSample.location;
-                transform.forward = splineSample.tangent;
+                if (isULT)
+                {
+                    transform.LookAt(_boss.transform.position);
+                }
+                else
+                {
+                    transform.forward = splineSample.tangent;
+                }
             }
             catch (System.Exception ex)
             {

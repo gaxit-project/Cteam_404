@@ -3,47 +3,22 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    private PlayerBeam _playerBeam;
-    private PlayerController _playerController;
+    private Player _playerScript;
+
 
     private void Start()
     {
-        _playerBeam = GetComponentInParent<PlayerBeam>();
-
-        if(_playerBeam == null)
-        {
-            Debug.Log("PlayerBeam スクリプトが見つかりません");
-        }
-
-        // PlayerController を取得
-        _playerController = GetComponentInParent<PlayerController>();
-
-        if (_playerController == null)
-        {
-            Debug.LogError("PlayerController が見つかりません！");
-        }
+        _playerScript = GameObject.Find("Player").GetComponent<Player>();
     }
 
-    public void TriggerAttack()
-    {
-        //PlayerControllerが存在する場合、攻撃終了処理を実行
-        if (_playerController != null)
-        {
-            _playerController.EndAttack();
-        }
-    }
+
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (_playerController.IsAttacking() && collision.collider.CompareTag("Mob"))
+        if (/*_playerScript. && */collision.collider.CompareTag("Mob"))
         {
-            Debug.Log("ヒット");
-
-            if (_playerBeam != null)
-            {
-                _playerBeam.AddMobHit();
-            }
-                
+            Debug.Log("ヒット1");
+            _playerScript.AddMobHit();
             Destroy(collision.gameObject);
         }
     }
@@ -52,14 +27,10 @@ public class PlayerAttack : MonoBehaviour
     {
         Debug.Log("OnTriggerEnter が呼ばれました: " + other.name);
         
-        if (_playerController.IsAttacking() && other.CompareTag("Mob"))
+        if (/*_playerScript. && */other.CompareTag("Mob"))
         {
-            Debug.Log("ヒット");
-
-        　　if (_playerBeam != null)
-            {
-                _playerBeam.AddMobHit();
-            }
+            Debug.Log("ヒット2");
+            _playerScript.AddMobHit();
             Destroy(other.gameObject);
         }
     }

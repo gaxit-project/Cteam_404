@@ -3,6 +3,7 @@ using SplineMesh;
 using UnityEngine.UIElements;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEngine.InputSystem;
 
 public partial class  Player : MonoBehaviour
 {
@@ -12,20 +13,12 @@ public partial class  Player : MonoBehaviour
     public float Speed = 10f;
     private float MinSpeed = 5f;
     private float MaxSpeed = 15f;
-
-
     [Header("ジャンプ高さ")]
     public float JumpHeight = 2f;
     [Header("ジャンプ時間")]
     public float JumpDuration = 0.5f;
-    //[Header("現在のレール")]
-    //public float RotateSpeed;
     [Header("レールへの吸着が発生する距離")]
     public float _snapDistance = 8f; // 吸着が有効となる距離
-
-    private Rigidbody rb;
-    private Animator animator;
-    private PlayerStateBase currentState;
 
     protected float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
     private bool _leftPosition = false;     // 左側にレールがあるか
@@ -36,22 +29,92 @@ public partial class  Player : MonoBehaviour
     private Spline _rightRail = null;       // 右側のレール
     private float _leftRailPosition = 0f;   // 左レールの位置 (0〜1で表現)
     private float _rightRailPosition = 0f;  // 右レールの位置 (0〜1で表現)
-    private bool canFall = false;
 
+    #region ULT
+    [Header("ビームチャージに必要なモブ数")]
+    [SerializeField]
+    public int _attackMob = 5; //ビームを発射するために必要なモブの撃破数
+
+    [Header("ULT時間")]
+    [SerializeField]
+    public float _ultTime = 5f; //ビームの発射時間
+
+    [Header("ULT攻撃力")]
+    [SerializeField]
+    protected int _damegeULT = 50; //ULTの攻撃
+
+    [Header("ボス")]
+    [SerializeField]
+    protected GameObject _boss;
+
+    public int _mobCounter = 0;      // 倒したモブの数
+
+    protected bool canULT = false;
+    public bool isULT = false;
+    private ParticleSystem particle; // ビームのエフェクト用のパーティクルシステム
+    private SliderPlayerBeam sliderPlayerBeam;　//ビームチャージ用スライダーの管理スクリプト
+    #endregion
+
+    protected bool canFall = false;
     protected bool isRide = true;
-
-
     protected bool isAttacking = false; // 攻撃中かどうかのフラグ
-    protected bool canRide = false; // 攻撃中かどうかのフラグ
+    protected bool canRide = false; // レールに乗れるかどうかのフラグ
+    protected bool isJumping = false;
 
-
-
+    #region ステート
+    protected PlayerStateBase currentState;
     private static readonly StateRailMove stateRailMove = new StateRailMove();
     private static readonly StateAttack stateAttack = new StateAttack();
+    private static readonly StateULTAttack stateUltAttack = new StateULTAttack();
+    #endregion
 
+    private Rigidbody rb;
+    private Animator animator;
+
+
+
+
+    [SerializeField] private InputActionReference _hold;
+    [SerializeField] private Image _gaugeImage;
+
+    private InputAction _holdAction;
+    public static bool gaugeStatus = false;
+
+    public static float progress;
+    public static bool gaugeActivated = false;
+
+    float lockTime = 0;
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+
+        // Performedフェーズの判定を行う
+        if (context.phase == InputActionPhase.Performed)
+        {
+
+            isJumping = true;
+        }
+    }
+
+
+    private void Awake()
+    {
+        if (_hold == null) return;
+
+        _holdAction = _hold.action;
+        _holdAction.Enable();
+    }
 
     private void Start()
     {
+        //パーティクルシステムを取得
+        particle = GetComponentInChildren<ParticleSystem>();
+        particle.Stop();
+
+        //スライダーUIを管理するスクリプトを取得
+        //sliderPlayerBeam = GetComponentInChildren<SliderPlayerBeam>();
+        _mobCounter = 0;
+
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         ChangeState(stateRailMove);
@@ -61,6 +124,13 @@ public partial class  Player : MonoBehaviour
     {
         currentState.OnUpdate(this);
         Debug.Log("現在の状態 : " +  currentState);
+
+        //　モブ撃破数が必要数に達した場合、Enterキーでビームを発射できる
+        if (_mobCounter >= _attackMob)
+        {
+            canULT = true;
+        }
+
     }
 
     public void ChangeState(PlayerStateBase newState)
@@ -68,5 +138,17 @@ public partial class  Player : MonoBehaviour
         currentState?.OnExit(this, newState);
         newState.OnEnter(this, currentState);
         currentState = newState;
+    }
+
+    /// <summary>
+    /// モブにヒットした回数を加算するメソッド
+    /// </summary>
+    public void AddMobHit()
+    {
+        if (_mobCounter < _attackMob)
+        {
+            _mobCounter++;//撃破数を増やす
+        }
+        Debug.Log("モブヒット回数: " + _mobCounter);
     }
 }

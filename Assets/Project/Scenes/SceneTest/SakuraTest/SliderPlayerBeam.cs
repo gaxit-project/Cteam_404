@@ -1,50 +1,55 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
-
 
 /// <summary>
 /// プレイヤーのビームゲージを管理するクラス
 /// </summary>
 public class SliderPlayerBeam : MonoBehaviour
 {
-    [SerializeField]
-    Slider DashGage; //スライダーのUI
+    private Slider ULTGauge; // スライダーのUI
+    private Player playerScript; // Playerスクリプトの参照
+    private float previousMobCounter; // 前回のmobCounter値
+    private float sliderTargetValue; // 目標値
+    private float upSpeed = 2f;
+    private float changeSpeed = 2.0f; // スライダーの変化速度（0.5秒で変化するよう調整）
 
-    private float currentVelocity = 0;//スライダーの値をスムーズに変化させるための補助変数
-    private PlayerBeam playerBeam;//PlayerBeamスクリプトの参照
 
     void Start()
     {
-        // PlayerBeamコンポーネントを取得
-        playerBeam = GetComponentInParent<PlayerBeam>();
+        // スライダーのUIコンポーネント取得
+        ULTGauge = GetComponent<Slider>();
 
-        if (playerBeam == null)
-        {
-            Debug.LogError("PlayerBeam スクリプトが見つかりません！");
-            return;
-        }
+        // Playerスクリプトを取得
+        playerScript = GameObject.Find("Player").GetComponent<Player>();
 
-        //スライダーの最大値を_attackMobにする
-        DashGage.maxValue = playerBeam._attackMob;
-        DashGage.value = 0;//初期値を0に設定
+        // スライダーの最大値と初期値を設定
+        ULTGauge.maxValue = playerScript._attackMob;
+        ULTGauge.value = playerScript._mobCounter;
+        sliderTargetValue = playerScript._mobCounter;
+        previousMobCounter = playerScript._mobCounter;
     }
 
     void Update()
     {
-        if (playerBeam != null)
+        // モブの撃破数が増えたらスライダーを更新
+        if (playerScript._mobCounter > previousMobCounter)
         {
-            // _mobCounterをスライダーの現在地にスムーズに反映
-            DashGage.value = Mathf.SmoothDamp(DashGage.value, playerBeam._mobCounter, ref currentVelocity, 0.1f);
+            sliderTargetValue = playerScript._mobCounter;
+            changeSpeed = upSpeed;
         }
+
+        // ULT発動（適宜変更）
+        if (playerScript.isULT) // 仮に「U」キーでULT発動するとする
+        {
+            sliderTargetValue = 0;
+            changeSpeed = (1 / playerScript._ultTime) * 2;
+        }
+
     }
-    
-    /// <summary>
-    /// スライダーをリセットする(ビーム発射後に呼ばれる)
-    /// </summary>
-    public void ResetSlider()
+
+    private void LateUpdate()
     {
-        DashGage.value = 0;
+        ULTGauge.value = Mathf.Lerp(ULTGauge.value, sliderTargetValue, Time.deltaTime * changeSpeed);
+        previousMobCounter = playerScript._mobCounter;
     }
 }
