@@ -19,6 +19,8 @@ public partial class  Player : MonoBehaviour
     public float JumpDuration = 0.5f;
     [Header("レールへの吸着が発生する距離")]
     public float _snapDistance = 8f; // 吸着が有効となる距離
+    [Header("武器")]
+    public GameObject arms;
 
     protected float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
     private bool _leftPosition = false;     // 左側にレールがあるか
@@ -92,7 +94,7 @@ public partial class  Player : MonoBehaviour
         if (context.phase == InputActionPhase.Performed)
         {
 
-            isJumping = true;
+            isAttacking = true;
         }
     }
 
@@ -110,6 +112,7 @@ public partial class  Player : MonoBehaviour
         //パーティクルシステムを取得
         particle = GetComponentInChildren<ParticleSystem>();
         particle.Stop();
+        arms.SetActive(false);
 
         //スライダーUIを管理するスクリプトを取得
         //sliderPlayerBeam = GetComponentInChildren<SliderPlayerBeam>();

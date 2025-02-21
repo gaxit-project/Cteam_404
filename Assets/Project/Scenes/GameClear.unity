@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: 
+  Canvas: {fileID: 0}
 --- !u!114 &34282021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -687,6 +688,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: MainScene
+  Canvas: {fileID: 0}
 --- !u!114 &654006734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -842,7 +844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 654006731}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &798468759
@@ -1310,6 +1312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: TitleScene
+  Canvas: {fileID: 0}
 --- !u!114 &1886749416
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ public partial class Player
 
         public override void OnEnter(Player owner, PlayerStateBase prevState)
         {
-            owner.animator.SetBool("isRide", true);
+            //owner.animator.SetBool("isRide", true);
             _currentSpeed = owner.Speed;
         }
 
@@ -57,9 +57,9 @@ public partial class Player
 
 
             // çUåÇ
-            if (owner.isJumping)
+            if (owner.isAttacking)
             {
-                owner.isJumping = !owner.isJumping;
+                owner.isAttacking= !owner.isAttacking;
                 owner.ChangeState(stateAttack);
             }
 

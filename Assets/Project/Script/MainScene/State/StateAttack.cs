@@ -13,7 +13,8 @@ public partial class Player
         public override void OnEnter(Player owner, PlayerStateBase prevState)
         {
             time = 0;
-            owner.animator.SetTrigger("isAttack");
+            owner.arms.SetActive(true);
+            //owner.animator.SetTrigger("isAttack");
         }
 
         public override void OnUpdate(Player owner)
@@ -39,6 +40,7 @@ public partial class Player
             time += Time.deltaTime;
             if(time >= 1f)
             {
+                owner.arms.SetActive(false);
                 owner.ChangeState(stateRailMove);
             }
         }
