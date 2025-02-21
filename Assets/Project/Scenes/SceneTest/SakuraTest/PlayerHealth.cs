@@ -31,6 +31,15 @@ public class PlayerHealth : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(_enemyTag))
         {
+            Debug.Log("ダメージを食らった1");
+            TakeDamage();
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag(_enemyTag))
+        {
+            Debug.Log("ダメージを食らった2");
             TakeDamage();
         }
     }
