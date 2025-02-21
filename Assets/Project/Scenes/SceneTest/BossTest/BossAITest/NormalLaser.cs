@@ -4,39 +4,27 @@ using System.Collections;
 public class NormalLaser : MonoBehaviour
 {
     [Header("▽円設定")]
-    [Header("円の中心")]
     public Transform centerObject;
-    [Header("プレイヤー")]
     public Transform player;
 
     [Header("▽レーザー設定")]
-    [Header("ラインレンダー")]
     public LineRenderer laserLine;
-    [Header("レーザー発射角度(度数法)")]
     public float forwardOffsetAngle = 10f;
-    [Header("ラインレンダー延長距離")]
     public float laserExtendDistance = 5f;
-    [InspectorName("レーザーの持続時間")]
     public float laserDuration = 2f;
-    [Header("Rayの太さ")]
-    public float laserRadius = 50f;
-    [Header("プレイヤーのLayer")]
-    public LayerMask playerLayer;
 
     [Header("▽警告エリア設定")]
-    [Header("警告エリア (Quad)")]
     public GameObject warningArea;
-    [Header("警告表示時間")]
     public float warningDuration = 1.5f;
 
     [Header("▽警告音設定")]
-    [Header("警告音")]
     public AudioClip warningSound;
     private AudioSource audioSource;
 
     private Vector3 laserStart;
     private Vector3 laserEnd;
-    private bool isLaserActive = false;
+    private Collider warningCollider;
+    private MeshRenderer warningRenderer;
 
     void Start()
     {
@@ -46,11 +34,26 @@ public class NormalLaser : MonoBehaviour
             audioSource = warningArea.AddComponent<AudioSource>();
         }
         audioSource.clip = warningSound;
+
+        // 警告エリアのコライダーとメッシュレンダーを取得（最初は非表示）
+        warningCollider = warningArea.GetComponent<Collider>();
+        warningRenderer = warningArea.GetComponent<MeshRenderer>();
+
+        if (warningCollider != null)
+        {
+            warningCollider.isTrigger = true;
+            warningCollider.enabled = false;
+        }
+
+        if (warningRenderer != null)
+        {
+            warningRenderer.enabled = false; // 初期状態では非表示
+        }
     }
 
     public void ExecuteAttack()
     {
-        //プレイヤーの少し前の座標を計算
+        // プレイヤーの少し前の座標を計算
         float dynamicRadius = Vector3.Distance(centerObject.position, player.position);
         Vector3 radiusVector = (player.position - centerObject.position).normalized;
         float currentAngle = Mathf.Atan2(radiusVector.z, radiusVector.x) * Mathf.Rad2Deg;
@@ -63,27 +66,21 @@ public class NormalLaser : MonoBehaviour
             centerObject.position.z + Mathf.Sin(radians) * dynamicRadius
         );
 
-        //Rayを発射してレーザーの着弾地点を決定
+        // レーザーの開始位置と終点を決定
         laserStart = centerObject.position;
         Vector3 laserDirection = (predictedPosition - laserStart).normalized;
         laserEnd = predictedPosition + (laserDirection * laserExtendDistance);
 
         Debug.DrawRay(laserStart, laserDirection * laserExtendDistance, Color.green, 5.0f);
 
-        //QuadをRayの長さに合わせて伸ばす
+        // 警告エリアの設定
         if (warningArea != null)
         {
             float laserLength = Vector3.Distance(laserStart, laserEnd);
             Vector3 warningCenter = (laserStart + laserEnd) / 2;
 
             warningArea.transform.position = warningCenter;
-
-            // 終点方向を向ける（回転の調整）
-            Vector3 direction = (laserEnd - laserStart).normalized;
-            Quaternion rotation = Quaternion.LookRotation(direction);
-            warningArea.transform.rotation = rotation;
-
-            // 長さを調整（Z軸方向に伸ばす）
+            warningArea.transform.rotation = Quaternion.LookRotation(laserEnd - laserStart);
             warningArea.transform.localScale = new Vector3(warningArea.transform.localScale.x, warningArea.transform.localScale.y, laserLength);
 
             if (!audioSource.isPlaying)
@@ -91,8 +88,17 @@ public class NormalLaser : MonoBehaviour
                 audioSource.Play();
             }
 
+            // メッシュレンダーをONにして可視化
+            if (warningRenderer != null)
+            {
+                warningRenderer.enabled = true;
+            }
 
-            warningArea.SetActive(true);
+            // コライダーを有効化（ビームが消えるまで残す）
+            if (warningCollider != null)
+            {
+                warningCollider.enabled = true;
+            }
         }
 
         StartCoroutine(LaserWarningCoroutine());
@@ -100,66 +106,47 @@ public class NormalLaser : MonoBehaviour
 
     private IEnumerator LaserWarningCoroutine()
     {
-        float elapsedTime = 0f;
-        Renderer warningRenderer = warningArea.GetComponent<Renderer>();
-        Material warningMaterial = warningRenderer.material;
-        Color initialColor = warningMaterial.color;
+        yield return new WaitForSeconds(warningDuration);
 
-        // 警告エリアを表示する時間
-        while (elapsedTime < warningDuration)
+        // レーザー発射の瞬間に警告エリアのコライダー内にいるプレイヤーを判定
+        ApplyLaserDamage();
+
+        // 警告エリアの見た目だけ消す（コライダーは残す）
+        if (warningRenderer != null)
         {
-            float alpha = Mathf.PingPong(elapsedTime * 5f, 1f);  // 5fは点滅の速さ
-            Color newColor = new Color(initialColor.r, initialColor.g, initialColor.b, alpha);
-            warningMaterial.color = newColor;
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            warningRenderer.enabled = false;
         }
-
-        // 最終的な透明度を1にして完全に表示
-        warningMaterial.color = new Color(initialColor.r, initialColor.g, initialColor.b, 1f);
-
-        // 警告エリアを非表示にするタイミングを変更
-        // 警告が終わった直後ではなく、レーザーが発射される直前に非表示にする
-        yield return new WaitForSeconds(warningDuration);  // 警告エリアの表示時間を待つ
-
-        // レーザー発射時に警告エリアを消す
-        warningArea.SetActive(false); // ラインレンダーが表示されるタイミングで消す
 
         // レーザー発射
         laserLine.SetPosition(0, laserStart);
         laserLine.SetPosition(1, laserEnd);
         laserLine.enabled = true;
-        isLaserActive = true;
 
-        // ダメージ判定
-        CheckLaserHit(laserStart, laserEnd);
-
-        // レーザーの持続時間後に消す
         yield return new WaitForSeconds(laserDuration);
+
+        // レーザーが消えるタイミングで警告エリアのコライダーも無効化
         laserLine.enabled = false;
-        isLaserActive = false;
+        if (warningCollider != null)
+        {
+            warningCollider.enabled = false;
+        }
     }
 
-    private void CheckLaserHit(Vector3 start, Vector3 end)
+    private void ApplyLaserDamage()
     {
         if (player == null) return;
 
-        Vector3 direction = (end - start).normalized;
-        float distance = Vector3.Distance(start, end);
-        Debug.DrawRay(start, direction * distance, Color.green, 5.0f);
+        Collider playerCollider = player.GetComponent<Collider>();
+        if (playerCollider == null || warningCollider == null) return;
 
-        RaycastHit[] hits = Physics.SphereCastAll(start, laserRadius, direction, distance, playerLayer);
-        foreach (RaycastHit hit in hits)
+        // 警告エリアのコライダー内にプレイヤーがいるか確認
+        if (warningCollider.bounds.Intersects(playerCollider.bounds))
         {
-            if (hit.collider.CompareTag("Player"))
+            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
             {
-                PlayerHealth playerHealth = hit.collider.GetComponent<PlayerHealth>();
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage();
-                    Debug.Log("Playerがレーザーダメージを受けた");
-                }
+                playerHealth.TakeDamage();
+                Debug.Log("Playerがレーザーダメージを受けた");
             }
         }
     }
