@@ -1224,6 +1224,15 @@ MonoBehaviour:
   JumpHeight: 2
   JumpDuration: 0.5
   _snapDistance: 8
+  arms: {fileID: 0}
+  _attackMob: 5
+  _ultTime: 5
+  _damegeULT: 50
+  _boss: {fileID: 0}
+  _mobCounter: 0
+  prevMobCounter: 0
+  isULT: 0
+  _hold: {fileID: 0}
 --- !u!114 &203408246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1236,9 +1245,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6cb425c2947db49abccff9fc2bb14b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHit: 0
   _damageCooldownTime: 3
   _invincibilityTime: 2
-  DamageImg: {fileID: 385690217}
+  _damageImg: {fileID: 0}
+  _blinkSpeed: 5
 --- !u!4 &203408250 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4414195849807522356, guid: 3864e9f0b67fc9d4ca938779d50afb12, type: 3}
@@ -2170,10 +2181,6 @@ MonoBehaviour:
   forwardOffsetAngle: 15
   laserExtendDistance: 20
   laserDuration: 5
-  laserRadius: 50
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
   warningArea: {fileID: 103400846}
   warningDuration: 1
   warningSound: {fileID: 8300000, guid: b580c212b3d747f41b255c31c954dc86, type: 3}
@@ -8203,6 +8210,7 @@ MonoBehaviour:
   chargeEffect: {fileID: 0}
   chargeEffectStopRatio: 0.8
   chargeTime: 3
+  specialAttackInterval: 30
   firstPhaseAttackInterval: 8
   isSecondPhase: 0
   secondPhaseAttackInterval: 2.5
@@ -8605,6 +8613,8 @@ MonoBehaviour:
   maxDistance: 12
   heightOffset: 1.5
   lateralOffset: 1
+  cameraMinDistance: 50
+  cameraMaxDistance: 70
   springStrength: 10
   damping: 5
   minFOV: 40
@@ -13409,6 +13419,63 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1270261237}
   m_SourcePrefab: {fileID: 100100000, guid: a75bc6a9359045148a55a6987cd7e382, type: 3}
+--- !u!1001 &4943958054684239641
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1345280615438992052, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -578.9397
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345280615438992052, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 198.52527
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345280615438992052, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 847.1074
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345280615438992052, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345280615438992052, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345280615438992052, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345280615438992052, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345280615438992052, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345280615438992052, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345280615438992052, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8295962199808894397, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
+      propertyPath: m_Name
+      value: Obstacle
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: dd79e2bd943d4be40bf34f3f8357a345, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -13423,3 +13490,4 @@ SceneRoots:
   - {fileID: 610859839}
   - {fileID: 786772175}
   - {fileID: 875853192}
+  - {fileID: 4943958054684239641}

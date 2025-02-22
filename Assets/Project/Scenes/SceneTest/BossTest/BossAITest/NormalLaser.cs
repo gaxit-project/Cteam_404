@@ -139,36 +139,20 @@ public class NormalLaser : MonoBehaviour
     }
 
     // 警告エリアにプレイヤーが触れたときの処理
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider collider)
     {
-        if (!isLaserActive) return; // レーザーが発射されていない場合は無効
+        Debug.Log(collider.gameObject.name);
 
-        Debug.Log($"OnTriggerEnter が呼ばれました: {other.gameObject.name}, Tag: {other.tag}, Position: {other.transform.position}, Collider: {other.GetType().Name}, Is Trigger: {other.isTrigger}");
+        if (!isLaserActive) return;
 
-        // WarningArea自身を除外し、プレイヤーのみを検知
-        if (other.CompareTag("Player") && other.gameObject != warningArea)
+        if (collider.CompareTag("Player") && collider.gameObject != warningArea)
         {
-            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
+            PlayerHealth playerHealth = collider.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage();
                 Debug.Log("Playerがレーザーダメージを受けた");
             }
-            else
-            {
-                Debug.LogError("PlayerHealth component not found on player!");
-            }
-        }
-    }
-
-    // デバッグ用：BoxColliderの範囲をGizmosで表示
-    private void OnDrawGizmos()
-    {
-        if (warningCollider != null && warningCollider.enabled)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.matrix = warningCollider.transform.localToWorldMatrix;
-            Gizmos.DrawWireCube(Vector3.zero, warningCollider.size);
         }
     }
 }
