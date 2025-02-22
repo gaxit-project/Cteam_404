@@ -50,6 +50,7 @@ public partial class  Player : MonoBehaviour
     protected GameObject _boss;
 
     public int _mobCounter = 0;      // 倒したモブの数
+    public int prevMobCounter = 0;
 
     protected bool canULT = false;
     public bool isULT = false;
@@ -150,6 +151,7 @@ public partial class  Player : MonoBehaviour
     {
         if (_mobCounter < _attackMob)
         {
+            prevMobCounter = _mobCounter;
             _mobCounter++;//撃破数を増やす
         }
         Debug.Log("モブヒット回数: " + _mobCounter);

@@ -41,10 +41,15 @@ public partial class Player
             // UŒ‚’†‚Ì“Á•Ê‚È“®ì‚ª‚ ‚éê‡‚Í‚±‚±‚É’Ç‰Á
 
             time += Time.deltaTime;
+
+            if(time >= owner._ultTime - (owner._ultTime / 4))
+            {
+                owner.particle.Stop();
+            }
+
             if (time >= owner._ultTime)
             {
                 health.TakeDamage(owner._damegeULT);
-                owner.particle.Stop();
                 owner.isULT = false;
                 owner.ChangeState(stateRailMove);
             }

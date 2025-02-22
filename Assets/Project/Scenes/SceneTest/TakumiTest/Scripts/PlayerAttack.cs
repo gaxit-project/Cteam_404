@@ -19,7 +19,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (/*_playerScript. && */collision.collider.CompareTag("Mob"))
+        if (collision.collider.CompareTag("Mob"))
         {
             Debug.Log("ヒット1");
             _playerScript.AddMobHit();
@@ -28,10 +28,8 @@ public class PlayerAttack : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("OnTriggerEnter が呼ばれました: " + other.name);
-        
-        if (/*_playerScript. && */other.CompareTag("Mob"))
+    {        
+        if (other.CompareTag("Mob"))
         {
             Debug.Log("ヒット2");
             mob = other.gameObject;
