@@ -120,6 +120,7 @@ public class PlayerHealth : MonoBehaviour
         {
             if (!_isDebug)
             {
+                AudioManager.Instance.StopBGM();
                 GameOver();
             }
             return;
