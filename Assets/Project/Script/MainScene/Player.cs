@@ -121,6 +121,9 @@ public partial class  Player : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+
+        AudioManager.GetInstance().PlayBGM(1);
+
         ChangeState(stateRailMove);
     }
 
