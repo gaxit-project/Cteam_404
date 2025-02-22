@@ -2258,6 +2258,10 @@ PrefabInstance:
       propertyPath: CurrentRail
       value: 
       objectReference: {fileID: 1988898725}
+    - target: {fileID: 2018563370638114747, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
+      propertyPath: _snapDistance
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 2141998872979529370, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
