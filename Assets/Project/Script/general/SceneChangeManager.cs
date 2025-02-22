@@ -9,6 +9,7 @@ public class SceneChangeManager : MonoBehaviour
     public static SceneChangeManager Instance {  get; private set; }
 
 
+
     #region シングルトン
 
     public static SceneChangeManager GetInstance()
@@ -30,6 +31,33 @@ public class SceneChangeManager : MonoBehaviour
     }
     #endregion
 
+    #region SEがなっているか確認
+
+    public void SceneChangeWithSE(string sceneName)
+    {
+        AudioManager audioManager = AudioManager.GetInstance();
+
+        if (audioManager != null && audioManager._audioSourceSE != null)
+        {
+            StartCoroutine(WaitForSoundEnd(audioManager._audioSourceSE, sceneName));
+        }
+        else
+        {
+            Debug.LogError("AudioManagerまたはAudioSourceが見つかりません");
+        }
+    }
+
+    IEnumerator WaitForSoundEnd(AudioSource audioSource, string sceneName)
+    {
+        while (audioSource.isPlaying)
+        {
+            yield return null;
+        }
+
+        SceneChange(sceneName);
+    }
+
+    #endregion
 
     #region クリア判定
     private void Update()
@@ -66,6 +94,7 @@ public class SceneChangeManager : MonoBehaviour
     public void SceneChange(string sceneName) // startボタンを押すとメインシーンに遷移
     {
         SceneManager.LoadSceneAsync(sceneName);
+        AudioManager.GetInstance().StopBGM();
         Time.timeScale = 1.0f;
     }
 
