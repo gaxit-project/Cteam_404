@@ -1,20 +1,24 @@
 using UnityEngine;
-using SplineMesh;
+
+
 
 public partial class Player
 {
-
     /// <summary>
-    /// 攻撃ステート
+    /// ULT攻撃ステート
     /// </summary>
-    public class StateAttack : PlayerStateBase
+    public class StateULTAttack : PlayerStateBase
     {
-        float time = 0;
+        private float time = 0;
+        private BossHealth health;
         public override void OnEnter(Player owner, PlayerStateBase prevState)
         {
-            time = 0;
-            owner.arms.SetActive(true);
-            //owner.animator.SetTrigger("isAttack");
+            health = owner._boss.GetComponent<BossHealth>();
+            owner._mobCounter = 0; //撃破カウントをリセット
+            owner.canULT = false;
+            owner.isULT = true;
+            owner.particle.Play();  //ビームエフェクトを再生
+            time = 0f;
         }
 
         public override void OnUpdate(Player owner)
@@ -38,13 +42,19 @@ public partial class Player
             // 攻撃中の特別な動作がある場合はここに追加
 
             time += Time.deltaTime;
-            if(time >= 1f)
+
+            if(time >= owner._ultTime - (owner._ultTime / 4))
             {
-                owner.arms.SetActive(false);
+                owner.particle.Stop();
+            }
+
+            if (time >= owner._ultTime)
+            {
+                health.TakeDamage(owner._damegeULT);
+                owner.isULT = false;
                 owner.ChangeState(stateRailMove);
             }
         }
-
-
     }
 }
+

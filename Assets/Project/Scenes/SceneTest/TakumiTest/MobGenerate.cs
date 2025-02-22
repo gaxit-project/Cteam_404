@@ -46,7 +46,6 @@ public class MobGenerate : MonoBehaviour
     {
         RailManager[] railManagers = FindObjectsByType<RailManager>(FindObjectsSortMode.None);
         if (railManagers.Length == 0) return;
-        Debug.Log("Gen1");
 
         // ランダムにレールを選択
         int rnd = Random.Range(0, railManagers.Length);
@@ -57,7 +56,6 @@ public class MobGenerate : MonoBehaviour
         int nearestIndex = selectedRail.GetNearPositionIndex(player.transform.position);
         if (nearestIndex == -1) return; // 有効な位置がない場合は終了
         nearestIndex += _distance;
-        Debug.Log("Gen2");
 
         // 場所取得
         Vector3 refarence = selectedRail.GetNearPosition(nearestIndex);
@@ -65,12 +63,10 @@ public class MobGenerate : MonoBehaviour
         // 最近傍のスプライン上の位置を取得
         float nearestDistance = selectedRail.GetNearRailPosition(nearestIndex);
         var sample = TargetRail.GetSampleAtDistance(nearestDistance);
-        Debug.Log("Gen3");
 
         // プレイヤーとその位置間の距離を計算
         float distanceToPlayer = Vector3.Distance(player.transform.position, sample.location);
         //if (distanceToPlayer > _distance) return; // プレイヤーとの距離が探知範囲外なら生成しない
-        Debug.Log("Gen4");
 
         // 位置調整
         refarence = refarence - new Vector3(0f, 2f, 0f);
@@ -80,7 +76,6 @@ public class MobGenerate : MonoBehaviour
 
         Destroy(enemyObject, _destroyDelay);
 
-        Debug.Log("せいせい");
 
         // プレイヤーの方向を向かせる
         Vector3 toPlayer = player.transform.position - refarence;

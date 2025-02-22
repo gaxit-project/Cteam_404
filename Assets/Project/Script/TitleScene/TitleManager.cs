@@ -5,8 +5,22 @@ using UnityEngine.SceneManagement;
 
 public class TitleManager : MonoBehaviour
 {
+    [SerializeField] private string _sceneName;
+
     private void Start()
     {
         AudioManager.GetInstance().PlayBGM(0);
+    }
+    public void SceneChangeToMainScene() // startボタンを押すとメインシーンに遷移
+    {
+        SceneManager.LoadScene(_sceneName);
+    }
+    public void ApplicationEnd() // quitボタンを押すとゲームを終了
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false; // ゲーム終了
+        #else
+            Application.Quit(); // ゲーム終了
+        #endif
     }
 }

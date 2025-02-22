@@ -144,7 +144,15 @@ public class RailManager : MonoBehaviour
     public Vector3 GetNearPosition(int index)
     {
         //Debug.Assert(index < 0 || ReferenceObjects.Length < index ,"要素数外を参照しようとしています");
-        return ReferenceObjects[index].transform.position;
+        if(index >= ReferenceObjects.Length)
+        {
+            index = index - ReferenceObjects.Length;
+            return ReferenceObjects[index].transform.position;
+        }
+        else
+        {
+            return ReferenceObjects[index].transform.position;
+        }
     }
 
     /// <summary>
@@ -154,13 +162,15 @@ public class RailManager : MonoBehaviour
     /// <returns>スプライン上の位置（0〜1）</returns>
     public float GetNearRailPosition(int index)
     {
-        if (0 <= index && index < RailPositions.Length)
+        if (index >= ReferenceObjects.Length)
+        {
+            index = index - ReferenceObjects.Length;
+            return RailPositions[index];
+        }
+        else
         {
             return RailPositions[index];
         }
-
-        Debug.LogWarning("指定されたインデックスが範囲外です。");
-        return -1f; // 範囲外の場合のエラー値
     }
 
 

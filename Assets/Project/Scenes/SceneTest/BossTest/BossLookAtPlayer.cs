@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class BossLookAtPlayer : MonoBehaviour
 {
-    [Header("プレイヤータグ")]
-    [SerializeField] private string playerTag = "Player";
+    [Header("プレイヤー")]
+    [SerializeField] private GameObject playerObject;
 
     [Header("回転速度")]
     [SerializeField] private float rotationSpeed = 5f;
@@ -12,7 +12,7 @@ public class BossLookAtPlayer : MonoBehaviour
 
     private void Start()
     {
-        GameObject playerObject = GameObject.FindWithTag(playerTag);
+        playerObject = GameObject.Find("Player");
         if (playerObject != null)
         {
             playerTransform = playerObject.transform;

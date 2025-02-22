@@ -3,69 +3,83 @@ using System.Collections;
 
 public class BossSpecialAttack : MonoBehaviour
 {
-    [SerializeField] private ParticleSystem specialEffect; // 必殺技のパーティクルエフェクト
-    [SerializeField] private Collider attackCollider;
-    [SerializeField] private AudioSource specialAttackSound;
+    [SerializeField] private ParticleSystem specialEffect;        // パーティクルエフェクト
+    [SerializeField] private Collider attackCollider;             // パーティクルのコライダー
+    [SerializeField] private AudioSource specialAttackSound;      // 特別攻撃の音
+    [SerializeField] private int damageAmount = 10;               // ダメージ量（PlayerHealthに渡す値は不要）
+
     private BossStateAI bossAI;
 
     private void Start()
     {
         bossAI = FindObjectOfType<BossStateAI>();
+        if (attackCollider != null)
+        {
+            attackCollider.enabled = false; // 初期状態でコライダーを無効
+        }
     }
 
     public void ExecuteAttack()
     {
-        // 溜めが終わった後、必殺技発動
         if (specialEffect != null)
         {
             specialEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             specialEffect.Play();
-            Debug.Log("必殺技発動！");
 
-            if(specialAttackSound != null)
+            if (specialAttackSound != null)
             {
                 specialAttackSound.Play();
             }
 
             if (attackCollider != null)
             {
-                attackCollider.enabled = true;
+                attackCollider.enabled = true; // 攻撃中にコライダーを有効化
             }
 
-            Invoke(nameof(StopSpecialEffect), 3f);
-        }
-        else
-        {
-            Debug.LogWarning("必殺技エフェクトがアタッチされていません！");
+            StartCoroutine(StopSpecialEffect(3f)); // 3秒後にパーティクルとコライダーを無効化
         }
     }
 
-    private void StopSpecialEffect()
+    private IEnumerator StopSpecialEffect(float duration)
     {
-        if(specialEffect != null)
+        yield return new WaitForSeconds(duration);
+
+        if (specialEffect != null)
         {
             specialEffect.Stop();
-            Debug.Log("必殺技終了");
         }
 
-        if(attackCollider != null)
+        if (attackCollider != null)
         {
-            attackCollider.enabled = false;
+            attackCollider.enabled = false; // コライダーを無効化
         }
 
-        if(specialAttackSound != null)
+        if (specialAttackSound != null)
         {
             specialAttackSound.Stop();
         }
 
-        bossAI.SpecialAttackFinished();
+        if (bossAI != null)
+        {
+            bossAI.SpecialAttackFinished();
+        }
     }
 
+    // パーティクルのコライダーにプレイヤーが触れたときの処理
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("プレイヤーに当たった");
+            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage();
+                Debug.Log("Playerがパーティクルダメージを受けた");
+            }
+            else
+            {
+                Debug.LogError("PlayerHealth component not found on player!");
+            }
         }
     }
 }

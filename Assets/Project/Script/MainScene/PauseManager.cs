@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
@@ -9,6 +10,8 @@ public class PauseManager : MonoBehaviour
     public GameObject Canvas;
 
     private int BuildIndex;
+
+    private bool IsPaused = false;
 
 
     #region シングルトン
@@ -62,6 +65,17 @@ public class PauseManager : MonoBehaviour
 
     #endregion
 
+    public void OnPausu(InputAction.CallbackContext context)
+    {
+
+        // Performedフェーズの判定を行う
+        if (context.phase == InputActionPhase.Performed)
+        {
+
+            IsPaused = true;
+        }
+    }
+
 
     /// <summary>
     /// escキーが押されたらCanvasを実体化
@@ -75,8 +89,9 @@ public class PauseManager : MonoBehaviour
                 Canvas = GameObject.Find("Canvas");
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (IsPaused)
             {
+                IsPaused = false;
                 Time.timeScale = 0f;
                 if (Canvas != null)
                 {
