@@ -9,6 +9,7 @@ public class SceneChangeManager : MonoBehaviour
     public static SceneChangeManager Instance {  get; private set; }
 
 
+
     #region シングルトン
 
     public static SceneChangeManager GetInstance()
@@ -32,13 +33,13 @@ public class SceneChangeManager : MonoBehaviour
 
     #region SEがなっているか確認
 
-    void Start()
+    public void SceneChangeWithSE(string sceneName)
     {
         AudioManager audioManager = AudioManager.GetInstance();
 
         if (audioManager != null && audioManager._audioSourceSE != null)
         {
-            StartCoroutine(WaitForSoundEnd(audioManager._audioSourceSE));
+            StartCoroutine(WaitForSoundEnd(audioManager._audioSourceSE, sceneName));
         }
         else
         {
@@ -46,7 +47,7 @@ public class SceneChangeManager : MonoBehaviour
         }
     }
 
-    IEnumerator WaitForSoundEnd(AudioSource audioSource)
+    IEnumerator WaitForSoundEnd(AudioSource audioSource, string sceneName)
     {
         while (audioSource.isPlaying)
         {
