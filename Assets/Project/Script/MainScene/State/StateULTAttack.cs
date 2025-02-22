@@ -18,6 +18,7 @@ public partial class Player
             owner.canULT = false;
             owner.isULT = true;
             owner.particle.Play();  //ビームエフェクトを再生
+            time = 0f;
         }
 
         public override void OnUpdate(Player owner)
