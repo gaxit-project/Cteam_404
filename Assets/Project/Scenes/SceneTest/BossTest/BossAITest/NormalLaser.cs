@@ -12,7 +12,6 @@ public class NormalLaser : MonoBehaviour
     public float forwardOffsetAngle = 10f;
     public float laserExtendDistance = 5f;
     public float laserDuration = 2f;
-    public LayerMask playerLayer;
 
     [Header("▽警告エリア設定")]
     public GameObject warningArea;
@@ -25,7 +24,8 @@ public class NormalLaser : MonoBehaviour
     private Vector3 laserStart;
     private Vector3 laserEnd;
     private bool isLaserActive = false;
-    private Collider warningCollider;
+    private BoxCollider warningCollider;
+    private Renderer warningRenderer;
 
     void Start()
     {
@@ -36,13 +36,20 @@ public class NormalLaser : MonoBehaviour
         }
         audioSource.clip = warningSound;
 
-        warningCollider = warningArea.GetComponent<Collider>();
-        if (warningCollider == null)
+        // 警告エリアのコライダーとレンダラーを取得（最初は非表示）
+        warningCollider = warningArea.GetComponent<BoxCollider>();
+        warningRenderer = warningArea.GetComponent<Renderer>();
+
+        if (warningCollider != null)
         {
-            Debug.LogError("警告エリアに Collider がありません。");
+            warningCollider.isTrigger = true; // トリガーとして設定
+            warningCollider.enabled = false;  // 警告エリアのコライダーは最初無効
         }
-        warningCollider.enabled = false; // 初期状態では無効化
-        warningCollider.isTrigger = true; // トリガーとして扱う
+
+        if (warningRenderer != null)
+        {
+            warningRenderer.enabled = false; // 初期状態では非表示
+        }
     }
 
     public void ExecuteAttack()
@@ -77,9 +84,9 @@ public class NormalLaser : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(laserEnd - laserStart);
             warningArea.transform.rotation = rotation;
             warningArea.transform.localScale = new Vector3(
-                warningArea.transform.localScale.x,
-                warningArea.transform.localScale.y,
-                laserLength
+                1f, // Xスケールを1に固定
+                5f, // Yスケールを5に固定（プレイヤーの高さに合わせる）
+                laserLength // Zスケールをレーザー長さに設定
             );
 
             if (!audioSource.isPlaying)
@@ -88,6 +95,7 @@ public class NormalLaser : MonoBehaviour
             }
 
             warningArea.SetActive(true);
+            warningRenderer.enabled = true; // 警告エリアを表示
             warningCollider.enabled = false; // 警告時は当たり判定なし
         }
 
@@ -97,7 +105,6 @@ public class NormalLaser : MonoBehaviour
     private IEnumerator LaserWarningCoroutine()
     {
         float elapsedTime = 0f;
-        Renderer warningRenderer = warningArea.GetComponent<Renderer>();
         Material warningMaterial = warningRenderer.material;
         Color initialColor = warningMaterial.color;
 
@@ -123,7 +130,6 @@ public class NormalLaser : MonoBehaviour
         // 警告エリアの視覚を消し、当たり判定のみを残す
         warningRenderer.enabled = false;
         warningCollider.enabled = true; // 当たり判定を有効化
-        warningCollider.isTrigger = true;
 
         // レーザーの持続時間後に消す
         yield return new WaitForSeconds(laserDuration);
@@ -132,18 +138,37 @@ public class NormalLaser : MonoBehaviour
         warningCollider.enabled = false; // 当たり判定も無効化
     }
 
+    // 警告エリアにプレイヤーが触れたときの処理
     private void OnTriggerEnter(Collider other)
     {
         if (!isLaserActive) return; // レーザーが発射されていない場合は無効
 
-        if (other.gameObject == player.gameObject)
+        Debug.Log($"OnTriggerEnter が呼ばれました: {other.gameObject.name}, Tag: {other.tag}, Position: {other.transform.position}, Collider: {other.GetType().Name}, Is Trigger: {other.isTrigger}");
+
+        // WarningArea自身を除外し、プレイヤーのみを検知
+        if (other.CompareTag("Player") && other.gameObject != warningArea)
         {
-            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage();
                 Debug.Log("Playerがレーザーダメージを受けた");
             }
+            else
+            {
+                Debug.LogError("PlayerHealth component not found on player!");
+            }
+        }
+    }
+
+    // デバッグ用：BoxColliderの範囲をGizmosで表示
+    private void OnDrawGizmos()
+    {
+        if (warningCollider != null && warningCollider.enabled)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.matrix = warningCollider.transform.localToWorldMatrix;
+            Gizmos.DrawWireCube(Vector3.zero, warningCollider.size);
         }
     }
 }
