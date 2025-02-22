@@ -5,6 +5,8 @@ public class ButtonHandler : MonoBehaviour
 {
     [SerializeField] private string _sceneName;
 
+    [SerializeField] private int _seNumber;
+
     public GameObject Canvas;
 
     int BuildIndex;
@@ -14,6 +16,7 @@ public class ButtonHandler : MonoBehaviour
     }
     public void ButtonOnClicked()
     {
+        AudioManager.GetInstance().PlaySound(_seNumber);
         SceneChangeManager.Instance.SceneChange(_sceneName);
     }
 

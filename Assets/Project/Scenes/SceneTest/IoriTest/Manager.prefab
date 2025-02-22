@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 7556316973918701959}
   - component: {fileID: 428016393658043902}
   - component: {fileID: 7864623128911793347}
-  - component: {fileID: 9140533152069207394}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -61,9 +60,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _seLists:
-  - {fileID: 8300000, guid: 047c70dfb38184f4cbc8d30152dc5ddd, type: 3}
+  - {fileID: 8300000, guid: 077c3b6b81ce39f41ac019e96c1fc4e7, type: 3}
+  - {fileID: 8300000, guid: a012b5324eca4b949bf6d2e9890b3253, type: 3}
   _bgmLists:
-  - {fileID: 8300000, guid: cd10c6038b73b3d4ba37a68a068b38e9, type: 3}
+  - {fileID: 8300000, guid: 90eae78e8ce85a849b5b0ca11b2de641, type: 3}
+  - {fileID: 8300000, guid: 1532c7e67c2d60c4c8780da14b7e8fcf, type: 3}
   _audioSourceSE: {fileID: 428016393658043902}
   _audioSourceBGM: {fileID: 7864623128911793347}
   SESlider: {fileID: 0}
@@ -180,7 +181,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -262,16 +263,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &9140533152069207394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1316551798493742681}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a517581a6e60904abbebdc57a81374e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Canvas: {fileID: 0}

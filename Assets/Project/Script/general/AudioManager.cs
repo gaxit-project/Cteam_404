@@ -15,9 +15,9 @@ public class AudioManager : MonoBehaviour
 
     //音の鳴らし方の指定
     [Header("SEのAudioSource")]
-    [SerializeField] AudioSource _audioSourceSE;
+    [SerializeField] public AudioSource _audioSourceSE;
     [Header("BGMのAudioSource")]
-    [SerializeField] AudioSource _audioSourceBGM;
+    [SerializeField] public AudioSource _audioSourceBGM;
 
     [Header("スライダー")]
     public Slider SESlider;
@@ -66,8 +66,6 @@ public class AudioManager : MonoBehaviour
         {
             _audioSourceBGM = gameObject.AddComponent<AudioSource>();
         }
-        PlayBGM(0);
-        PlaySound(0);
     }
     public void Update()
     {
