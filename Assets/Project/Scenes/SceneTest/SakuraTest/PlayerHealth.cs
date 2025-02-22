@@ -10,6 +10,8 @@ public class PlayerHealth : MonoBehaviour
     private float _invincibilityTimer = 0f;
     private int _damageCount = 0;
     private string _enemyTag = "Mob";
+    private PlayerCol playerCol;
+    public bool isHit = false;
 
     [Header("ダメージのクールダウン時間")]
     [SerializeField]
@@ -40,8 +42,14 @@ public class PlayerHealth : MonoBehaviour
         if (other.gameObject.CompareTag(_enemyTag))
         {
             Debug.Log("ダメージを食らった2");
-            TakeDamage();
+            isHit = true;
+            //TakeDamage();
         }
+    }
+
+    private void Start()
+    {
+        playerCol = GetComponent<PlayerCol>();
     }
 
     void Update()

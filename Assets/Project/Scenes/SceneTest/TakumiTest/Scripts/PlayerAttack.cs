@@ -4,11 +4,15 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     private Player _playerScript;
+    private PlayerCol _playerCol;
+    public bool isHit = false;
+    public GameObject mob;
 
 
     private void Start()
     {
         _playerScript = GameObject.Find("Player").GetComponent<Player>();
+        _playerCol = GameObject.Find("Player").GetComponent<PlayerCol>();
     }
 
 
@@ -30,8 +34,15 @@ public class PlayerAttack : MonoBehaviour
         if (/*_playerScript. && */other.CompareTag("Mob"))
         {
             Debug.Log("ヒット2");
-            _playerScript.AddMobHit();
-            Destroy(other.gameObject);
+            mob = other.gameObject;
+            isHit = true;
+            //MobHit();
+            //Destroy(other.gameObject);
         }
+    }
+
+    public void MobHit()
+    {
+        _playerScript.AddMobHit();
     }
 }
