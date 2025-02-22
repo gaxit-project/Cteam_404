@@ -68,8 +68,6 @@ public class BossSpecialAttack : MonoBehaviour
     // パーティクルのコライダーにプレイヤーが触れたときの処理
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"OnTriggerEnter が呼ばれました: {other.gameObject.name}, Tag: {other.tag}, Position: {other.transform.position}, Collider: {other.GetType().Name}, Is Trigger: {other.isTrigger}");
-
         if (other.CompareTag("Player"))
         {
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
