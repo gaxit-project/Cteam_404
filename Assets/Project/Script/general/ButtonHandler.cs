@@ -17,7 +17,7 @@ public class ButtonHandler : MonoBehaviour
     public void ButtonOnClicked()
     {
         AudioManager.GetInstance().PlaySound(_seNumber);
-        SceneChangeManager.Instance.SceneChange(_sceneName);
+        SceneChangeManager.Instance.SceneChangeWithSE(_sceneName);
     }
 
 

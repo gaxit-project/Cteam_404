@@ -633,6 +633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: 
+  _seNumber: 0
   Canvas: {fileID: 0}
 --- !u!114 &422520960
 MonoBehaviour:
@@ -1366,6 +1367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: MainScene
+  _seNumber: 1
   Canvas: {fileID: 0}
 --- !u!1 &1422571893
 GameObject:
@@ -1606,6 +1608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: Setting
+  _seNumber: 1
   Canvas: {fileID: 0}
 --- !u!1001 &4422147810230005331
 PrefabInstance:
