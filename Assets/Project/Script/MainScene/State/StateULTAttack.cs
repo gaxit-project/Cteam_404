@@ -52,6 +52,7 @@ public partial class Player
             {
                 health.TakeDamage(owner._damegeULT);
                 owner.isULT = false;
+                owner.arms.SetActive(false);
                 owner.ChangeState(stateRailMove);
             }
         }

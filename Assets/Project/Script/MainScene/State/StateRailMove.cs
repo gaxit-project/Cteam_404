@@ -55,7 +55,6 @@ public partial class Player
             }
 
 
-
             // UŒ‚
             if (owner.isAttacking)
             {

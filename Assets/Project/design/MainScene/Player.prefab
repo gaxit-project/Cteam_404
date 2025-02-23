@@ -27,8 +27,8 @@ Transform:
   m_GameObject: {fileID: 2099705348131795764}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7184005, y: 0.047355384, z: 0.692274, w: -0.04914254}
-  m_LocalPosition: {x: -4.8710876, y: -2.517385, z: -23.585808}
-  m_LocalScale: {x: 85, y: 50, z: 50}
+  m_LocalPosition: {x: -6, y: 2, z: -17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6408269887837951799}
@@ -4896,6 +4896,7 @@ MonoBehaviour:
   _damegeULT: 50
   _boss: {fileID: 0}
   _mobCounter: 0
+  prevMobCounter: 0
   isULT: 0
   _hold: {fileID: -5047846092849895973, guid: 289c1b55c9541489481df5cc06664110, type: 3}
 --- !u!114 &6803324902184924405
@@ -4910,6 +4911,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6cb425c2947db49abccff9fc2bb14b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHit: 0
   _damageCooldownTime: 10
   _invincibilityTime: 2
   _damageImg: {fileID: 0}
@@ -5677,6 +5679,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d966f3c3a5b4f743a0fc9a9a92626eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHit: 0
+  mob: {fileID: 0}
 --- !u!1001 &7543277205975039091
 PrefabInstance:
   m_ObjectHideFlags: 0

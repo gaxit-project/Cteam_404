@@ -11,8 +11,8 @@ public partial class  Player : MonoBehaviour
     public  Spline CurrentRail;
     [Header("レール上スピード")]
     public float Speed = 10f;
-    private float MinSpeed = 5f;
-    private float MaxSpeed = 15f;
+    private float MinSpeed;
+    private float MaxSpeed;
     [Header("ジャンプ高さ")]
     public float JumpHeight = 2f;
     [Header("ジャンプ時間")]
@@ -122,7 +122,10 @@ public partial class  Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
 
-        AudioManager.GetInstance().PlayBGM(1);
+        AudioManager.GetInstance().PlayBGM(2);
+
+        MinSpeed = Speed - 5f;
+        MaxSpeed = Speed + 5f;
 
         ChangeState(stateRailMove);
     }
