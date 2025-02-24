@@ -44,6 +44,7 @@ public class NormalLaser : MonoBehaviour
         {
             warningCollider.isTrigger = true; // トリガーとして設定
             warningCollider.enabled = false;  // 警告エリアのコライダーは最初無効
+            warningCollider.size = new Vector3(0.1f, 5f, 1f); // 初期サイズ（スクリプトで動的に調整）
         }
 
         if (warningRenderer != null)
@@ -83,11 +84,12 @@ public class NormalLaser : MonoBehaviour
             warningArea.transform.position = warningCenter;
             Quaternion rotation = Quaternion.LookRotation(laserEnd - laserStart);
             warningArea.transform.rotation = rotation;
-            warningArea.transform.localScale = new Vector3(
-                1f, // Xスケールを1に固定
-                5f, // Yスケールを5に固定（プレイヤーの高さに合わせる）
-                laserLength // Zスケールをレーザー長さに設定
-            );
+            warningArea.transform.localScale = new Vector3(1f, 1f, laserLength); // スケールをリセットして動的に調整
+
+            if (warningCollider != null)
+            {
+                warningCollider.size = new Vector3(0.1f, 5f, laserLength); // コライダーサイズをレーザー長さに合わせる
+            }
 
             if (!audioSource.isPlaying)
             {
@@ -138,20 +140,16 @@ public class NormalLaser : MonoBehaviour
         warningCollider.enabled = false; // 当たり判定も無効化
     }
 
-    // 警告エリアにプレイヤーが触れたときの処理
-    private void OnTriggerEnter(Collider collider)
+    // 警告エリアにプレイヤーが触れたときの処理（PlayerHitの機能）
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(collider.gameObject.name);
-
-        if (!isLaserActive) return;
-
-        if (collider.CompareTag("Player") && collider.gameObject != warningArea)
+        if (other.CompareTag("Player"))
         {
-            PlayerHealth playerHealth = collider.GetComponent<PlayerHealth>();
+            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage();
-                Debug.Log("Playerがレーザーダメージを受けた");
+                Debug.Log("Playerがレーザーに当たってダメージを受けた");
             }
         }
     }
