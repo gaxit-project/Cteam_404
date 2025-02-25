@@ -14,35 +14,44 @@ public class LineWallSetup : MonoBehaviour
     {
         if (lineRenderer == null || playerHitPrefab == null)
         {
-            Debug.LogError("LineRendererまたはPlayerHitプレハブがアサインされていません。");
             return;
         }
 
-        SetupWalls();
+        if (enabled)
+        {
+            SetupWalls();
+        }
     }
 
     void LateUpdate()
     {
-        UpdateWalls(); // 線の位置が変更された場合に壁を更新
+        if (enabled)
+        {
+            UpdateWalls();
+        }
     }
 
-    void SetupWalls()
+    void OnEnable()
+    {
+        SetupWalls();
+    }
+
+    void OnDisable()
+    {
+        CleanupWalls();
+    }
+
+    public void SetupWalls()
     {
         // 既存の壁セグメントを削除
-        if (wallSegments != null)
-        {
-            foreach (GameObject segment in wallSegments)
-            {
-                if (segment != null) Destroy(segment);
-            }
-        }
+        CleanupWalls();
 
         // LineRendererのポイント数を取得
         int pointCount = lineRenderer.positionCount;
 
         if (pointCount < 2) return;
 
-        // 各セグメントごとに壁を配置（左右に2つ、合計2 * (pointCount - 1)個）
+        // 各セグメントごとに壁を配置
         wallSegments = new GameObject[2 * (pointCount - 1)];
         for (int i = 0; i < pointCount - 1; i++)
         {
@@ -125,9 +134,21 @@ public class LineWallSetup : MonoBehaviour
         }
     }
 
+    public void CleanupWalls()
+    {
+        if (wallSegments != null)
+        {
+            foreach (GameObject segment in wallSegments)
+            {
+                if (segment != null) Destroy(segment);
+            }
+            wallSegments = null; // 配列をクリア
+        }
+    }
+
     void OnDrawGizmos()
     {
-        if (lineRenderer != null && playerHitPrefab != null)
+        if (lineRenderer != null && playerHitPrefab != null && enabled)
         {
             int pointCount = lineRenderer.positionCount;
             for (int i = 0; i < pointCount - 1; i++)
