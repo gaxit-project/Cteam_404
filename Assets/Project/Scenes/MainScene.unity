@@ -12451,6 +12451,7 @@ GameObject:
   - component: {fileID: 1333658505}
   - component: {fileID: 1333658504}
   - component: {fileID: 1333658506}
+  - component: {fileID: 1333658507}
   m_Layer: 0
   m_Name: WarningArea
   m_TagString: Untagged
@@ -12623,6 +12624,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &1333658507
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1333658501}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 1, z: 1.0000001}
+  m_Center: {x: 0.000009155279, y: 0.00012207031, z: -0.0000019073486}
 --- !u!1 &1334552721 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5221782951766278395, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
