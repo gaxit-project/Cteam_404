@@ -22,9 +22,12 @@ public partial class  Player : MonoBehaviour
     [Header("武器")]
     public GameObject arms;
 
+    protected Camera mainCamera;
+    protected PlayerEmpty _playerEmpty;
+
     protected float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
-    private bool _leftPosition = false;     // 左側にレールがあるか
-    private bool _rightPosition = false;    // 右側にレールがあるか
+    public bool _leftPosition = false;     // 左側にレールがあるか
+    public bool _rightPosition = false;    // 右側にレールがあるか
     private Vector3 left;
     private Vector3 right;
     private Spline _leftRail = null;        // 左側のレール
@@ -94,7 +97,6 @@ public partial class  Player : MonoBehaviour
         // Performedフェーズの判定を行う
         if (context.phase == InputActionPhase.Performed)
         {
-
             isAttacking = true;
         }
     }
@@ -121,11 +123,13 @@ public partial class  Player : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        mainCamera = Camera.main;
+        _playerEmpty = GameObject.Find("PlayerEmpty").GetComponent<PlayerEmpty>();
 
         AudioManager.GetInstance().PlayBGM(2);
 
-        MinSpeed = Speed - 5f;
-        MaxSpeed = Speed + 5f;
+        MinSpeed = Speed * 0.25f;
+        MaxSpeed = Speed * 1.5f;
 
         ChangeState(stateRailMove);
     }
@@ -134,6 +138,7 @@ public partial class  Player : MonoBehaviour
     {
         currentState.OnUpdate(this);
         Debug.Log("現在の状態 : " +  currentState);
+        Debug.Log("レール差分" + (_railPosition - _playerEmpty._railPosition));
 
         //　モブ撃破数が必要数に達した場合、Enterキーでビームを発射できる
         if (_mobCounter >= _attackMob)

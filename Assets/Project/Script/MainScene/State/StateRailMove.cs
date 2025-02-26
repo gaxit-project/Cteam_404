@@ -1,6 +1,8 @@
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using SplineMesh;
+
 
 public partial class Player
 {
@@ -19,6 +21,7 @@ public partial class Player
 
         public override void OnUpdate(Player owner)
         {
+
             owner.MoveAlongRail();
             owner.UpdateReferencePositions();
 
@@ -34,6 +37,13 @@ public partial class Player
                 {
                     if (owner._leftPosition)
                     {
+                        /*
+                        if(owner._playerEmpty._leftRailPosition + owner._playerEmpty.MaxPos > owner._leftRailPosition)
+                        {
+                            owner._leftRailPosition = owner._playerEmpty._leftRailPosition + owner._playerEmpty.MaxPos;
+                            owner.left = owner.PosRail(owner._playerEmpty._leftRailPosition + owner._playerEmpty.MaxPos, owner._leftRail);
+                        }
+                        */
                         owner.ChangeState(new StateJump(owner._leftRail, owner._leftRailPosition, owner.left));
                     }
                 }
@@ -41,6 +51,13 @@ public partial class Player
                 {
                     if (owner._rightPosition)
                     {
+                        /*
+                        if (owner._playerEmpty._rightRailPosition + owner._playerEmpty.MaxPos > owner._rightRailPosition)
+                        {
+                            owner._rightRailPosition = owner._playerEmpty._rightRailPosition + owner._playerEmpty.MaxPos;
+                            owner.right = owner.PosRail(owner._playerEmpty._rightRailPosition + owner._playerEmpty.MaxPos, owner._rightRail);
+                        }
+                        */
                         owner.ChangeState(new StateJump(owner._rightRail, owner._rightRailPosition, owner.right));
                     }
                 }
@@ -81,6 +98,10 @@ public partial class Player
 
             Debug.Log("現在の速度:" + _currentSpeed);
 
+            if(owner._railPosition >= owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos)
+            {
+                _currentSpeed = owner.MinSpeed;
+            }
             owner._railPosition += _currentSpeed * Time.deltaTime / owner.CurrentRail.Length;
             if (owner._railPosition >= 0.9999f)
             {
@@ -95,6 +116,7 @@ public partial class Player
                     owner._railPosition = 0f; // ループ処理
                 }
             }
+            owner._railPosition = Mathf.Clamp(owner._railPosition, owner._playerEmpty._railPosition - owner._playerEmpty.MinPos, owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos);
         }
     }
 
@@ -174,43 +196,6 @@ public partial class Player
                     _rightRailPosition = manager.GetJumpRailPosition(closestIndex);
                     right = manager.GetJumpPosition(closestIndex);
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-                /*for (int i = 0; i < manager.ReferenceObjects.Length; i++)
-                {
-                    Vector3 referenceObject = manager.GetNearPosition(i);
-                    float distance = Vector3.Distance(transform.position, referenceObject);
-
-                    if (distance > _snapDistance) continue; // スナップ距離外の場合スキップ
-
-                    Vector3 toObject = referenceObject - transform.position;
-                    float dot = Vector3.Dot(transform.right, toObject.normalized);
-
-                    if (dot < -0.5f && !_leftPosition) // 左側
-                    {
-                        _leftPosition = true;
-                        _leftRail = manager.TargetRail;
-                        _leftRailPosition = manager.GetJumpRailPosition(i);
-                        left = manager.GetJumpPosition(i);
-                    }
-                    else if (dot > 0.5f && !_rightPosition) // 右側
-                    {
-                        _rightPosition = true;
-                        _rightRail = manager.TargetRail;
-                        _rightRailPosition = manager.GetJumpRailPosition(i);
-                        right = manager.GetJumpPosition(i);
-                    }
-                }*/
             }
         }
         catch (System.Exception ex)
@@ -220,4 +205,14 @@ public partial class Player
     }
     #endregion
 
+    /// <summary>
+    /// レールポジションから座標取得
+    /// </summary>
+    #region レールポジションから座標取得
+    public Vector3 PosRail(float _pos, Spline _rail)
+    {
+        var splineSample = CurrentRail.GetSampleAtDistance(_pos * _rail.Length);
+        return splineSample.location;
+    }
+    #endregion
 }
