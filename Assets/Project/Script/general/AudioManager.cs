@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Runtime.CompilerServices;
 
 [DisallowMultipleComponent]
 public class AudioManager : MonoBehaviour
@@ -27,6 +28,7 @@ public class AudioManager : MonoBehaviour
     private float bgmVolume = 0.25f;
 
     private int BuildIndex;
+    private bool _isDamage;
 
 
     
@@ -219,6 +221,32 @@ public class AudioManager : MonoBehaviour
     {
         _audioSourceBGM.Stop();
     }
+
+    /// <summary>
+    /// ダメージを受けたらSE再生
+    /// </summary>
+    /// <param name="index"></param>
+    public void PlayDamageSound(int index)
+    {
+        if (!_isDamage)
+        {
+            _audioSourceSE.PlayOneShot(_seLists[index]);
+            _isDamage = true;
+
+
+            Invoke(nameof(ResetDamageFlag), _seLists[index].length);
+        }
+    }
+
+    /// <summary>
+    /// ダメージフラグリセット
+    /// </summary>
+    private void ResetDamageFlag()
+    {
+        _isDamage = false;
+    }
+    
+    
     #endregion
 
     #region BGM・SEをゲーム終了時に保存・ロードする

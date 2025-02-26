@@ -35,11 +35,11 @@ public class SceneChangeManager : MonoBehaviour
 
     public void SceneChangeWithSE(string sceneName)
     {
-        AudioManager audioManager = AudioManager.GetInstance();
+        AudioManager audioManager = AudioManager.GetInstance(); // AudioManagerのインスタンスを取得
 
         if (audioManager != null && audioManager._audioSourceSE != null)
         {
-            StartCoroutine(WaitForSoundEnd(audioManager._audioSourceSE, sceneName));
+            StartCoroutine(WaitForSoundEnd(audioManager._audioSourceSE, sceneName)); //コルーチンスタート
         }
         else
         {
