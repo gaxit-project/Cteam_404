@@ -1,96 +1,62 @@
-using UnityEngine;
-using SplineMesh;
+ï»¿using UnityEngine;
+using System.Collections;
 
 public class Missile : MonoBehaviour
 {
-    [SerializeField] private float speed = 10f; // ’Ç]‘¬“x
-    [SerializeField] private float dropSpeed = 5f; // —‰º‘¬“x
-    [SerializeField] private float explosionRadius = 2f; // ”š”­”ÍˆÍi‹Šo—pj
-    private Vector3 targetPosition; // “ªãƒ^[ƒQƒbƒg
-    private Vector3 impactPosition; // ’…—¤“_
-    private bool isDropping = false; // —‰º’†‚©‚Ç‚¤‚©
-    private Player player; // ƒvƒŒƒCƒ„[‚ÌQÆ
-    private RailManager railManager; // RailManager‚ÌQÆ
+    [SerializeField] private GameObject warningAreaPrefab;
+    [SerializeField] private float speed = 10f;
+    private GameObject warningArea;
+    private Vector3 targetPosition;  //ãƒŸã‚µã‚¤ãƒ«ã®ç›®æ¨™åº§æ¨™
+    private Vector3 landingPosition;  //ç€å¼¾ç‚¹ï¼ˆè­¦å‘Šã‚¨ãƒªã‚¢ã®ä½ç½®ï¼‰
+    private bool isTargetReached = false;  //ç›®æ¨™ã«åˆ°é”ã—ãŸã‹ã©ã†ã‹
 
-    void Start()
-    {
-        player = FindObjectOfType<Player>();
-        railManager = FindObjectOfType<RailManager>();
-        if (railManager == null)
-        {
-            Debug.LogError("RailManager‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñBƒV[ƒ“‚ÉRailManager‚ğ”z’u‚µ‚Ä‚­‚¾‚³‚¢B");
-        }
-    }
-
-    public void SetTarget(Vector3 target, Vector3 impact, float missileSpeed, float dropSpd, float radius)
+    public void SetTarget(Vector3 target, Vector3 landing, float missileSpeed, GameObject warning)
     {
         targetPosition = target;
-        impactPosition = impact;
+        landingPosition = landing;
         speed = missileSpeed;
-        dropSpeed = dropSpd;
-        explosionRadius = radius;
+        warningArea = warning;
     }
 
     void Update()
     {
-        if (!isDropping)
+        if (!isTargetReached)
         {
-            // “ªãƒ^[ƒQƒbƒg‚ÉŒü‚©‚Á‚Ä’Ç]
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
-            // “ªãƒ^[ƒQƒbƒg‚É“’B‚µ‚½‚ç—‰ºŠJn
             if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
             {
-                isDropping = true;
+                isTargetReached = true;
+                StartCoroutine(DropToLanding());
             }
         }
-        else
+    }
+
+    private IEnumerator DropToLanding()
+    {
+        while (Vector3.Distance(transform.position, landingPosition) > 0.1f)
         {
-            // ’…—¤“_‚ÉŒü‚©‚Á‚Ä—‰ºiƒŒ[ƒ‹is‚É’Ç]j
-            if (railManager != null && player != null)
-            {
-                Vector3 railDirection = GetRailDirection();
-                impactPosition += railDirection * player.Speed * Time.deltaTime; // ƒvƒŒƒCƒ„[‚Ì‘¬“x‚Å’Ç]
-            }
-            transform.position = Vector3.MoveTowards(transform.position, impactPosition, dropSpeed * Time.deltaTime);
-
-            // ’…—¤“_‚É“’B‚µ‚½‚ç”š”­i‹ŠoƒGƒtƒFƒNƒg‚Ì‚İj
-            if (Vector3.Distance(transform.position, impactPosition) < 0.1f)
-            {
-                Explode();
-            }
+            transform.position = Vector3.MoveTowards(transform.position, landingPosition, speed * Time.deltaTime);
+            yield return null;
         }
+
+        DestroyMissileAndWarning();
     }
 
-    private Vector3 GetRailDirection()
+    private void DestroyMissileAndWarning()
     {
-        if (railManager != null && railManager.TargetRail != null)
+        if (warningArea != null)
         {
-            int nearIndex = railManager.GetNearPositionIndex(player.transform.position);
-            float railPosition = railManager.GetNearRailPosition(nearIndex);
-            if (railPosition < 0) railPosition = 0f;
-
-            float nextPosition = railPosition + 0.01f;
-            if (nextPosition > 1f) nextPosition -= 1f;
-            Vector3 nextPoint = railManager.TargetRail.GetSample(nextPosition).location; // GetSample‚ğg—p
-            Vector3 currentPoint = railManager.TargetRail.GetSample(railPosition).location; // GetSample‚ğg—p
-            return (nextPoint - currentPoint).normalized;
+            Destroy(warningArea);
         }
-        return Vector3.forward; // ƒfƒtƒHƒ‹ƒg•ûŒü
+        Destroy(gameObject);
     }
 
-    private void Explode()
+    private void OnTriggerEnter(Collider other)
     {
-        // ‹Šo“I‚È”š”­ƒGƒtƒFƒNƒgi•K—v‚É‰‚¶‚ÄParticleSystem‚ğ’Ç‰Áj
-        Debug.Log("ƒ~ƒTƒCƒ‹‚ª’…—¤“_‚Å”š”­");
-
-        Destroy(gameObject); // ƒ~ƒTƒCƒ‹‚ğíœ
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        // ”š”­”ÍˆÍ‚ğGizmos‚Å•\¦iƒfƒoƒbƒO—pj
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(impactPosition, explosionRadius);
+        if (other.gameObject == warningArea)
+        {
+            DestroyMissileAndWarning();
+        }
     }
 }

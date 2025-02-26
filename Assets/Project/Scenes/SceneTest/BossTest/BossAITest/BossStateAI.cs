@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,31 +12,31 @@ public class BossStateAI : MonoBehaviour
         attack
     }
 
-    [Header("’ÊíUŒ‚")]
-    [InspectorName("’ÊíUŒ‚ƒXƒNƒŠƒvƒg")]
+    [Header("é€šå¸¸æ”»æ’ƒ")]
+    [InspectorName("é€šå¸¸æ”»æ’ƒã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     [SerializeField] private List<MonoBehaviour> attackScripts;
 
-    [Header("•KE‹Z")]
-    [InspectorName("•KE‹ZƒXƒNƒŠƒvƒg")]
+    [Header("å¿…æ®ºæŠ€")]
+    [InspectorName("å¿…æ®ºæŠ€ã‚¹ã‚¯ãƒªãƒ—ãƒˆ")]
     [SerializeField] private BossSpecialAttack specialAttackScript;
-    [InspectorName("ƒ`ƒƒ[ƒWSE")]
+    [InspectorName("ãƒãƒ£ãƒ¼ã‚¸SE")]
     [SerializeField] private AudioSource chargeSound;
-    [InspectorName("ƒ`ƒƒ[ƒWƒGƒtƒFƒNƒg")]
+    [InspectorName("ãƒãƒ£ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     [SerializeField] private ParticleSystem chargeEffect;
-    [InspectorName("ƒ`ƒƒ[ƒWƒGƒtƒFƒNƒg’â~ƒ^ƒCƒ~ƒ“ƒO")]
+    [InspectorName("ãƒãƒ£ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆåœæ­¢ã‚¿ã‚¤ãƒŸãƒ³ã‚°")]
     [SerializeField, Range(0f, 1f)] private float chargeEffectStopRatio = 0.8f;
-    [InspectorName("•KE‹Zƒ`ƒƒ[ƒWŠÔ")]
+    [InspectorName("å¿…æ®ºæŠ€ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“")]
     [SerializeField] private float chargeTime = 3f;
-    [InspectorName("•KE‹Z”­“®ŠÔŠu")]
+    [InspectorName("å¿…æ®ºæŠ€ç™ºå‹•é–“éš”")]
     [SerializeField] private float specialAttackInterval = 30f;
 
-    [Header("‘æˆêŒ`‘ÔƒXƒe[ƒ^ƒX")]
-    [InspectorName("UŒ‚•p“x")]
+    [Header("ç¬¬ä¸€å½¢æ…‹ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹")]
+    [InspectorName("æ”»æ’ƒé »åº¦")]
     [SerializeField] private float firstPhaseAttackInterval = 5f;
 
-    [Header("‘æ“ñŒ`‘ÔƒXƒe[ƒ^ƒX")]
+    [Header("ç¬¬äºŒå½¢æ…‹ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹")]
     [SerializeField] private bool isSecondPhase = false;
-    [InspectorName("UŒ‚•p“x")]
+    [InspectorName("æ”»æ’ƒé »åº¦")]
     [SerializeField] private float secondPhaseAttackInterval = 2.5f;
     
     private bool isSpecialAttackReady = true;
@@ -194,7 +194,7 @@ public class BossStateAI : MonoBehaviour
         if (method != null)
         {
             method.Invoke(attackScript, null);
-            attackTimer = 0f; // ƒ^ƒCƒ}[‚ğƒŠƒZƒbƒg
+            attackTimer = 0f; // ã‚¿ã‚¤ãƒãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆ
         }
     }
 
@@ -217,7 +217,7 @@ public class BossStateAI : MonoBehaviour
     }
 
     /// <summary>
-    /// ‘æ“ñŒ`‘Ô‚ÖˆÚs
+    /// ç¬¬äºŒå½¢æ…‹ã¸ç§»è¡Œ
     /// </summary>
     public void EnterSecondPhase()
     {
@@ -225,12 +225,12 @@ public class BossStateAI : MonoBehaviour
         {
             isSecondPhase = true;
             attackInterval = secondPhaseAttackInterval;
-            Debug.Log("Boss‚Í‘æ“ñŒ`‘Ô‚Éi‰»‚µ‚½I");
+            Debug.Log("Bossã¯ç¬¬äºŒå½¢æ…‹ã«é€²åŒ–ã—ãŸï¼");
         }
     }
 
     /// <summary>
-    /// 30•b‚²‚Æ‚É•KE‹Z‚ğ”­“®‚·‚éƒRƒ‹[ƒ`ƒ“
+    /// 30ç§’ã”ã¨ã«å¿…æ®ºæŠ€ã‚’ç™ºå‹•ã™ã‚‹ã‚³ãƒ«ãƒ¼ãƒãƒ³
     /// </summary>
     private IEnumerator AutomaticSpecialAttack()
     {

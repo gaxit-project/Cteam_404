@@ -1,8 +1,8 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerHit : MonoBehaviour
 {
-    [Header("áŠQ•¨‚Ìİ’è")]
+    [Header("éšœå®³ç‰©ã®è¨­å®š")]
     [SerializeField] private string _playerTag = "Player";
 
     private void OnCollisionEnter(Collision collision)
@@ -22,7 +22,7 @@ public class PlayerHit : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚Éƒ_ƒ[ƒW‚ğ—^‚¦‚éˆ—
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‹å‡¦ç†
     /// </summary>
     private void DealDamage(GameObject target)
     {
@@ -30,7 +30,7 @@ public class PlayerHit : MonoBehaviour
         if (playerHealth != null)
         {
             playerHealth.TakeDamage();
-            Debug.Log($"{gameObject.name} ‚ªƒvƒŒƒCƒ„[‚Éƒ_ƒ[ƒW‚ğ—^‚¦‚½");
+            Debug.Log($"{gameObject.name} ãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆãŸ");
         }
     }
 }

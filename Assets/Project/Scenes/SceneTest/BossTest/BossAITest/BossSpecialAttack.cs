@@ -1,12 +1,11 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class BossSpecialAttack : MonoBehaviour
 {
-    [SerializeField] private ParticleSystem specialEffect;        // ƒp[ƒeƒBƒNƒ‹ƒGƒtƒFƒNƒg
-    [SerializeField] private Collider attackCollider;             // ƒp[ƒeƒBƒNƒ‹‚ÌƒRƒ‰ƒCƒ_[
-    [SerializeField] private AudioSource specialAttackSound;      // “Á•ÊUŒ‚‚Ì‰¹
-    [SerializeField] private int damageAmount = 10;               // ƒ_ƒ[ƒW—ÊiPlayerHealth‚É“n‚·’l‚Í•s—vj
+    [SerializeField] private ParticleSystem specialEffect;
+    [SerializeField] private Collider attackCollider;
+    [SerializeField] private AudioSource specialAttackSound;
 
     private BossStateAI bossAI;
 
@@ -15,7 +14,7 @@ public class BossSpecialAttack : MonoBehaviour
         bossAI = FindObjectOfType<BossStateAI>();
         if (attackCollider != null)
         {
-            attackCollider.enabled = false; // ‰Šúó‘Ô‚ÅƒRƒ‰ƒCƒ_[‚ğ–³Œø
+            attackCollider.enabled = false;
         }
     }
 
@@ -33,10 +32,10 @@ public class BossSpecialAttack : MonoBehaviour
 
             if (attackCollider != null)
             {
-                attackCollider.enabled = true; // UŒ‚’†‚ÉƒRƒ‰ƒCƒ_[‚ğ—LŒø‰»
+                attackCollider.enabled = true;//æ”»æ’ƒä¸­ã«ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’æœ‰åŠ¹åŒ–
             }
 
-            StartCoroutine(StopSpecialEffect(3f)); // 3•bŒã‚Éƒp[ƒeƒBƒNƒ‹‚ÆƒRƒ‰ƒCƒ_[‚ğ–³Œø‰»
+            StartCoroutine(StopSpecialEffect(3f));//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã¨ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’ç„¡åŠ¹åŒ–
         }
     }
 
@@ -51,7 +50,7 @@ public class BossSpecialAttack : MonoBehaviour
 
         if (attackCollider != null)
         {
-            attackCollider.enabled = false; // ƒRƒ‰ƒCƒ_[‚ğ–³Œø‰»
+            attackCollider.enabled = false;
         }
 
         if (specialAttackSound != null)
@@ -65,7 +64,7 @@ public class BossSpecialAttack : MonoBehaviour
         }
     }
 
-    // ƒp[ƒeƒBƒNƒ‹‚ÌƒRƒ‰ƒCƒ_[‚ÉƒvƒŒƒCƒ„[‚ªG‚ê‚½‚Æ‚«‚Ìˆ—
+    // ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè§¦ã‚ŒãŸã¨ãã®å‡¦ç†
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -74,11 +73,6 @@ public class BossSpecialAttack : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage();
-                Debug.Log("Player‚ªƒp[ƒeƒBƒNƒ‹ƒ_ƒ[ƒW‚ğó‚¯‚½");
-            }
-            else
-            {
-                Debug.LogError("PlayerHealth component not found on player!");
             }
         }
     }

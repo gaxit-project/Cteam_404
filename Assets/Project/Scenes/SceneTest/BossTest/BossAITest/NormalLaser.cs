@@ -1,29 +1,29 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class NormalLaser : MonoBehaviour
 {
-    [Header("¤‰~İ’è")]
+    [Header("â–½å††è¨­å®š")]
     public Transform centerObject;
     public Transform player;
 
-    [Header("¤ƒŒ[ƒU[İ’è")]
+    [Header("â–½ãƒ¬ãƒ¼ã‚¶ãƒ¼è¨­å®š")]
     public LineRenderer laserLine;
     public float forwardOffsetAngle = 10f;
     public float laserExtendDistance = 5f;
-    public float laserDuration = 3f; // 3•b‚É•ÏX
+    public float laserDuration = 3f;
 
-    [Header("¤ŒxƒGƒŠƒAİ’è")]
-    public GameObject warningAreaPrefab; // ƒvƒŒƒnƒu‚Æ‚µ‚ÄŒxƒGƒŠƒA‚ğw’è
-    private GameObject warningAreaInstance; // ƒCƒ“ƒXƒ^ƒ“ƒX‰»‚³‚ê‚½ŒxƒGƒŠƒA
+    [Header("â–½è­¦å‘Šã‚¨ãƒªã‚¢è¨­å®š")]
+    public GameObject warningAreaPrefab;
+    private GameObject warningAreaInstance;
     public float warningDuration = 1.5f;
 
-    [Header("¤Œx‰¹İ’è")]
+    [Header("â–½è­¦å‘ŠéŸ³è¨­å®š")]
     public AudioClip warningSound;
     private AudioSource audioSource;
 
-    [Header("¤LineWallSetupİ’è")]
-    [SerializeField] private LineWallSetup lineWallSetup; // LineWallSetup‚ÌQÆ
+    [Header("â–½LineWallSetupè¨­å®š")]
+    [SerializeField] private LineWallSetup lineWallSetup;
 
     private Vector3 laserStart;
     private Vector3 laserEnd;
@@ -35,17 +35,13 @@ public class NormalLaser : MonoBehaviour
     {
         if (lineWallSetup == null)
         {
-            lineWallSetup = GetComponent<LineWallSetup>(); // “¯‚¶ƒIƒuƒWƒFƒNƒg‚ÉƒAƒ^ƒbƒ`‚³‚ê‚Ä‚¢‚éê‡
-            if (lineWallSetup == null)
-            {
-                Debug.LogError("LineWallSetupƒRƒ“ƒ|[ƒlƒ“ƒg‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
-            }
+            lineWallSetup = GetComponent<LineWallSetup>();
         }
     }
 
     public void ExecuteAttack()
     {
-        // ƒvƒŒƒCƒ„[‚Ì­‚µ‘O‚ÌÀ•W‚ğŒvZ
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å°‘ã—å‰ã®åº§æ¨™ã‚’è¨ˆç®—
         float dynamicRadius = Vector3.Distance(centerObject.position, player.position);
         Vector3 radiusVector = (player.position - centerObject.position).normalized;
         float currentAngle = Mathf.Atan2(radiusVector.z, radiusVector.x) * Mathf.Rad2Deg;
@@ -58,14 +54,14 @@ public class NormalLaser : MonoBehaviour
             centerObject.position.z + Mathf.Sin(radians) * dynamicRadius
         );
 
-        // ƒŒ[ƒU[‚ÌŠJnˆÊ’u‚ÆI—¹ˆÊ’u‚ğİ’è
+        //ãƒ¬ãƒ¼ã‚¶ãƒ¼ã®é–‹å§‹ä½ç½®ã¨çµ‚äº†ä½ç½®ã‚’è¨­å®š
         laserStart = centerObject.position;
         Vector3 laserDirection = (predictedPosition - laserStart).normalized;
         laserEnd = predictedPosition + (laserDirection * laserExtendDistance);
 
         Debug.DrawRay(laserStart, laserDirection * laserExtendDistance, Color.green, 5.0f);
 
-        // ŒxƒGƒŠƒA‚ğƒCƒ“ƒXƒ^ƒ“ƒX‰»
+        //è­¦å‘Šã‚¨ãƒªã‚¢ã‚’ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–
         if (warningAreaPrefab != null)
         {
             float laserLength = Vector3.Distance(laserStart, laserEnd);
@@ -78,36 +74,30 @@ public class NormalLaser : MonoBehaviour
 
             if (warningCollider != null)
             {
-                warningCollider.isTrigger = true; // ƒgƒŠƒK[‚Æ‚µ‚Äİ’è
-                warningCollider.enabled = false;  // ŒxƒGƒŠƒA‚ÌƒRƒ‰ƒCƒ_[‚ÍÅ‰–³Œø
-                warningCollider.size = new Vector3(0.1f, 5f, laserLength); // ƒRƒ‰ƒCƒ_[ƒTƒCƒY‚ğƒŒ[ƒU[’·‚³‚É‡‚í‚¹‚é
+                warningCollider.isTrigger = true;
+                warningCollider.enabled = false; //è­¦å‘Šã‚¨ãƒªã‚¢ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã¯æœ€åˆç„¡åŠ¹
+                warningCollider.size = new Vector3(0.1f, 5f, laserLength); //ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®ã‚µã‚¤ã‚ºã‚’ãƒ¬ãƒ¼ã‚¶ãƒ¼ã®é•·ã•ã«åˆã‚ã›ã‚‹
             }
 
             if (warningRenderer != null)
             {
-                warningRenderer.enabled = true; // ‰Šúó‘Ô‚Å•\¦
+                warningRenderer.enabled = true;
             }
 
             if (audioSource != null && warningSound != null)
             {
-                Debug.Log("Œx‰¹‚ğÄ¶: " + warningSound.name);
                 audioSource.clip = warningSound;
                 audioSource.Play();
             }
-            else
-            {
-                Debug.LogError("audioSource‚Ü‚½‚ÍwarningSound‚ªnull‚Å‚·B");
-            }
 
-            warningAreaInstance.transform.localScale = new Vector3(1f, 1f, laserLength); // ƒXƒP[ƒ‹‚ğƒŠƒZƒbƒg‚µ‚Ä“®“I‚É’²®
+            warningAreaInstance.transform.localScale = new Vector3(1f, 1f, laserLength);
             Quaternion rotation = Quaternion.LookRotation(laserEnd - laserStart);
             warningAreaInstance.transform.rotation = rotation;
 
-            // LineWallSetup‚ğƒIƒ“ilaserDuration‚É‡‚í‚¹‚Ä—LŒø‰»j
             if (lineWallSetup != null)
             {
                 lineWallSetup.enabled = true;
-                lineWallSetup.SetupWalls(); // •Ç‚ğ‘¦À‚É¶¬
+                lineWallSetup.SetupWalls();
             }
         }
 
@@ -120,8 +110,6 @@ public class NormalLaser : MonoBehaviour
         Material warningMaterial = warningRenderer.material;
         Color initialColor = warningMaterial.color;
 
-        // ŒxƒGƒŠƒA‚ğ“_–Å
-        Debug.Log("ŒxƒGƒŠƒA“_–ÅŠJn");
         while (elapsedTime < warningDuration)
         {
             float alpha = Mathf.PingPong(elapsedTime * 5f, 1f);
@@ -130,7 +118,6 @@ public class NormalLaser : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("Œx‰¹Ä¶s: audioSource = " + (audioSource != null) + ", warningSound = " + (warningSound != null));
         if (audioSource != null && warningSound != null)
         {
             audioSource.Play();
@@ -138,33 +125,30 @@ public class NormalLaser : MonoBehaviour
 
         warningMaterial.color = new Color(initialColor.r, initialColor.g, initialColor.b, 1f);
 
-        Debug.Log("ŒxƒGƒŠƒA‘Ò‹@ŠJn");
         yield return new WaitForSeconds(warningDuration);
 
-        // ƒŒ[ƒU[”­Ë
+        // ãƒ¬ãƒ¼ã‚¶ãƒ¼ç™ºå°„
         laserLine.enabled = true;
         laserLine.SetPosition(0, laserStart);
         laserLine.SetPosition(1, laserEnd);
         isLaserActive = true;
 
-        // ŒxƒGƒŠƒA‚Ì‹Šo‚ğÁ‚µA“–‚½‚è”»’è‚Ì‚İ‚ğc‚·
+        // è­¦å‘Šã‚¨ãƒªã‚¢ã®è¦–è¦šã‚’æ¶ˆã—ã€å½“ãŸã‚Šåˆ¤å®šã®ã¿ã‚’æ®‹ã™
         warningRenderer.enabled = false;
-        warningCollider.enabled = true; // “–‚½‚è”»’è‚ğ—LŒø‰»
-        Debug.Log("“–‚½‚è”»’è—LŒø‰»i" + laserDuration + "•bŒã‚É–³Œø‰»j");
+        warningCollider.enabled = true; // å½“ãŸã‚Šåˆ¤å®šã‚’æœ‰åŠ¹åŒ–
 
-        // ƒŒ[ƒU[‚Ì‘±ŠÔŒã‚ÉÁ‚·
+        // ãƒ¬ãƒ¼ã‚¶ãƒ¼ã®æŒç¶šæ™‚é–“å¾Œã«æ¶ˆã™
         yield return StartCoroutine(WaitForSecondsWithCheck(laserDuration));
         laserLine.enabled = false;
         isLaserActive = false;
-        warningCollider.enabled = false; // “–‚½‚è”»’è‚ğ–³Œø‰»
-        Destroy(warningAreaInstance); // ŒxƒGƒŠƒA‚ğŠ®‘S‚Éíœ
-        Debug.Log("ŒxƒGƒŠƒA‚Æ“–‚½‚è”»’è–³Œø‰»");
+        warningCollider.enabled = false; // å½“ãŸã‚Šåˆ¤å®šã‚’ç„¡åŠ¹åŒ–
+        Destroy(warningAreaInstance); // è­¦å‘Šã‚¨ãƒªã‚¢ã‚’å®Œå…¨ã«å‰Šé™¤
 
-        // LineWallSetup‚ğƒIƒtilaserDurationI—¹Œã‚É–³Œø‰»j
+        // LineWallSetupã‚’ã‚ªãƒ•ï¼ˆlaserDurationçµ‚äº†å¾Œã«ç„¡åŠ¹åŒ–ï¼‰
         if (lineWallSetup != null)
         {
             lineWallSetup.enabled = false;
-            lineWallSetup.CleanupWalls(); // •Ç‚ğƒNƒŠ[ƒ“ƒAƒbƒv
+            lineWallSetup.CleanupWalls();
         }
     }
 
@@ -174,22 +158,20 @@ public class NormalLaser : MonoBehaviour
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            if (Time.timeScale == 0) yield return new WaitUntil(() => Time.timeScale > 0); // ŠÔ’â~‚ğƒ`ƒFƒbƒN
+            if (Time.timeScale == 0) yield return new WaitUntil(() => Time.timeScale > 0);
             yield return null;
         }
     }
 
-    // ŒxƒGƒŠƒA‚ÉƒvƒŒƒCƒ„[‚ªG‚ê‚½‚Æ‚«‚Ìˆ—iPlayerHit‚Ì‹@”\j
+    // è­¦å‘Šã‚¨ãƒªã‚¢ã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè§¦ã‚ŒãŸã¨ãã®å‡¦ç†
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("OnTriggerEnter: isLaserActive = " + isLaserActive);
-        if (other.CompareTag("Player") && isLaserActive && !other.gameObject.CompareTag("WarningArea")) // WarningArea‚ğœŠO
+        if (other.CompareTag("Player") && isLaserActive && !other.gameObject.CompareTag("WarningArea"))
         {
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage();
-                Debug.Log("Player‚ªƒŒ[ƒU[‚É“–‚½‚Á‚Äƒ_ƒ[ƒW‚ğó‚¯‚½");
             }
         }
     }

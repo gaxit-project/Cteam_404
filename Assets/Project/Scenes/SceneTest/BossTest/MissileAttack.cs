@@ -1,206 +1,62 @@
-using UnityEngine;
-using SplineMesh;
+ï»¿using UnityEngine;
 using System.Collections;
+using System.Reflection;
 
 public class MissileAttack : MonoBehaviour
 {
-    [Header("ƒr[ƒ€İ’èiNormalLaser‚ğg—pj")]
-    [SerializeField] private NormalLaser normalLaser;
-    [SerializeField] private float pushBackDistance = 5f;
-    [SerializeField] private float pushBackDuration = 0.5f;
-
-    [Header("ƒ~ƒTƒCƒ‹İ’è")]
+    [Header("ãƒŸã‚µã‚¤ãƒ«è¨­å®š")]
     [SerializeField] private GameObject missilePrefab;
-    [SerializeField] private float missileLaunchDelay = 1f;
-    [SerializeField] private float missileSpeed = 10f;
-    [SerializeField] private float dropSpeed = 5f;
-    [SerializeField] private float explosionRadius = 2f;
+    [SerializeField] private int missileCount = 3;  //ãƒŸã‚µã‚¤ãƒ«ã®æ•°
+    [SerializeField] private float missileLaunchInterval = 1f;  //ãƒŸã‚µã‚¤ãƒ«ã®ç™ºå°„é–“éš”
+    [SerializeField] private float missileSpeed = 10f;  //ãƒŸã‚µã‚¤ãƒ«ã®é€Ÿåº¦
+    [SerializeField] private GameObject warningAreaPrefab;  //è­¦å‘Šã‚¨ãƒªã‚¢ã®Prefab
 
-    [Header("’…’e“_İ’è")]
-    [SerializeField] private float offsetDistance1 = 5f;
-    [SerializeField] private float offsetDistance2 = 10f;
+    [Header("ç”Ÿæˆä½ç½®è¨­å®š")]
+    [SerializeField] private Transform missileSpawnPoint;  //ãƒŸã‚µã‚¤ãƒ«ã®ç”Ÿæˆä½ç½®
 
-    [Header("ƒvƒŒƒCƒ„[İ’è")]
-    [SerializeField] private Player player;
-    [SerializeField] private float playerBoostSpeed = 15f;
-    [SerializeField] private float playerBoostDuration = 2f;
+    [Header("ç›®æ¨™åœ°ç‚¹è¨­å®š")]
+    [SerializeField] private float targetHeightOffset = 5f;
 
-    [Header("ƒ~ƒTƒCƒ‹ƒ^[ƒQƒbƒgİ’è")]
-    [SerializeField] private float targetHeight = 5f;
-
-    [Header("ŒxƒGƒŠƒAİ’è")]
-    [SerializeField] private GameObject warningAreaPrefab;
-    [SerializeField] private float warningDuration = 1.5f;
-    [SerializeField] private AudioClip warningSound;
-
-    private GameObject[] warningAreas;
-    private RailManager railManager;
+    private Player player;
+    private GameObject[] warningAreaInstances;
 
     void Start()
     {
+        player = FindObjectOfType<Player>();
         if (player == null)
         {
-            player = FindObjectOfType<Player>();
+            return;
         }
-        if (normalLaser == null)
-        {
-            normalLaser = GetComponent<NormalLaser>();
-        }
-        railManager = FindObjectOfType<RailManager>();
+
+        warningAreaInstances = new GameObject[missileCount];
     }
 
     public void ExecuteAttack()
     {
-        if (player == null || normalLaser == null || missilePrefab == null || warningAreaPrefab == null || railManager == null) return;
-
-        StartCoroutine(PerformAttack());
+        StartCoroutine(LaunchMissiles());
     }
 
-    private IEnumerator PerformAttack()
+    private IEnumerator LaunchMissiles()
     {
-        //NormalLaser‚Ìƒr[ƒ€‚ğ”­Ë
-        normalLaser.ExecuteAttack();
-
-        yield return new WaitForSeconds(normalLaser.laserDuration + pushBackDuration);
-
-        // ƒvƒŒƒCƒ„[‚ÌŒ»İˆÊ’u‚ğæ“¾
-        Vector3 playerPos = player.transform.position;
-
-        Vector3 bossPos = transform.position;
-        Vector3 beamDirection = (playerPos - bossPos).normalized;
-        Vector3 pushBackDirection = -beamDirection;
-        Vector3 targetPosition = player.transform.position + (pushBackDirection * pushBackDistance);
-
-        float elapsedTime = 0f;
-        Vector3 initialPosition = player.transform.position;
-        while (elapsedTime < pushBackDuration)
+        for (int i = 0; i < missileCount; i++)
         {
-            elapsedTime += Time.deltaTime;
-            float t = elapsedTime / pushBackDuration;
-            player.transform.position = Vector3.Lerp(initialPosition, targetPosition, t);
-            yield return null;
-        }
+            Vector3 warningAreaPosition = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
+            GameObject warningArea = Instantiate(warningAreaPrefab, warningAreaPosition, Quaternion.identity);
+            warningAreaInstances[i] = warningArea;
 
-        //ƒ~ƒTƒCƒ‹”­Ë‚Ì’x‰„
-        yield return new WaitForSeconds(missileLaunchDelay);
+            Vector3 landingPosition = warningArea.transform.position;
 
-        //ƒvƒŒƒCƒ„[‚Ì•½‹Ï‘¬“x‚ğæ“¾iSpeed‚ğ‰¼’èj
-        float playerAverageSpeed = player.Speed;
-        if (playerAverageSpeed <= 0) playerAverageSpeed = 10f;
+            Vector3 targetPosition = landingPosition + Vector3.up * targetHeightOffset;
 
-        //RailManager‚©‚çƒvƒŒƒCƒ„[‚ÌƒŒ[ƒ‹ˆÊ’u‚ğæ“¾
-        int nearIndex = railManager.GetNearPositionIndex(player.transform.position);
-        float railPosition = railManager.GetNearRailPosition(nearIndex);
-        if (railPosition < 0) railPosition = 0f;
+            GameObject missile = Instantiate(missilePrefab, missileSpawnPoint.position, Quaternion.identity);
+            Missile missileScript = missile.GetComponent<Missile>();
 
-        //ƒ~ƒTƒCƒ‹‚Ì’…’e“_‚ğŒvZiƒŒ[ƒ‹ã‚ÌˆÊ’u‚Æ‘O•ûj
-        Vector3 currentPlayerPos = player.transform.position;
-        Vector3 railDirection = GetRailDirectionFromRailManager(railPosition);
-        Vector3 impactPoint1 = currentPlayerPos;
-        Vector3 impactPoint2 = currentPlayerPos + (railDirection * offsetDistance1 / playerAverageSpeed);
-        Vector3 impactPoint3 = currentPlayerPos + (railDirection * offsetDistance2 / playerAverageSpeed);
-
-        //ŒxƒGƒŠƒA‚ğ•\¦
-        warningAreas = new GameObject[3];
-        StartCoroutine(ShowWarningAreas(impactPoint1, impactPoint2, impactPoint3));
-
-        //ƒ~ƒTƒCƒ‹‚ğ”­Ëi3”­j
-        LaunchMissile(impactPoint1);
-        yield return new WaitForSeconds(0.3f);
-        LaunchMissile(impactPoint2);
-        yield return new WaitForSeconds(0.3f);
-        LaunchMissile(impactPoint3);
-
-    }
-
-    private Vector3 GetRailDirectionFromRailManager(float railPosition)
-    {
-        if (railManager != null && railManager.TargetRail != null)
-        {
-            float nextPosition = railPosition + 0.01f;
-            if (nextPosition > 1f) nextPosition -= 1f;
-            Vector3 nextPoint = railManager.TargetRail.GetSample(nextPosition).location;
-            Vector3 currentPoint = railManager.TargetRail.GetSample(railPosition).location;
-            return (nextPoint - currentPoint).normalized;
-        }
-        return Vector3.forward;
-    }
-
-    private IEnumerator ShowWarningAreas(Vector3 point1, Vector3 point2, Vector3 point3)
-    {
-        // 3‚Â‚Ì’…—¤“_‚ÉŒxƒGƒŠƒA‚ğ•\¦
-        warningAreas[0] = InstantiateWarningArea(point1);
-        warningAreas[1] = InstantiateWarningArea(point2);
-        warningAreas[2] = InstantiateWarningArea(point3);
-
-        yield return new WaitForSeconds(warningDuration);
-
-        foreach (GameObject area in warningAreas)
-        {
-            if (area != null)
+            if (missileScript != null)
             {
-                Destroy(area);
+                missileScript.SetTarget(targetPosition, landingPosition, missileSpeed, warningArea);
             }
-        }
-    }
 
-    private GameObject InstantiateWarningArea(Vector3 position)
-    {
-        GameObject warningArea = Instantiate(warningAreaPrefab, position, Quaternion.identity);
-        BoxCollider collider = warningArea.GetComponent<BoxCollider>();
-        Renderer renderer = warningArea.GetComponent<Renderer>();
-        AudioSource audioSource = warningArea.GetComponent<AudioSource>();
-
-        if (collider != null)
-        {
-            collider.isTrigger = true;
-            collider.size = new Vector3(explosionRadius * 2, 5f, explosionRadius * 2);
-        }
-
-        if (renderer != null)
-        {
-            renderer.enabled = true;
-            Material material = renderer.material;
-            StartCoroutine(BlinkWarningArea(material));
-        }
-
-        if (audioSource != null && warningSound != null)
-        {
-            audioSource.clip = warningSound;
-            audioSource.Play();
-        }
-
-        return warningArea;
-    }
-
-    private IEnumerator BlinkWarningArea(Material material)
-    {
-        float elapsedTime = 0f;
-        Color initialColor = material.color;
-
-        while (elapsedTime < warningDuration)
-        {
-            float alpha = Mathf.PingPong(elapsedTime * 5f, 1f);
-            material.color = new Color(initialColor.r, initialColor.g, initialColor.b, alpha);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        material.color = new Color(initialColor.r, initialColor.g, initialColor.b, 1f);
-    }
-
-    private void LaunchMissile(Vector3 impactPoint)
-    {
-        Vector3 playerPos = player.transform.position;
-        Vector3 targetPos = playerPos + Vector3.up * targetHeight;
-
-        Vector3 launchPosition = normalLaser.centerObject.position;
-
-        GameObject missile = Instantiate(missilePrefab, launchPosition, Quaternion.identity);
-        Missile missileScript = missile.GetComponent<Missile>();
-        if (missileScript != null)
-        {
-            missileScript.SetTarget(targetPos, impactPoint, missileSpeed, dropSpeed, explosionRadius);
+            yield return new WaitForSeconds(missileLaunchInterval);
         }
     }
 }

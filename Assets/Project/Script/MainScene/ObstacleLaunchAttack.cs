@@ -1,22 +1,22 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class ObstacleLaunchAttack : MonoBehaviour
 {
-    [Header("áŠQ•¨‚Ìİ’è")]
-    [SerializeField] private GameObject obstaclePrefab;      // áŠQ•¨‚ÌƒvƒŒƒnƒu
-    [SerializeField] private float spawnOffsetY = -10f;     // ‰æ–ÊŠO‚Ì‰º‚©‚ç‚Ì¶¬ˆÊ’u
-    [SerializeField] private float moveDuration = 0.5f;     // ‰æ–ÊŠO‚©‚çBoss‚ÆPlayer‚Ì’†ŠÔ‚Ü‚ÅˆÚ“®‚·‚éŠÔ
-    [SerializeField] private float pauseDuration = 1f;      // ’†ŠÔ‚Å’â~‚·‚éŠÔ
-    [SerializeField] private float launchSpeed = 10f;       // ”ò‚Î‚·‘¬“x
-    [SerializeField] private float launchDuration = 3f;     // ”ò‚Î‚·ŠÔ
-    [SerializeField] private GameObject bossCenter;         // ƒ{ƒX‚Ì’†S
+    [Header("éšœå®³ç‰©ã®è¨­å®š")]
+    [SerializeField] private GameObject obstaclePrefab;      //éšœå®³ç‰©ã®ãƒ—ãƒ¬ãƒãƒ–
+    [SerializeField] private float spawnOffsetY = -10f;     //ç”Ÿæˆä½ç½®
+    [SerializeField] private float moveDuration = 0.5f;     //ç”»é¢å¤–ã‹ã‚‰Bossã¨Playerã®ä¸­é–“ã¾ã§ç§»å‹•ã™ã‚‹æ™‚é–“
+    [SerializeField] private float pauseDuration = 1f;      //åœæ­¢ã™ã‚‹æ™‚é–“
+    [SerializeField] private float launchSpeed = 10f;       //é£›ã°ã™é€Ÿåº¦
+    [SerializeField] private float launchDuration = 3f;     //é£›ã°ã™æ™‚é–“
+    [SerializeField] private GameObject bossCenter;         //ãƒœã‚¹ã®ä¸­å¿ƒ
 
-    private Player player;                                  // ƒvƒŒƒCƒ„[QÆ
-    private GameObject spawnedObstacle;                     // ¶¬‚µ‚½áŠQ•¨
+    private Player player;                                  //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å‚ç…§
+    private GameObject spawnedObstacle;                     //ç”Ÿæˆã—ãŸéšœå®³ç‰©
 
     private float timer = 0f;
-    private Vector3 startPos;                               // ¶¬‚ÌˆÊ’u
-    private Vector3 targetPos;                              // ƒvƒŒƒCƒ„[‚Æƒ{ƒX‚Ì’†ŠÔˆÊ’u
+    private Vector3 startPos;                               //ç”Ÿæˆæ™‚ã®ä½ç½®
+    private Vector3 targetPos;                              //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ãƒœã‚¹ã®ä¸­é–“ä½ç½®
     private enum Phase { Moving, Paused, Launching }
     private Phase currentPhase = Phase.Moving;
 
@@ -60,7 +60,7 @@ public class ObstacleLaunchAttack : MonoBehaviour
             switch (currentPhase)
             {
                 case Phase.Moving:
-                    // ‰æ–ÊŠO‚©‚çBoss‚ÆPlayer‚Ì’†ŠÔ‚Ü‚ÅˆÚ“®
+                    // ç”»é¢å¤–ã‹ã‚‰Bossã¨Playerã®ä¸­é–“ã¾ã§ç§»å‹•
                     float moveProgress = Mathf.Clamp01(timer / moveDuration);
                     spawnedObstacle.transform.position = Vector3.Lerp(startPos, targetPos, moveProgress);
 
@@ -72,7 +72,6 @@ public class ObstacleLaunchAttack : MonoBehaviour
                     break;
 
                 case Phase.Paused:
-                    // Boss‚ÆPlayer‚Ì’†ŠÔ‚Å’â~iƒvƒŒƒCƒ„[‚Ì“®‚«‚É’Ç]j
                     Vector3 playerPos = player.transform.position;
                     Vector3 bossCenterPos = bossCenter.transform.position;
                     Vector3 midPoint = (playerPos + bossCenterPos) * 0.5f;
@@ -86,7 +85,6 @@ public class ObstacleLaunchAttack : MonoBehaviour
                     break;
 
                 case Phase.Launching:
-                    // ’†S‚Ì‹t•ûŒü‚É”ò‚Î‚·
                     Vector3 direction = (spawnedObstacle.transform.position - bossCenter.transform.position).normalized;
                     spawnedObstacle.transform.position += direction * launchSpeed * Time.deltaTime;
 

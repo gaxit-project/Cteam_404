@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class LineWallSetup : MonoBehaviour
 {
-    [SerializeField] private LineRenderer lineRenderer; // LineRendererの参照
+    [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private GameObject playerHitPrefab; // PlayerHitプレハブ
-    [SerializeField] private float wallThickness = 0.1f; // 壁の厚さ（X方向）
-    [SerializeField] private float wallHeight = 5f; // 壁の高さ（Y方向）
-    [SerializeField] private float wallOffset = 0.5f; // 線からのオフセット（Z方向）
+    [SerializeField] private float wallThickness = 0.1f; // 壁の厚さ
+    [SerializeField] private float wallHeight = 5f; // 壁の高さ
+    [SerializeField] private float wallOffset = 0.5f;
 
-    private GameObject[] wallSegments; // 配置した壁セグメントの配列
+    private GameObject[] wallSegments;
 
     void Start()
     {
@@ -43,15 +43,12 @@ public class LineWallSetup : MonoBehaviour
 
     public void SetupWalls()
     {
-        // 既存の壁セグメントを削除
         CleanupWalls();
 
-        // LineRendererのポイント数を取得
         int pointCount = lineRenderer.positionCount;
 
         if (pointCount < 2) return;
 
-        // 各セグメントごとに壁を配置
         wallSegments = new GameObject[2 * (pointCount - 1)];
         for (int i = 0; i < pointCount - 1; i++)
         {
@@ -62,7 +59,7 @@ public class LineWallSetup : MonoBehaviour
             float segmentLength = Vector3.Distance(point1, point2);
             Vector3 wallDirection = Vector3.Cross(segmentDirection, Vector3.up).normalized;
 
-            for (int side = 0; side < 2; side++) // 左（0）、右（1）
+            for (int side = 0; side < 2; side++)
             {
                 Vector3 wallPosition = ((point1 + point2) * 0.5f) + (wallDirection * (side == 0 ? -wallOffset : wallOffset));
                 Quaternion wallRotation = Quaternion.LookRotation(segmentDirection, Vector3.up);
@@ -77,7 +74,7 @@ public class LineWallSetup : MonoBehaviour
                     collider.center = new Vector3(0, 0, segmentLength * 0.5f);
                 }
 
-                wallSegments[i * 2 + side] = wall; // 配列に保存（左右の壁を分ける）
+                wallSegments[i * 2 + side] = wall;
             }
         }
     }
@@ -96,7 +93,6 @@ public class LineWallSetup : MonoBehaviour
             return;
         }
 
-        // 既存の壁の位置を更新
         for (int i = 0; i < pointCount - 1; i++)
         {
             Vector3 point1 = lineRenderer.GetPosition(i);
@@ -108,7 +104,7 @@ public class LineWallSetup : MonoBehaviour
 
             for (int side = 0; side < 2; side++)
             {
-                int index = i * 2 + side; // インデックス計算
+                int index = i * 2 + side;
                 if (index < wallSegments.Length && wallSegments[index] != null)
                 {
                     GameObject wall = wallSegments[index];
@@ -126,10 +122,6 @@ public class LineWallSetup : MonoBehaviour
                         collider.center = new Vector3(0, 0, segmentLength * 0.5f);
                     }
                 }
-                else
-                {
-                    Debug.LogWarning($"壁セグメントのインデックス {index} が範囲外または null です。");
-                }
             }
         }
     }
@@ -142,7 +134,7 @@ public class LineWallSetup : MonoBehaviour
             {
                 if (segment != null) Destroy(segment);
             }
-            wallSegments = null; // 配列をクリア
+            wallSegments = null;
         }
     }
 
