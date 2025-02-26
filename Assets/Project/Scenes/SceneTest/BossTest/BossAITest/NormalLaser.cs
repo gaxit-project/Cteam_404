@@ -1,29 +1,29 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class NormalLaser : MonoBehaviour
 {
-    [Header("▽円設定")]
+    [Header("���~�ݒ�")]
     public Transform centerObject;
     public Transform player;
 
-    [Header("▽レーザー設定")]
+    [Header("�����[�U�[�ݒ�")]
     public LineRenderer laserLine;
     public float forwardOffsetAngle = 10f;
     public float laserExtendDistance = 5f;
-    public float laserDuration = 3f;
+    public float laserDuration = 3f; // 3�b�ɕύX
 
-    [Header("▽警告エリア設定")]
-    public GameObject warningAreaPrefab;
-    private GameObject warningAreaInstance;
+    [Header("���x���G���A�ݒ�")]
+    public GameObject warningAreaPrefab; // �v���n�u�Ƃ��Čx���G���A��w��
+    private GameObject warningAreaInstance; // �C���X�^���X�����ꂽ�x���G���A
     public float warningDuration = 1.5f;
 
-    [Header("▽警告音設定")]
+    [Header("���x�����ݒ�")]
     public AudioClip warningSound;
     private AudioSource audioSource;
 
-    [Header("▽LineWallSetup設定")]
-    [SerializeField] private LineWallSetup lineWallSetup;
+    [Header("��LineWallSetup�ݒ�")]
+    [SerializeField] private LineWallSetup lineWallSetup; // LineWallSetup�̎Q��
 
     private Vector3 laserStart;
     private Vector3 laserEnd;
