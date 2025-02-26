@@ -88,6 +88,7 @@ public class PlayerHealth : MonoBehaviour
             _damageTimer += Time.deltaTime;
             if (_damageTimer >= _damageCooldownTime)
             {
+                AudioManager.Instance.PlaySound(3);
                 _isDamaged = false;
                 _damageTimer = 0f;
             }
@@ -110,6 +111,8 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage()
     {
         Debug.Log("ダメージ！");
+        AudioManager.Instance.PlayDamageSound(2);
+        
 
         if (_isInvincible)
         {
@@ -120,7 +123,6 @@ public class PlayerHealth : MonoBehaviour
         {
             if (!_isDebug)
             {
-                AudioManager.Instance.StopBGM();
                 GameOver();
             }
             return;
@@ -135,7 +137,19 @@ public class PlayerHealth : MonoBehaviour
 
     public void GameOver()
     {
+        AudioManager.Instance.StopBGM();
+        AudioManager audioManager = AudioManager.GetInstance(); //AudioManagerのインスタンスを取得
+        if(audioManager != null)
+        {
+            if(audioManager._audioSourceSE != null)
+            {
+                audioManager._audioSourceSE.clip = null; //SEのClipをnullに
+                audioManager._audioSourceSE.Play();  // SEを停止
+            }
+        }
+        
         SceneChangeManager.Instance.GameOver();
+
     }
 
     private void ToggleDebugMode()
