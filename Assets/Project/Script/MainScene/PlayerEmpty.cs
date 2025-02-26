@@ -38,6 +38,7 @@ public class PlayerEmpty : MonoBehaviour
 
         #region プレイヤーレール操作
 
+        /*
         Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         float angle = Mathf.Atan2(input.y, input.x) * Mathf.Rad2Deg;
         if (input.magnitude > 0.1f) // 適当な閾値
@@ -58,6 +59,7 @@ public class PlayerEmpty : MonoBehaviour
             }
 
         }
+        */
 
         #endregion
 
