@@ -185,9 +185,14 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// BGMí‚é~
     /// </summary>
-    public void StopBGM()  
+    public void StopBGM()
     {
         _audioSourceBGM.Stop();
+    }
+
+    public void StopSound()
+    {
+        _audioSourceSE.PlayOneShot(_seLists[4]);
     }
 
     ///<summary>
