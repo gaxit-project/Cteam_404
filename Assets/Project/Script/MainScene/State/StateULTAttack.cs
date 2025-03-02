@@ -19,6 +19,7 @@ public partial class Player
             owner.isULT = true;
             owner.particle.Play();  //ビームエフェクトを再生
             time = 0f;
+            AudioManager.GetInstance().PlaySound(7);
         }
 
         public override void OnUpdate(Player owner)

@@ -15,6 +15,8 @@ public partial class Player
             time = 0;
             owner.arms.SetActive(true);
             //owner.animator.SetTrigger("isAttack");
+            //‚±‚±‚ÅSE
+            AudioManager.GetInstance().PlaySound(5);
         }
 
         public override void OnUpdate(Player owner)

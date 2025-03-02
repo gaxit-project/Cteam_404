@@ -45,7 +45,10 @@ public class NormalLaser : MonoBehaviour
         float dynamicRadius = Vector3.Distance(centerObject.position, player.position);
         Vector3 radiusVector = (player.position - centerObject.position).normalized;
         float currentAngle = Mathf.Atan2(radiusVector.z, radiusVector.x) * Mathf.Rad2Deg;
-        float targetAngle = currentAngle + forwardOffsetAngle;
+        // -1～1の範囲のノイズ値を取得
+        //float noiseValue = 2 * (Mathf.PerlinNoise(player.position.x, player.position.z) - 0.5f);
+        float noiseValue = Mathf.PerlinNoise(player.position.x, player.position.z);
+        float targetAngle = currentAngle + forwardOffsetAngle * noiseValue;
         float radians = targetAngle * Mathf.Deg2Rad;
 
         Vector3 predictedPosition = new Vector3(
