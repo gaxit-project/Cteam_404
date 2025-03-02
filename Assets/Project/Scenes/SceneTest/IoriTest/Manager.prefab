@@ -63,8 +63,13 @@ MonoBehaviour:
   _seLists:
   - {fileID: 8300000, guid: 077c3b6b81ce39f41ac019e96c1fc4e7, type: 3}
   - {fileID: 8300000, guid: a012b5324eca4b949bf6d2e9890b3253, type: 3}
-  - {fileID: 8300000, guid: df5c6fe99660ba547aafac5165acb3f7, type: 3}
+  - {fileID: 8300000, guid: 117ae74df9517474fb108a5a4e2fd591, type: 3}
   - {fileID: 8300000, guid: b14d99e046728da479fc3b20c52fb147, type: 3}
+  - {fileID: 8300000, guid: 72466a3bfeb918149bff806444df3ece, type: 3}
+  - {fileID: 8300000, guid: e98782f7da5d311469189afd68be1903, type: 3}
+  - {fileID: 8300000, guid: 0d350656017c0e345809bc92d72fb568, type: 3}
+  - {fileID: 8300000, guid: 7bfa88a996f7c5441af98e6945d0d2b7, type: 3}
+  - {fileID: 8300000, guid: fb670ef43548c69429e017bbee52dd26, type: 3}
   _bgmLists:
   - {fileID: 8300000, guid: 90eae78e8ce85a849b5b0ca11b2de641, type: 3}
   - {fileID: 8300000, guid: 1532c7e67c2d60c4c8780da14b7e8fcf, type: 3}
