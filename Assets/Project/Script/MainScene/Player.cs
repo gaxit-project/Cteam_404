@@ -21,6 +21,8 @@ public partial class  Player : MonoBehaviour
     public float _snapDistance = 8f; // 吸着が有効となる距離
     [Header("武器")]
     public GameObject arms;
+    [Header("攻撃エフェクト")]
+    public ParticleSystem Slash;
 
     protected Camera mainCamera;
     protected PlayerEmpty _playerEmpty;

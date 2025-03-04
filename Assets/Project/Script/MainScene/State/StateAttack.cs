@@ -14,7 +14,7 @@ public partial class Player
         {
             time = 0;
             owner.arms.SetActive(true);
-            //owner.animator.SetTrigger("isAttack");
+            owner.animator.SetTrigger("Attack");
             //‚±‚±‚ÅSE
             AudioManager.GetInstance().PlaySound(5);
         }
