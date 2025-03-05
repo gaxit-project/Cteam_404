@@ -45,6 +45,7 @@ public class MissileAttack : MonoBehaviour
             Vector3 warningAreaPosition = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
             GameObject warningArea = Instantiate(warningAreaPrefab, warningAreaPosition, Quaternion.identity);
             warningAreaInstances[i] = warningArea;
+            AudioManager.GetInstance().PlaySound(10);
 
             Vector3 landingPosition = warningArea.transform.position;
 
@@ -59,7 +60,9 @@ public class MissileAttack : MonoBehaviour
                 missileScript.SetTarget(targetPosition, landingPosition, missileSpeed, warningArea);
             }
 
-            AudioManager.GetInstance().PlaySound(10);
+            yield return new WaitForSeconds(0.4f);
+
+            AudioManager.GetInstance().PlaySound(11);
 
             yield return new WaitForSeconds(missileLaunchInterval);
         }
