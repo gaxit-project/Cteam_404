@@ -9,6 +9,7 @@ public class MissileAttack : MonoBehaviour
     [SerializeField] private float missileLaunchInterval = 1f;  //ミサイルの発射間隔
     [SerializeField] private float missileSpeed = 10f;  //ミサイルの速度
     [SerializeField] private GameObject warningAreaPrefab;
+    [SerializeField] private float warningAreaOffsetDistance = 5f; //PlayerとWarningAreaの距離
 
     [Header("生成位置設定")]
     [SerializeField] private Transform missileSpawnPoint;  //ミサイルの生成位置
@@ -42,7 +43,8 @@ public class MissileAttack : MonoBehaviour
     {
         for (int i = 0; i < missileCount; i++)
         {
-            Vector3 warningAreaPosition = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
+            Vector3 playerForwardDirection = player.transform.forward;
+            Vector3 warningAreaPosition = player.transform.position + playerForwardDirection * warningAreaOffsetDistance;
             GameObject warningArea = Instantiate(warningAreaPrefab, warningAreaPosition, Quaternion.identity);
             warningAreaInstances[i] = warningArea;
             AudioManager.GetInstance().PlaySound(10);
