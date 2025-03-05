@@ -6,6 +6,11 @@ using UnityEngine.SceneManagement;
 public class TitleManager : MonoBehaviour
 {
     [SerializeField] private string _sceneName;
+
+    private void Start()
+    {
+        AudioManager.GetInstance().PlayBGM(0);
+    }
     public void SceneChangeToMainScene() // startボタンを押すとメインシーンに遷移
     {
         SceneManager.LoadScene(_sceneName);

@@ -6,7 +6,10 @@ using UnityEngine.SceneManagement;
 [DisallowMultipleComponent]
 public class SceneChangeManager : MonoBehaviour
 {
-    public static SceneChangeManager Instance = null;
+    public static SceneChangeManager Instance {  get; private set; }
+
+
+
     #region シングルトン
 
     public static SceneChangeManager GetInstance()
@@ -18,7 +21,7 @@ public class SceneChangeManager : MonoBehaviour
         return Instance;
     }
     private void Awake()
-    {
+    {   
         if(this != GetInstance())
         {
             Destroy(this.gameObject);
@@ -27,18 +30,76 @@ public class SceneChangeManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
     #endregion
+
+    #region SEがなっているか確認
+
+    public void SceneChangeWithSE(string sceneName)
+    {
+        AudioManager audioManager = AudioManager.GetInstance(); // AudioManagerのインスタンスを取得
+
+        if (audioManager != null && audioManager._audioSourceSE != null)
+        {
+            StartCoroutine(WaitForSoundEnd(audioManager._audioSourceSE, sceneName)); //コルーチンスタート
+        }
+        else
+        {
+            Debug.LogError("AudioManagerまたはAudioSourceが見つかりません");
+        }
+    }
+
+    IEnumerator WaitForSoundEnd(AudioSource audioSource, string sceneName)
+    {
+        while (audioSource.isPlaying)
+        {
+            yield return null;
+        }
+
+        SceneChange(sceneName);
+    }
+
+    #endregion
+
+    #region クリア判定
+    private void Update()
+    {
+        int BuildIndex = SceneManager.GetActiveScene().buildIndex;
+        
+
+        if(BuildIndex == 2)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                GameOver();
+            }
+            else if (Input.GetKeyDown(KeyCode.RightShift))
+            {
+                GameClear();
+            }
+        }
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("Game Over");
+        SceneManager.LoadScene("GameOver");
+    }
+
+    public void GameClear()
+    {
+        Debug.Log("Game Clear");
+        SceneManager.LoadScene("GameClear");
+    }
+
+    #endregion
+    public void SceneChange(string sceneName) // startボタンを押すとメインシーンに遷移
+    {
+        SceneManager.LoadSceneAsync(sceneName);
+        AudioManager.GetInstance().StopBGM();
+        Time.timeScale = 1.0f;
+    }
+
+
+
+
     
-    [SerializeField] private string _sceneName;
-    public void SceneChange() // startボタンを押すとメインシーンに遷移
-    {
-        SceneManager.LoadScene(_sceneName);
-    }
-    public void ApplicationEnd() // quitボタンを押すとゲームを終了
-    {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false; // ゲーム終了
-        #else
-            Application.Quit(); // ゲーム終了
-        #endif
-    }
 }
