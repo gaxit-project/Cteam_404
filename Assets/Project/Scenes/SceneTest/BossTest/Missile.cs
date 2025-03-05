@@ -48,6 +48,7 @@ public class Missile : MonoBehaviour
         if (warningArea != null)
         {
             Destroy(warningArea);
+            AudioManager.GetInstance().PlaySound(12);
         }
         Destroy(gameObject);
     }

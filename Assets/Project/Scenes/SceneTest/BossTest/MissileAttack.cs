@@ -66,5 +66,23 @@ public class MissileAttack : MonoBehaviour
 
             yield return new WaitForSeconds(missileLaunchInterval);
         }
+
+        yield return new WaitForSeconds(3f);
+
+        ResetWarningAreas();
+    }
+
+    /// <summary>
+    /// すべてのWarningAreaを削除する
+    /// </summary>
+    private void ResetWarningAreas()
+    {
+        for (int i = 0; i < warningAreaInstances.Length; i++)
+        {
+            if (warningAreaInstances[i] != null)
+            {
+                Destroy(warningAreaInstances[i]);
+            }
+        }
     }
 }
