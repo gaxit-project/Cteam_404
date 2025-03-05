@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Reflection;
 
 public class MissileAttack : MonoBehaviour
 {
@@ -9,7 +8,7 @@ public class MissileAttack : MonoBehaviour
     [SerializeField] private int missileCount = 3;  //ミサイルの数
     [SerializeField] private float missileLaunchInterval = 1f;  //ミサイルの発射間隔
     [SerializeField] private float missileSpeed = 10f;  //ミサイルの速度
-    [SerializeField] private GameObject warningAreaPrefab;  //警告エリアのPrefab
+    [SerializeField] private GameObject warningAreaPrefab;
 
     [Header("生成位置設定")]
     [SerializeField] private Transform missileSpawnPoint;  //ミサイルの生成位置
@@ -17,8 +16,10 @@ public class MissileAttack : MonoBehaviour
     [Header("目標地点設定")]
     [SerializeField] private float targetHeightOffset = 7f;
 
+
     private Player player;
     private GameObject[] warningAreaInstances;
+    private AudioSource audioSource;
 
     void Start()
     {
@@ -29,6 +30,7 @@ public class MissileAttack : MonoBehaviour
         }
 
         warningAreaInstances = new GameObject[missileCount];
+        audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     public void ExecuteAttack()
@@ -56,6 +58,8 @@ public class MissileAttack : MonoBehaviour
             {
                 missileScript.SetTarget(targetPosition, landingPosition, missileSpeed, warningArea);
             }
+
+            AudioManager.GetInstance().PlaySound(10);
 
             yield return new WaitForSeconds(missileLaunchInterval);
         }
