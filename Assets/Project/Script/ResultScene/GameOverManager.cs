@@ -5,7 +5,7 @@ public class GameOverManager : MonoBehaviour
 
     void Start()
     {
-        AudioManager.Instance.PlayBGM(4);
+        AudioManager.GetInstance().PlayBGM(4);
     }
 
 }
