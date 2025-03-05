@@ -42,6 +42,14 @@ public partial class  Player : MonoBehaviour
     [SerializeField]
     public int _attackMob = 5; //ビームを発射するために必要なモブの撃破数
 
+    [Header("ULT待機エフェクト")]
+    [SerializeField]
+    protected ParticleSystem UltStay; //ビームを発射待機状態
+
+    [Header("ビームエフェクト")]
+    [SerializeField]
+    protected ParticleSystem particle; // ビームのエフェクト用のパーティクルシステム
+
     [Header("ULT時間")]
     [SerializeField]
     public float _ultTime = 5f; //ビームの発射時間
@@ -62,7 +70,7 @@ public partial class  Player : MonoBehaviour
 
     protected bool canULT = false;
     public bool isULT = false;
-    private ParticleSystem particle; // ビームのエフェクト用のパーティクルシステム
+    
     private SliderPlayerBeam sliderPlayerBeam;　//ビームチャージ用スライダーの管理スクリプト
     #endregion
 
@@ -118,8 +126,8 @@ public partial class  Player : MonoBehaviour
     private void Start()
     {
         //パーティクルシステムを取得
-        particle = GetComponentInChildren<ParticleSystem>();
         particle.Stop();
+        UltStay.Stop();
         arms.SetActive(false);
 
         //スライダーUIを管理するスクリプトを取得
@@ -143,13 +151,15 @@ public partial class  Player : MonoBehaviour
     {
         currentState.OnUpdate(this);
         Debug.Log("現在の状態 : " +  currentState);
-        Debug.Log("レール差分" + (_railPosition - _playerEmpty._railPosition));
 
         //　モブ撃破数が必要数に達した場合、Enterキーでビームを発射できる
         if (_mobCounter >= _attackMob)
         {
             canULT = true;
+            UltStay.Play();
         }
+
+
 
     }
 

@@ -73,19 +73,13 @@ public partial class Player
 
 
             // 攻撃
-            if (owner.isAttacking)
-            {
-                owner.isAttacking= !owner.isAttacking;
-                owner.ChangeState(stateAttack);
-            }
-
             if (owner.canULT)
             {
                 // 長押しの進捗を取得
                 progress = owner._holdAction.GetTimeoutCompletionPercentage();
                 // 進捗が1以上になったときの処理
                 if (progress >= 1 && !gaugeActivated)
-                {                    
+                {
                     owner._holdAction.Disable();  // Actionを一旦無効化
                     owner._holdAction.Enable();   // すぐに有効化して次の入力に備える
                     progress = 0.0f;
@@ -93,7 +87,24 @@ public partial class Player
                     Debug.Log("ULT発動");
                     owner.ChangeState(stateUltAttack);
                 }
+                else
+                {
+                    if (owner.isAttacking)
+                    {
+                        owner.isAttacking = !owner.isAttacking;
+                        owner.ChangeState(stateAttack);
+                    }
+                }
             }
+            else
+            {
+                if (owner.isAttacking)
+                {
+                    owner.isAttacking = !owner.isAttacking;
+                    owner.ChangeState(stateAttack);
+                }
+            }
+
             #endregion
 
             Debug.Log("現在の速度:" + _currentSpeed);
