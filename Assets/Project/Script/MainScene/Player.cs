@@ -53,6 +53,9 @@ public partial class  Player : MonoBehaviour
     [Header("ボス")]
     [SerializeField]
     protected GameObject _boss;
+    [Header("ボスセンター")]
+    [SerializeField]
+    protected GameObject _bossCenter;
 
     public int _mobCounter = 0;      // 倒したモブの数
     public int prevMobCounter = 0;

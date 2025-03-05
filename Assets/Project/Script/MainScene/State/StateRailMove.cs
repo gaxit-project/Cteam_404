@@ -134,7 +134,7 @@ public partial class Player
                 transform.position = splineSample.location;
                 if (isULT)
                 {
-                    transform.LookAt(_boss.transform.position);
+                    transform.LookAt(_bossCenter.transform.position);
                 }
                 else
                 {

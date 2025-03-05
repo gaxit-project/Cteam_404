@@ -15,7 +15,7 @@ public class MissileAttack : MonoBehaviour
     [SerializeField] private Transform missileSpawnPoint;  //ミサイルの生成位置
 
     [Header("目標地点設定")]
-    [SerializeField] private float targetHeightOffset = 5f;
+    [SerializeField] private float targetHeightOffset = 7f;
 
     private Player player;
     private GameObject[] warningAreaInstances;
@@ -46,6 +46,7 @@ public class MissileAttack : MonoBehaviour
 
             Vector3 landingPosition = warningArea.transform.position;
 
+            float noiseValue = Mathf.PerlinNoise(player.transform.position.x, player.transform.position.z);
             Vector3 targetPosition = landingPosition + Vector3.up * targetHeightOffset;
 
             GameObject missile = Instantiate(missilePrefab, missileSpawnPoint.position, Quaternion.identity);
