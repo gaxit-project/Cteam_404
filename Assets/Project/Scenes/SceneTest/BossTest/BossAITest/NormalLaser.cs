@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class NormalLaser : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class NormalLaser : MonoBehaviour
     private bool isLaserActive = false;
     private BoxCollider warningCollider;
     private Renderer warningRenderer;
+    private List<GameObject> activeWarningAreas = new List<GameObject>();
 
     void Start()
     {
@@ -133,14 +135,15 @@ public class NormalLaser : MonoBehaviour
         warningRenderer.enabled = false;
         warningCollider.enabled = true; // 当たり判定を有効化
 
-        //レーザーの持続時間後に消す
         yield return StartCoroutine(WaitForSecondsWithCheck(laserDuration));
+        
         laserLine.enabled = false;
         isLaserActive = false;
-        warningCollider.enabled = false; // 当たり判定を無効化
-        Destroy(warningAreaInstance); // 警告エリアを完全に削除
+        warningAreaInstance.GetComponent<BoxCollider>().enabled = false;
 
-        //LineWallSetupをオフ
+        activeWarningAreas.Remove(warningAreaInstance);
+        Destroy(warningAreaInstance);
+
         if (lineWallSetup != null)
         {
             lineWallSetup.enabled = false;
