@@ -31,7 +31,9 @@ public class NormalLaser : MonoBehaviour
     private bool isLaserActive = false;
     private BoxCollider warningCollider;
     private Renderer warningRenderer;
+
     private List<GameObject> activeWarningAreas = new List<GameObject>();
+    private List<BoxCollider> activeWarningColliders = new List<BoxCollider>();
 
     void Start()
     {
@@ -43,7 +45,7 @@ public class NormalLaser : MonoBehaviour
 
     public void ExecuteAttack()
     {
-        //プレイヤーの少し前の座標を計算
+        // プレイヤーの少し前の座標を計算
         float dynamicRadius = Vector3.Distance(centerObject.position, player.position);
         Vector3 radiusVector = (player.position - centerObject.position).normalized;
         float currentAngle = Mathf.Atan2(radiusVector.z, radiusVector.x) * Mathf.Rad2Deg;
@@ -57,12 +59,10 @@ public class NormalLaser : MonoBehaviour
             centerObject.position.z + Mathf.Sin(radians) * dynamicRadius
         );
 
-        //レーザーの開始位置と終了位置を設定
+        // レーザーの開始位置と終了位置を設定
         laserStart = centerObject.position;
         Vector3 laserDirection = (predictedPosition - laserStart).normalized;
         laserEnd = predictedPosition + (laserDirection * laserExtendDistance);
-
-        Debug.DrawRay(laserStart, laserDirection * laserExtendDistance, Color.green, 5.0f);
 
         if (warningAreaPrefab != null)
         {
@@ -73,11 +73,14 @@ public class NormalLaser : MonoBehaviour
             warningCollider = warningAreaInstance.GetComponent<BoxCollider>();
             warningRenderer = warningAreaInstance.GetComponent<Renderer>();
 
+            activeWarningAreas.Add(warningAreaInstance);
+            activeWarningColliders.Add(warningCollider);
+
             if (warningCollider != null)
             {
                 warningCollider.isTrigger = true;
-                warningCollider.enabled = false; //警告エリアのコライダーは最初無効
-                warningCollider.size = new Vector3(0.1f, 5f, laserLength); //コライダーのサイズをレーザーの長さに合わせる
+                warningCollider.enabled = false;
+                warningCollider.size = new Vector3(0.1f, 5f, laserLength);
             }
 
             if (warningRenderer != null)
@@ -86,8 +89,7 @@ public class NormalLaser : MonoBehaviour
             }
 
             warningAreaInstance.transform.localScale = new Vector3(1f, 1f, laserLength);
-            Quaternion rotation = Quaternion.LookRotation(laserEnd - laserStart);
-            warningAreaInstance.transform.rotation = rotation;
+            warningAreaInstance.transform.rotation = Quaternion.LookRotation(laserEnd - laserStart);
 
             if (lineWallSetup != null)
             {
@@ -100,6 +102,7 @@ public class NormalLaser : MonoBehaviour
 
         StartCoroutine(LaserWarningCoroutine());
     }
+
 
 
     private IEnumerator LaserWarningCoroutine()
@@ -116,33 +119,34 @@ public class NormalLaser : MonoBehaviour
             yield return null;
         }
 
-        if (audioSource != null && warningSound != null)
-        {
-            audioSource.Play();
-        }
-
         warningMaterial.color = new Color(initialColor.r, initialColor.g, initialColor.b, 1f);
-
         yield return new WaitForSeconds(warningDuration);
 
-        //レーザー発射
+        // レーザー発射
         laserLine.enabled = true;
+        laserLine.positionCount = 2;
         laserLine.SetPosition(0, laserStart);
         laserLine.SetPosition(1, laserEnd);
         isLaserActive = true;
 
-        //警告エリアの視覚を消し、当たり判定のみを残す
-        warningRenderer.enabled = false;
-        warningCollider.enabled = true; // 当たり判定を有効化
+        // 警告エリアの視覚を消し、当たり判定のみを残す
+        if (warningRenderer != null)
+            warningRenderer.enabled = false;
+
+        if (warningCollider != null)
+            warningCollider.enabled = true;
 
         yield return StartCoroutine(WaitForSecondsWithCheck(laserDuration));
-        
-        laserLine.enabled = false;
-        isLaserActive = false;
-        warningAreaInstance.GetComponent<BoxCollider>().enabled = false;
 
-        activeWarningAreas.Remove(warningAreaInstance);
-        Destroy(warningAreaInstance);
+        isLaserActive = false;
+        laserLine.enabled = false;
+
+        if (warningAreaInstance != null)
+        {
+            activeWarningAreas.Remove(warningAreaInstance);
+            activeWarningColliders.Remove(warningCollider);
+            Destroy(warningAreaInstance);
+        }
 
         if (lineWallSetup != null)
         {
@@ -150,6 +154,7 @@ public class NormalLaser : MonoBehaviour
             lineWallSetup.CleanupWalls();
         }
     }
+
 
     private IEnumerator WaitForSecondsWithCheck(float duration)
     {
@@ -164,7 +169,7 @@ public class NormalLaser : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && isLaserActive && !other.gameObject.CompareTag("WarningArea"))
+        if (isLaserActive && other.CompareTag("Player"))
         {
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)

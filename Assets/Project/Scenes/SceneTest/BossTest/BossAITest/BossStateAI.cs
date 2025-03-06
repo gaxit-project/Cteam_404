@@ -194,7 +194,7 @@ public class BossStateAI : MonoBehaviour
         if (method != null)
         {
             method.Invoke(attackScript, null);
-            attackTimer = 0f; // タイマーをリセット
+            attackTimer = 0f;
         }
     }
 
