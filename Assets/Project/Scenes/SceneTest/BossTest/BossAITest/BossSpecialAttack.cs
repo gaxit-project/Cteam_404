@@ -5,7 +5,6 @@ public class BossSpecialAttack : MonoBehaviour
 {
     [SerializeField] private ParticleSystem specialEffect;
     [SerializeField] private Collider attackCollider;
-    [SerializeField] private AudioSource specialAttackSound;
 
     private BossStateAI bossAI;
 
@@ -25,10 +24,7 @@ public class BossSpecialAttack : MonoBehaviour
             specialEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             specialEffect.Play();
 
-            if (specialAttackSound != null)
-            {
-                specialAttackSound.Play();
-            }
+            AudioManager.GetInstance().PlaySound(13);
 
             if (attackCollider != null)
             {
@@ -51,11 +47,6 @@ public class BossSpecialAttack : MonoBehaviour
         if (attackCollider != null)
         {
             attackCollider.enabled = false;
-        }
-
-        if (specialAttackSound != null)
-        {
-            specialAttackSound.Stop();
         }
 
         if (bossAI != null)
