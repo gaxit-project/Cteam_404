@@ -982,7 +982,7 @@ MonoBehaviour:
   missileLaunchInterval: 0.2
   missileSpeed: 200
   warningAreaPrefab: {fileID: 1941456964}
-  warningAreaOffsetDistance: 10
+  warningAreaOffsetDistance: 12
   missileSpawnPoint: {fileID: 1792968298}
   targetHeightOffset: 30
 --- !u!1 &156640392 stripped

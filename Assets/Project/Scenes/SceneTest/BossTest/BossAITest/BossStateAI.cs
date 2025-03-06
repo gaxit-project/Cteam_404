@@ -48,6 +48,10 @@ public class BossStateAI : MonoBehaviour
     private bool stateEnter = true;
     private Animator animator;
 
+    private int lastAttackIndex = -1;
+    private int repeatCount = 0;
+    private const int maxRepeat = 3;
+
     private void Start()
     {
         attackInterval = isSecondPhase ? secondPhaseAttackInterval : firstPhaseAttackInterval;
@@ -187,7 +191,47 @@ public class BossStateAI : MonoBehaviour
     {
         if (attackScripts.Count == 0) return;
 
-        int index = Random.Range(0, attackScripts.Count);
+        int index;
+
+        if(repeatCount >= maxRepeat)
+        {
+            List<int> validIndices = new List<int>();
+
+            for(int i = 0; i < attackScripts.Count; i++)
+            {
+                if(i != lastAttackIndex)
+                {
+                    validIndices.Add(i);
+                }
+            }
+
+            if(validIndices.Count > 0)
+            {
+                index = validIndices[Random.Range(0, validIndices.Count)];
+            }
+            else
+            {
+                index = Random.Range(0, attackScripts.Count);
+            }
+
+            repeatCount = 0;
+        }
+        else
+        {
+            index = Random.Range(0, attackScripts.Count);
+
+            if(index == lastAttackIndex)
+            {
+                repeatCount++;
+            }
+            else
+            {
+                repeatCount = 1;
+            }
+        }
+
+        lastAttackIndex = index;
+
         MonoBehaviour attackScript = attackScripts[index];
 
         var method = attackScript.GetType().GetMethod("ExecuteAttack");
