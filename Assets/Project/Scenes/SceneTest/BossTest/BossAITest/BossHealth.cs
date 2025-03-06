@@ -23,8 +23,7 @@ public class BossHealth : EnemyHealth
     {
         if (Input.GetKeyDown(KeyCode.O))
         {
-            Debug.Log("ボスに10ダメージ");
-            TakeDamage(10);
+            TakeDamage(50);
         }
     }
 
@@ -33,8 +32,6 @@ public class BossHealth : EnemyHealth
         if (currentHealth <= 0) return;
 
         base.TakeDamage(damage);
-
-        Debug.Log($"[BossHealth] HP: {currentHealth}, フェーズ閾値: {phaseTwoThreshold}");
 
         if(!isPhaseTwo && currentHealth <= phaseTwoThreshold)
         {
