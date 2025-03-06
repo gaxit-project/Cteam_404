@@ -250,8 +250,22 @@ public class AudioManager : MonoBehaviour
     {
         _isDamage = false;
     }
+
+    public void PlaySoundLoop(int index, int loopCount)
+    {
+        StartCoroutine(PlaySoundLoopCoroutine(index, loopCount));
+    }
     
-    
+    private IEnumerator PlaySoundLoopCoroutine(int index, int loopCount)
+    {
+        AudioClip clip = _seLists[index];
+
+        for(int i = 0; i < loopCount; i++)
+        {
+            _audioSourceSE.PlayOneShot(clip);
+            yield return new WaitForSeconds(clip.length);
+        }
+    }
     #endregion
 
     #region BGM・SEをゲーム終了時に保存・ロードする

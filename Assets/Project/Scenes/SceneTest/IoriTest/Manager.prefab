@@ -74,6 +74,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5411756711db2fa40ad490321530f1c1, type: 3}
   - {fileID: 8300000, guid: 17ddea2f1a109e74386af9cdf6f58e41, type: 3}
   - {fileID: 8300000, guid: 89f70ad8a80e64743a1901e8911b2fbd, type: 3}
+  - {fileID: 8300000, guid: 5f49aa3116615b448878e0e10f1e56df, type: 3}
+  - {fileID: 8300000, guid: 21eaaa1440c8cba41b67e2f282dfb244, type: 3}
+  - {fileID: 8300000, guid: 89f70ad8a80e64743a1901e8911b2fbd, type: 3}
+  - {fileID: 8300000, guid: 89f70ad8a80e64743a1901e8911b2fbd, type: 3}
   _bgmLists:
   - {fileID: 8300000, guid: 90eae78e8ce85a849b5b0ca11b2de641, type: 3}
   - {fileID: 8300000, guid: 1532c7e67c2d60c4c8780da14b7e8fcf, type: 3}
