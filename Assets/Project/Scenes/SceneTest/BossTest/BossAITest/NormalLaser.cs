@@ -45,8 +45,6 @@ public class NormalLaser : MonoBehaviour
         float dynamicRadius = Vector3.Distance(centerObject.position, player.position);
         Vector3 radiusVector = (player.position - centerObject.position).normalized;
         float currentAngle = Mathf.Atan2(radiusVector.z, radiusVector.x) * Mathf.Rad2Deg;
-        // -1～1の範囲のノイズ値を取得
-        //float noiseValue = 2 * (Mathf.PerlinNoise(player.position.x, player.position.z) - 0.5f);
         float noiseValue = Mathf.PerlinNoise(player.position.x, player.position.z);
         float targetAngle = currentAngle + forwardOffsetAngle * noiseValue;
         float radians = targetAngle * Mathf.Deg2Rad;
@@ -64,7 +62,6 @@ public class NormalLaser : MonoBehaviour
 
         Debug.DrawRay(laserStart, laserDirection * laserExtendDistance, Color.green, 5.0f);
 
-        //警告エリアをインスタンス化
         if (warningAreaPrefab != null)
         {
             float laserLength = Vector3.Distance(laserStart, laserEnd);
@@ -73,7 +70,6 @@ public class NormalLaser : MonoBehaviour
             warningAreaInstance = Instantiate(warningAreaPrefab, warningCenter, Quaternion.identity, transform);
             warningCollider = warningAreaInstance.GetComponent<BoxCollider>();
             warningRenderer = warningAreaInstance.GetComponent<Renderer>();
-            audioSource = warningAreaInstance.GetComponent<AudioSource>();
 
             if (warningCollider != null)
             {
@@ -87,12 +83,6 @@ public class NormalLaser : MonoBehaviour
                 warningRenderer.enabled = true;
             }
 
-            if (audioSource != null && warningSound != null)
-            {
-                audioSource.clip = warningSound;
-                audioSource.Play();
-            }
-
             warningAreaInstance.transform.localScale = new Vector3(1f, 1f, laserLength);
             Quaternion rotation = Quaternion.LookRotation(laserEnd - laserStart);
             warningAreaInstance.transform.rotation = rotation;
@@ -104,8 +94,11 @@ public class NormalLaser : MonoBehaviour
             }
         }
 
+        AudioManager.GetInstance().PlaySound(15);
+
         StartCoroutine(LaserWarningCoroutine());
     }
+
 
     private IEnumerator LaserWarningCoroutine()
     {
@@ -130,24 +123,24 @@ public class NormalLaser : MonoBehaviour
 
         yield return new WaitForSeconds(warningDuration);
 
-        // レーザー発射
+        //レーザー発射
         laserLine.enabled = true;
         laserLine.SetPosition(0, laserStart);
         laserLine.SetPosition(1, laserEnd);
         isLaserActive = true;
 
-        // 警告エリアの視覚を消し、当たり判定のみを残す
+        //警告エリアの視覚を消し、当たり判定のみを残す
         warningRenderer.enabled = false;
         warningCollider.enabled = true; // 当たり判定を有効化
 
-        // レーザーの持続時間後に消す
+        //レーザーの持続時間後に消す
         yield return StartCoroutine(WaitForSecondsWithCheck(laserDuration));
         laserLine.enabled = false;
         isLaserActive = false;
         warningCollider.enabled = false; // 当たり判定を無効化
         Destroy(warningAreaInstance); // 警告エリアを完全に削除
 
-        // LineWallSetupをオフ（laserDuration終了後に無効化）
+        //LineWallSetupをオフ
         if (lineWallSetup != null)
         {
             lineWallSetup.enabled = false;
@@ -166,7 +159,6 @@ public class NormalLaser : MonoBehaviour
         }
     }
 
-    // 警告エリアにプレイヤーが触れたときの処理
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && isLaserActive && !other.gameObject.CompareTag("WarningArea"))
