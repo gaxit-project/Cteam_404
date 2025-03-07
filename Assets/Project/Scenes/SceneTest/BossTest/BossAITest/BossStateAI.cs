@@ -46,13 +46,14 @@ public class BossStateAI : MonoBehaviour
     [Header("第三形態専用技")]
     [SerializeField] private List<MonoBehaviour> thirdPhaseAttackScripts;
 
-    private bool isSpecialAttackReady = true;
-
+    private BossFace bossFace;
+    
     private float attackInterval;
     private float attackTimer = 0f;
     private float chargeTimer = 0f;
     private State currentState = State.doNothing;
     private bool stateEnter = true;
+    private bool isSpecialAttackReady = true;
     private Animator animator;
 
     private int lastAttackIndex = -1;
@@ -212,19 +213,19 @@ public class BossStateAI : MonoBehaviour
 
         int index;
 
-        if(repeatCount >= maxRepeat)
+        if (repeatCount >= maxRepeat)
         {
             List<int> validIndices = new List<int>();
 
-            for(int i = 0; i < attackScripts.Count; i++)
+            for (int i = 0; i < attackScripts.Count; i++)
             {
-                if(i != lastAttackIndex)
+                if (i != lastAttackIndex)
                 {
                     validIndices.Add(i);
                 }
             }
 
-            if(validIndices.Count > 0)
+            if (validIndices.Count > 0)
             {
                 index = validIndices[Random.Range(0, validIndices.Count)];
             }
@@ -239,7 +240,7 @@ public class BossStateAI : MonoBehaviour
         {
             index = Random.Range(0, attackScripts.Count);
 
-            if(index == lastAttackIndex)
+            if (index == lastAttackIndex)
             {
                 repeatCount++;
             }
@@ -318,6 +319,22 @@ public class BossStateAI : MonoBehaviour
                 isSpecialAttackReady = true;
             }
             yield return null;
+        }
+    }
+
+    private void BossFacePhase()
+    {
+        if (!isSecondPhase && !isThirdPhase)
+        {
+            bossFace.ChangeFace(0);
+        }
+        if (isSecondPhase && !isThirdPhase)
+        {
+            bossFace.ChangeFace(1);
+        }
+        if (!isSecondPhase && isThirdPhase)
+        {
+            bossFace.ChangeFace(2);
         }
     }
 }
