@@ -26,6 +26,8 @@ public class NormalLaser : MonoBehaviour
     [Header("��LineWallSetup�ݒ�")]
     [SerializeField] private LineWallSetup lineWallSetup; // LineWallSetup�̎Q��
 
+    private BossStateAI bossStateAI;
+
     private Vector3 laserStart;
     private Vector3 laserEnd;
     private bool isLaserActive = false;
@@ -41,10 +43,18 @@ public class NormalLaser : MonoBehaviour
         {
             lineWallSetup = GetComponent<LineWallSetup>();
         }
+
+        if (bossStateAI == null)
+        {
+            bossStateAI = FindObjectOfType<BossStateAI>();
+        }
     }
 
     public void ExecuteAttack()
     {
+        BossFace.Instance.ChangeFace(5);
+        StartCoroutine(ResetFaceAfterDelay(0.7f));
+
         // プレイヤーの少し前の座標を計算
         float dynamicRadius = Vector3.Distance(centerObject.position, player.position);
         Vector3 radiusVector = (player.position - centerObject.position).normalized;
@@ -107,6 +117,7 @@ public class NormalLaser : MonoBehaviour
 
     private IEnumerator LaserWarningCoroutine()
     {
+
         float elapsedTime = 0f;
         Material warningMaterial = warningRenderer.material;
         Color initialColor = warningMaterial.color;
@@ -177,5 +188,11 @@ public class NormalLaser : MonoBehaviour
                 playerHealth.TakeDamage();
             }
         }
+    }
+
+    private IEnumerator ResetFaceAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        bossStateAI.BossFacePhase();
     }
 }

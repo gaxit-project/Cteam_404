@@ -19,12 +19,14 @@ public class MissileAttack : MonoBehaviour
 
 
     private Player player;
+    private BossStateAI bossStateAI;
     private GameObject[] warningAreaInstances;
     private AudioSource audioSource;
 
     void Start()
     {
         player = FindObjectOfType<Player>();
+        bossStateAI = FindObjectOfType<BossStateAI>();
         if (player == null)
         {
             return;
@@ -41,6 +43,10 @@ public class MissileAttack : MonoBehaviour
 
     private IEnumerator LaunchMissiles()
     {
+        BossFace.Instance.ChangeFace(7);
+        yield return new WaitForSeconds(0.7f);
+        bossStateAI.BossFacePhase();
+
         for (int i = 0; i < missileCount; i++)
         {
             Vector3 playerForwardDirection = player.transform.forward;
