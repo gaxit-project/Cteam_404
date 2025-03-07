@@ -45,8 +45,6 @@ public class BossStateAI : MonoBehaviour
     [SerializeField] private float thirdPhaseAttackInterval = 1.5f;
     [Header("第三形態専用技")]
     [SerializeField] private List<MonoBehaviour> thirdPhaseAttackScripts;
-
-    private BossFace bossFace;
     
     private float attackInterval;
     private float attackTimer = 0f;
@@ -322,19 +320,19 @@ public class BossStateAI : MonoBehaviour
         }
     }
 
-    private void BossFacePhase()
+    public void BossFacePhase()
     {
         if (!isSecondPhase && !isThirdPhase)
         {
-            bossFace.ChangeFace(0);
+            BossFace.Instance.ChangeFace(0);
         }
         if (isSecondPhase && !isThirdPhase)
         {
-            bossFace.ChangeFace(1);
+            BossFace.Instance.ChangeFace(1);
         }
         if (!isSecondPhase && isThirdPhase)
         {
-            bossFace.ChangeFace(2);
+            BossFace.Instance.ChangeFace(2);
         }
     }
 }

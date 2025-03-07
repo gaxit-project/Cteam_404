@@ -11,6 +11,7 @@ public class BossHealth : EnemyHealth
     private bool isPhaseThird = false;
     private BossStateAI bossStateAI;
     private BossHealthUI bossHealthUI;
+    private BossFace bossFace;
 
     protected override void Start()
     {
@@ -65,6 +66,7 @@ public class BossHealth : EnemyHealth
         if(bossStateAI != null)
         {
             bossStateAI.EnterSecondPhase();
+            bossStateAI.BossFacePhase();
         }
     }
 
@@ -76,6 +78,7 @@ public class BossHealth : EnemyHealth
         if(bossStateAI != null)
         {
             bossStateAI.EnterThirdPhase();
+            bossStateAI.BossFacePhase();
         }
     }
 }   
