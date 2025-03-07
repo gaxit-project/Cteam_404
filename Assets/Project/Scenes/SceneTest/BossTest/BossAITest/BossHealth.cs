@@ -5,7 +5,10 @@ public class BossHealth : EnemyHealth
 {
     [Header("‘æ“ñŒ`‘Ô")]
     [SerializeField] private int phaseTwoThreshold;
-    private bool isPhaseTwo = false;
+    [Header("‘æŽOŒ`‘Ô")]
+    [SerializeField] private int phaseThreeThreshold;
+    private bool isPhaseSecond = false;
+    private bool isPhaseThird = false;
     private BossStateAI bossStateAI;
     private BossHealthUI bossHealthUI;
 
@@ -33,9 +36,14 @@ public class BossHealth : EnemyHealth
 
         base.TakeDamage(damage);
 
-        if(!isPhaseTwo && currentHealth <= phaseTwoThreshold)
+        if(!isPhaseSecond && currentHealth <= phaseTwoThreshold)
         {
-            EnterPhaseTwo();
+            EnterPhaseSecond();
+        }
+
+        if(!isPhaseThird && currentHealth <= phaseThreeThreshold)
+        {
+            EnterPhaseThird();
         }
     }
 
@@ -50,13 +58,24 @@ public class BossHealth : EnemyHealth
         SceneManager.LoadScene("GameClear");
     }
 
-    private void EnterPhaseTwo()
+    private void EnterPhaseSecond()
     {
-        isPhaseTwo = true;
+        isPhaseSecond = true;
 
         if(bossStateAI != null)
         {
             bossStateAI.EnterSecondPhase();
+        }
+    }
+
+    private void EnterPhaseThird()
+    {
+        isPhaseThird = true;
+        isPhaseSecond = false;
+
+        if(bossStateAI != null)
+        {
+            bossStateAI.EnterThirdPhase();
         }
     }
 }   

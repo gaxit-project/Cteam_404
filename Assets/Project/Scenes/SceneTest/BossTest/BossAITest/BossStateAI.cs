@@ -38,7 +38,14 @@ public class BossStateAI : MonoBehaviour
     [SerializeField] private bool isSecondPhase = false;
     [InspectorName("攻撃頻度")]
     [SerializeField] private float secondPhaseAttackInterval = 2.5f;
-    
+
+    [Header("第三形態ステータス")]
+    [SerializeField] private bool isThirdPhase = false;
+    [InspectorName("攻撃頻度")]
+    [SerializeField] private float thirdPhaseAttackInterval = 1.5f;
+    [Header("第三形態専用技")]
+    [SerializeField] private List<MonoBehaviour> thirdPhaseAttackScripts;
+
     private bool isSpecialAttackReady = true;
 
     private float attackInterval;
@@ -54,7 +61,7 @@ public class BossStateAI : MonoBehaviour
 
     private void Start()
     {
-        attackInterval = isSecondPhase ? secondPhaseAttackInterval : firstPhaseAttackInterval;
+        attackInterval = isThirdPhase ? thirdPhaseAttackInterval : isSecondPhase ? secondPhaseAttackInterval : firstPhaseAttackInterval;
         animator = GetComponent<Animator>();
 
         if (chargeEffect != null)
@@ -78,6 +85,11 @@ public class BossStateAI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             EnterSecondPhase();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            EnterThirdPhase();
         }
 
         switch (currentState)
@@ -191,6 +203,13 @@ public class BossStateAI : MonoBehaviour
     {
         if (attackScripts.Count == 0) return;
 
+        List<MonoBehaviour> availableAttacks = attackScripts;
+
+        if (isThirdPhase && thirdPhaseAttackScripts.Count > 0)
+        {
+            availableAttacks = thirdPhaseAttackScripts;
+        }
+
         int index;
 
         if(repeatCount >= maxRepeat)
@@ -270,6 +289,17 @@ public class BossStateAI : MonoBehaviour
             isSecondPhase = true;
             attackInterval = secondPhaseAttackInterval;
             Debug.Log("Bossは第二形態に進化した！");
+        }
+    }
+
+    public void EnterThirdPhase()
+    {
+        if (!isThirdPhase)
+        {
+            isThirdPhase = true;
+            isSecondPhase = false;
+            attackInterval = thirdPhaseAttackInterval;
+            Debug.Log("Bossは第三形態に進化した！");
         }
     }
 

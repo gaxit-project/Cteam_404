@@ -63,7 +63,7 @@ public class MissileAttack : MonoBehaviour
             }
 
             yield return new WaitForSeconds(0.4f);
-
+            
             AudioManager.GetInstance().PlaySound(11);
 
             yield return new WaitForSeconds(missileLaunchInterval);
