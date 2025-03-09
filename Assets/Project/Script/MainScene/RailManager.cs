@@ -69,7 +69,7 @@ public class RailManager : MonoBehaviour
             ReferenceObjects[i] = referenceObject;
             RailPositions[i] = distance / railLength; // スプライン全体での位置を0〜1で保存
 
-            if(i != 0)
+            if (i != 0)
             {
                 line.SetPosition(i - 1, ReferenceObjects[i - 1].transform.position);
                 line.SetPosition(i, ReferenceObjects[i].transform.position);
@@ -127,7 +127,7 @@ public class RailManager : MonoBehaviour
             }
         }
 
-        if(5 < ReferenceObjects.Length - closestIndex)
+        if (5 < ReferenceObjects.Length - closestIndex)
         {
             closestIndex += 3;
         }
@@ -143,16 +143,9 @@ public class RailManager : MonoBehaviour
     /// <returns>参照用オブジェクトのposition(Vector3型)</returns>
     public Vector3 GetNearPosition(int index)
     {
-        //Debug.Assert(index < 0 || ReferenceObjects.Length < index ,"要素数外を参照しようとしています");
-        if(index >= ReferenceObjects.Length)
-        {
-            index = index - ReferenceObjects.Length;
-            return ReferenceObjects[index].transform.position;
-        }
-        else
-        {
-            return ReferenceObjects[index].transform.position;
-        }
+        Debug.Log("GetnearPosition:" + index % ReferenceObjects.Length);
+        return ReferenceObjects[index % ReferenceObjects.Length].transform.position;
+
     }
 
     /// <summary>
@@ -162,48 +155,17 @@ public class RailManager : MonoBehaviour
     /// <returns>スプライン上の位置（0〜1）</returns>
     public float GetNearRailPosition(int index)
     {
-        if (index >= ReferenceObjects.Length)
-        {
-            index = index - ReferenceObjects.Length;
-            return RailPositions[index];
-        }
-        else
-        {
-            return RailPositions[index];
-        }
+        return RailPositions[index % ReferenceObjects.Length];
     }
 
 
     public Vector3 GetJumpPosition(int index)
     {
-        if(index+jumpIndex >= ReferenceObjects.Length)
-        {
-            index = (index + jumpIndex) - ReferenceObjects.Length;
-        }
-        else
-        {
-            index += jumpIndex;
-        }
-        return ReferenceObjects[index].transform.position;
+        return ReferenceObjects[(index + jumpIndex) % ReferenceObjects.Length].transform.position;
     }
 
     public float GetJumpRailPosition(int index)
     {
-        if (index + jumpIndex >= ReferenceObjects.Length)
-        {
-            index = (index + jumpIndex) - ReferenceObjects.Length;
-        }
-        else
-        {
-            index += jumpIndex;
-        }
-
-        if (0 <= index && index < RailPositions.Length)
-        {
-            return RailPositions[index];
-        }
-
-        Debug.LogWarning("指定されたインデックスが範囲外です。");
-        return -1f; // 範囲外の場合のエラー値
+        return RailPositions[(index + jumpIndex) % ReferenceObjects.Length];
     }
 }
