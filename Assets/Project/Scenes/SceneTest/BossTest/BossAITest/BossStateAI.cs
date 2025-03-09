@@ -285,6 +285,8 @@ public class BossStateAI : MonoBehaviour
     {
         if (!isSecondPhase)
         {
+            BossFace.Instance.ChangeFace(3);
+            StartCoroutine(WaitCoroutine());
             isSecondPhase = true;
             attackInterval = secondPhaseAttackInterval;
             Debug.Log("Bossは第二形態に進化した！");
@@ -295,11 +297,18 @@ public class BossStateAI : MonoBehaviour
     {
         if (!isThirdPhase)
         {
+            BossFace.Instance.ChangeFace(3);
+            StartCoroutine(WaitCoroutine());
             isThirdPhase = true;
             isSecondPhase = false;
             attackInterval = thirdPhaseAttackInterval;
             Debug.Log("Bossは第三形態に進化した！");
         }
+    }
+
+    private IEnumerator WaitCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
     }
 
     /// <summary>

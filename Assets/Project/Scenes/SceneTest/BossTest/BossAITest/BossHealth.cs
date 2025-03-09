@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Threading;
+using System.Collections;
 
 public class BossHealth : EnemyHealth
 {
@@ -27,6 +29,7 @@ public class BossHealth : EnemyHealth
     {
         if (Input.GetKeyDown(KeyCode.O))
         {
+
             TakeDamage(50);
         }
     }
@@ -37,7 +40,7 @@ public class BossHealth : EnemyHealth
 
         base.TakeDamage(damage);
 
-        if(!isPhaseSecond && currentHealth <= phaseTwoThreshold)
+        if (!isPhaseSecond && currentHealth <= phaseTwoThreshold)
         {
             EnterPhaseSecond();
         }
@@ -45,6 +48,11 @@ public class BossHealth : EnemyHealth
         if(!isPhaseThird && currentHealth <= phaseThreeThreshold)
         {
             EnterPhaseThird();
+        }
+
+        if (bossStateAI != null)
+        {
+            bossStateAI.BossFacePhase();
         }
     }
 
@@ -66,7 +74,6 @@ public class BossHealth : EnemyHealth
         if(bossStateAI != null)
         {
             bossStateAI.EnterSecondPhase();
-            bossStateAI.BossFacePhase();
         }
     }
 
@@ -78,7 +85,6 @@ public class BossHealth : EnemyHealth
         if(bossStateAI != null)
         {
             bossStateAI.EnterThirdPhase();
-            bossStateAI.BossFacePhase();
         }
     }
 }   
