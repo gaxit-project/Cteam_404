@@ -1183,10 +1183,10 @@ Transform:
   m_LocalScale: {x: 0.6666667, y: 0.5, z: 0.6666667}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2054337286}
   - {fileID: 777212107}
-  - {fileID: 1686426206}
   - {fileID: 143869381}
+  - {fileID: 1717559529}
+  - {fileID: 1686426206}
   m_Father: {fileID: 2027227761}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &323962721
@@ -9539,6 +9539,59 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &1717559528
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1717559529}
+  - component: {fileID: 1717559530}
+  m_Layer: 0
+  m_Name: ChasingLaser
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1717559529
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717559528}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 261180276}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1717559530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717559528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9da4faba39405f4b8d9fd47fa59685d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossCenter: {fileID: 1792968298}
+  player: {fileID: 1334552727}
+  laserPrefab: {fileID: 3682460191912876264, guid: 036035e608209814aa3dfc298b8b3eef, type: 3}
+  laserDuration: 5
+  stretchDuration: 0.1
+  backOffsetDistance: 150
+  chaseSpeed: 30
+  laserExtendLength: 20
+  fixedY: 250
 --- !u!1 &1723482000
 GameObject:
   m_ObjectHideFlags: 0
@@ -11103,6 +11156,7 @@ MonoBehaviour:
   attackScripts:
   - {fileID: 777212109}
   - {fileID: 143869382}
+  - {fileID: 1717559530}
   specialAttackScript: {fileID: 1686426207}
   chargeSound: {fileID: 1128220525}
   chargeEffect: {fileID: 1128220522}
@@ -11144,50 +11198,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthBarParent: {fileID: 0}
   healthBarSegmentPrefab: {fileID: 5933660302691501307, guid: ff87c2b213fdb8543a21403e3d848c64, type: 3}
---- !u!1 &2054337284
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2054337286}
-  - component: {fileID: 2054337285}
-  m_Layer: 0
-  m_Name: GenerateMobs
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2054337285
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2054337284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7b2fbf7221f2c34a94797df44364f11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &2054337286
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2054337284}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 261180276}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2054812653
 PrefabInstance:
   m_ObjectHideFlags: 0
