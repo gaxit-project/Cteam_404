@@ -140,6 +140,12 @@ public class NormalLaser : MonoBehaviour
         laserLine.SetPosition(1, laserEnd);
         isLaserActive = true;
 
+
+
+        //AudioManager.GetInstance().PlaySound();
+
+
+
         // 警告エリアの視覚を消し、当たり判定のみを残す
         if (warningRenderer != null)
             warningRenderer.enabled = false;
