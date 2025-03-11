@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerHealth : MonoBehaviour
     private int _damageCount = 0;
     private string _enemyTag = "Mob";
     private PlayerCol playerCol;
+    private Coroutine blinkCoroutine;
     public bool isHit = false;
 
     [Header("ダメージのクールダウン時間")]
@@ -28,6 +30,14 @@ public class PlayerHealth : MonoBehaviour
     [Header("ダメージエフェクトの点滅速度")]
     [SerializeField]
     private float _blinkSpeed = 5f; // 点滅速度
+
+    [Header("無敵時間のプレイヤーの点滅速度")]
+    [SerializeField]
+    private float _playerBlinkSpeed = 0.2f;
+
+    [Header("点滅するプレイヤーのRenderer")]
+    [SerializeField]
+    private SkinnedMeshRenderer[] _playerRenderers;
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -104,20 +114,20 @@ public class PlayerHealth : MonoBehaviour
             {
                 _isInvincible = false;
                 _invincibilityTimer = 0f;
+                StopBlinking(); //無敵終了時に点滅を止める
             }
         }
     }
 
     public void TakeDamage()
     {
-        Debug.Log("ダメージ！");
-        
-        
 
-        if (_isInvincible)
+        if (_isInvincible || _isDamaged)
         {
             return;
         }
+
+        Debug.Log("ダメージ！");
 
         if (_isDamaged)
         {
@@ -134,15 +144,65 @@ public class PlayerHealth : MonoBehaviour
 
         _isDamaged = true;
         _isInvincible = true;
-        _damageTimer = 0f;
         _invincibilityTimer = 0f;
         _damageCount++;
+
+        if (blinkCoroutine != null)
+        {
+            Debug.Log("コルーチン停止");
+            StopCoroutine(blinkCoroutine);
+        }
+
+        StartCoroutine(BlinkPlayer(_invincibilityTime));
+        Debug.Log("プレイヤー点滅開始");
+
+        _damageTimer = 0f;
+    }
+
+    /// <summary>
+    /// プレイヤーを無敵時間中に点滅させる
+    /// </summary>
+    private IEnumerator BlinkPlayer(float duration)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            foreach (var renderer in _playerRenderers) // 表示・非表示を切り替え
+            {
+                renderer.enabled = !renderer.enabled;
+            }
+
+            yield return new WaitForSeconds(_playerBlinkSpeed);
+            elapsedTime += _playerBlinkSpeed;
+        }
+
+        foreach (var renderer in _playerRenderers)// 無敵終了後は表示をONにする
+        {
+            renderer.enabled = true;
+        }
+    }
+
+    /// <summary>
+    /// プレイヤーの点滅を停止する（無敵終了時）
+    /// </summary>
+    private void StopBlinking()
+    {
+        if (blinkCoroutine != null)
+        {
+            StopCoroutine(blinkCoroutine);
+        }
+
+        foreach (var renderer in _playerRenderers)
+        {
+            renderer.enabled = true;
+        }
+        Debug.Log("無敵終了後、表示ON");
     }
 
     public void GameOver()
-    {       
+    {
         AudioManager.Instance.StopBGM();
-        AudioManager.Instance.StopSound();        
+        AudioManager.Instance.StopSound();
         SceneChangeManager.Instance.GameOver();
     }
 
@@ -150,4 +210,7 @@ public class PlayerHealth : MonoBehaviour
     {
         _isDebug = !_isDebug;
     }
+
+
+
 }
