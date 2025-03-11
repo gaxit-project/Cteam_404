@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using SplineMesh;
 using UnityEngine.UIElements;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine.InputSystem;
 
 public partial class  Player : MonoBehaviour
 {
+    //プレイヤー設定
+    #region レール移動
     [Header("現在のレール")]
     public  Spline CurrentRail;
     [Header("レール上スピード")]
@@ -18,11 +18,17 @@ public partial class  Player : MonoBehaviour
     [Header("ジャンプ時間")]
     public float JumpDuration = 0.5f;
     [Header("レールへの吸着が発生する距離")]
-    public float _snapDistance = 8f; // 吸着が有効となる距離
+    public float _snapDistance = 15f; // 吸着が有効となる距離
+    #endregion
+
+    #region 通常攻撃
+
     [Header("武器")]
     public GameObject arms;
     [Header("攻撃エフェクト")]
     public ParticleSystem Slash;
+
+    #endregion
 
     protected Camera mainCamera;
     protected PlayerEmpty _playerEmpty;
@@ -37,7 +43,7 @@ public partial class  Player : MonoBehaviour
     private float _leftRailPosition = 0f;   // 左レールの位置 (0〜1で表現)
     private float _rightRailPosition = 0f;  // 右レールの位置 (0〜1で表現)
 
-    #region ULT
+    #region ULT攻撃
     [Header("ビームチャージに必要なモブ数")]
     [SerializeField]
     public int _attackMob = 5; //ビームを発射するために必要なモブの撃破数
@@ -45,6 +51,8 @@ public partial class  Player : MonoBehaviour
     [Header("ULT待機エフェクト")]
     [SerializeField]
     protected ParticleSystem UltStay; //ビームを発射待機状態
+    protected ParticleSystem.MainModule main;
+    protected ParticleSystem.EmissionModule emission;
 
     [Header("ビームエフェクト")]
     [SerializeField]
@@ -53,6 +61,10 @@ public partial class  Player : MonoBehaviour
     [Header("ULT時間")]
     [SerializeField]
     public float _ultTime = 5f; //ビームの発射時間
+
+    [Header("ULTたまる時間")]
+    [SerializeField]
+    protected float UltChargeTime = 25f; // ULTがたまる時間
 
     [Header("ULT攻撃力")]
     [SerializeField]
@@ -68,10 +80,11 @@ public partial class  Player : MonoBehaviour
     public int _mobCounter = 0;      // 倒したモブの数
     public int prevMobCounter = 0;
 
+    public float UltGauge = 0;
+
     protected bool canULT = false;
     public bool isULT = false;
     
-    private SliderPlayerBeam sliderPlayerBeam;　//ビームチャージ用スライダーの管理スクリプト
     #endregion
 
     protected bool canFall = false;
@@ -90,7 +103,7 @@ public partial class  Player : MonoBehaviour
     private Rigidbody rb;
     private Animator animator;
 
-
+    #region InputAction
 
 
     [SerializeField] private InputActionReference _hold;
@@ -103,6 +116,8 @@ public partial class  Player : MonoBehaviour
     public static bool gaugeActivated = false;
 
     float lockTime = 0;
+
+    #endregion
 
     public void OnAttack(InputAction.CallbackContext context)
     {
@@ -126,13 +141,18 @@ public partial class  Player : MonoBehaviour
     private void Start()
     {
         //パーティクルシステムを取得
+        main = UltStay.main;
+        emission = UltStay.emission;
+        main.startSpeed = 0f;
+        emission.rateOverTime = 0f;
+
         particle.Stop();
-        UltStay.Stop();
         arms.SetActive(false);
 
         //スライダーUIを管理するスクリプトを取得
         //sliderPlayerBeam = GetComponentInChildren<SliderPlayerBeam>();
         _mobCounter = 0;
+        UltGauge = 0f;
 
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
@@ -153,11 +173,15 @@ public partial class  Player : MonoBehaviour
         Debug.Log("現在の状態 : " +  currentState);
 
         //　モブ撃破数が必要数に達した場合、Enterキーでビームを発射できる
-        if (_mobCounter >= _attackMob)
+
+        if (Input.GetKeyDown("n"))
         {
-            canULT = true;
+            AddMobHit();
             UltStay.Play();
         }
+
+        UltGaugeVolume();
+        Debug.Log("ゲージ　；　" + UltGauge);
 
 
 
@@ -179,7 +203,23 @@ public partial class  Player : MonoBehaviour
         {
             prevMobCounter = _mobCounter;
             _mobCounter++;//撃破数を増やす
+            UltGauge += 1 / _attackMob;
         }
         Debug.Log("モブヒット回数: " + _mobCounter);
+    }
+
+    public void UltGaugeVolume()
+    {
+        if(currentState != stateUltAttack && UltGauge <= 1f)
+        {
+            UltGauge += Time.deltaTime / UltChargeTime;
+        }
+        if(UltGauge >= 1f)
+        {
+            canULT = true;
+            UltGauge = 1f;
+            main.startSpeed = 1f;
+        }
+        emission.rateOverTime = UltGauge * 10f;
     }
 }

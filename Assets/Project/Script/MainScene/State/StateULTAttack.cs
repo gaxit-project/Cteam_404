@@ -25,6 +25,7 @@ public partial class Player
 
         public override void OnUpdate(Player owner)
         {
+            #region ƒŒ[ƒ‹ˆÚ“®
             owner._railPosition += owner.Speed * Time.deltaTime / owner.CurrentRail.Length;
             if (owner._railPosition >= 0.9999f)
             {
@@ -41,8 +42,10 @@ public partial class Player
             }
 
             owner.MoveAlongRail();
+            #endregion
             // UŒ‚’†‚Ì“Á•Ê‚È“®ì‚ª‚ ‚éê‡‚Í‚±‚±‚É’Ç‰Á
 
+            owner.UltGauge -= (1f / owner._ultTime) * Time.deltaTime;
             time += Time.deltaTime;
 
             if(time >= owner._ultTime - (owner._ultTime / 4))
@@ -50,8 +53,10 @@ public partial class Player
                 owner.particle.Stop();
             }
 
-            if (time >= owner._ultTime)
+            if (owner.UltGauge <= 0f)
             {
+                owner.main.startSpeed = 0f;
+                owner.emission.rateOverTime = 0f;
                 health.TakeDamage(owner._damegeULT);
                 owner.isULT = false;
                 owner.arms.SetActive(false);
