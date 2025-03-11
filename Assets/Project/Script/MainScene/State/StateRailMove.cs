@@ -37,13 +37,6 @@ public partial class Player
                 {
                     if (owner._leftPosition)
                     {
-                        /*
-                        if(owner._playerEmpty._leftRailPosition + owner._playerEmpty.MaxPos > owner._leftRailPosition)
-                        {
-                            owner._leftRailPosition = owner._playerEmpty._leftRailPosition + owner._playerEmpty.MaxPos;
-                            owner.left = owner.PosRail(owner._playerEmpty._leftRailPosition + owner._playerEmpty.MaxPos, owner._leftRail);
-                        }
-                        */
                         owner.ChangeState(new StateJump(owner._leftRail, owner._leftRailPosition, owner.left));
                     }
                 }
@@ -51,13 +44,6 @@ public partial class Player
                 {
                     if (owner._rightPosition)
                     {
-                        /*
-                        if (owner._playerEmpty._rightRailPosition + owner._playerEmpty.MaxPos > owner._rightRailPosition)
-                        {
-                            owner._rightRailPosition = owner._playerEmpty._rightRailPosition + owner._playerEmpty.MaxPos;
-                            owner.right = owner.PosRail(owner._playerEmpty._rightRailPosition + owner._playerEmpty.MaxPos, owner._rightRail);
-                        }
-                        */
                         owner.ChangeState(new StateJump(owner._rightRail, owner._rightRailPosition, owner.right));
                     }
                 }

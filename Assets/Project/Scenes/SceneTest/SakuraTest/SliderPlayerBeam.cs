@@ -22,8 +22,8 @@ public class SliderPlayerBeam : MonoBehaviour
         playerScript = GameObject.Find("Player").GetComponent<Player>();
 
         // スライダーの最大値と初期値を設定
-        ULTGauge.maxValue = playerScript._attackMob;
-        ULTGauge.value = playerScript._mobCounter;
+        ULTGauge.maxValue = 1;// playerScript._attackMob;
+        ULTGauge.value = playerScript.UltGauge;
         sliderTargetValue = playerScript._mobCounter;
     }
 
@@ -31,6 +31,9 @@ public class SliderPlayerBeam : MonoBehaviour
 
     private void LateUpdate()
     {
+
+        ULTGauge.value = playerScript.UltGauge;
+        /*
 
         // モブの撃破数が増えたらスライダーを更新
         if (playerScript._mobCounter > playerScript.prevMobCounter)
@@ -49,5 +52,6 @@ public class SliderPlayerBeam : MonoBehaviour
 
         ULTGauge.value = Mathf.Lerp(ULTGauge.value, sliderTargetValue, Time.deltaTime * changeSpeed);
         playerScript.prevMobCounter = playerScript._mobCounter;
+        */
     }
 }

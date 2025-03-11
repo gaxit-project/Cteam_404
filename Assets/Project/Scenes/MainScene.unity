@@ -1261,6 +1261,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2027227760}
     - target: {fileID: 2018563370638114747, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
+      propertyPath: _ultTime
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2018563370638114747, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: CurrentRail
       value: 
       objectReference: {fileID: 950194798}
@@ -11679,6 +11683,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerUI
       objectReference: {fileID: 0}
+    - target: {fileID: 6043705051827175, guid: 128075d8b26497c46849da492cbdb25d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 202240822557382941, guid: 128075d8b26497c46849da492cbdb25d, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11783,9 +11791,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7827454410033085051, guid: 128075d8b26497c46849da492cbdb25d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8031468629774321782, guid: 128075d8b26497c46849da492cbdb25d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
