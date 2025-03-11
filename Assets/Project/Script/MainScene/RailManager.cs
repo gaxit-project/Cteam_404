@@ -143,7 +143,6 @@ public class RailManager : MonoBehaviour
     /// <returns>参照用オブジェクトのposition(Vector3型)</returns>
     public Vector3 GetNearPosition(int index)
     {
-        Debug.Log("GetnearPosition:" + index % ReferenceObjects.Length);
         return ReferenceObjects[index % ReferenceObjects.Length].transform.position;
 
     }
