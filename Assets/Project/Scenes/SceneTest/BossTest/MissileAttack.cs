@@ -17,7 +17,6 @@ public class MissileAttack : MonoBehaviour
     [Header("目標地点設定")]
     [SerializeField] private float targetHeightOffset = 7f;
 
-
     private Player player;
     private BossStateAI bossStateAI;
     private GameObject[] warningAreaInstances;
