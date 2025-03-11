@@ -60,23 +60,6 @@ public class SceneChangeManager : MonoBehaviour
     #endregion
 
     #region ƒNƒŠƒA”»’è
-    private void Update()
-    {
-        int BuildIndex = SceneManager.GetActiveScene().buildIndex;
-        
-
-        if(BuildIndex == 2)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                GameOver();
-            }
-            else if (Input.GetKeyDown(KeyCode.RightShift))
-            {
-                GameClear();
-            }
-        }
-    }
 
     public void GameOver()
     {
