@@ -284,6 +284,11 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!137 &20251844 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6255511339630624759, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
+  m_PrefabInstance: {fileID: 342631771}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &24965410
 GameObject:
   m_ObjectHideFlags: 0
@@ -5915,6 +5920,11 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!137 &184596083 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1299425872213786943, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
+  m_PrefabInstance: {fileID: 342631771}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &242230391
 GameObject:
   m_ObjectHideFlags: 0
@@ -6231,6 +6241,26 @@ PrefabInstance:
       propertyPath: _damageCooldownTime
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
+      propertyPath: _playerRenderers.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
+      propertyPath: '_playerRenderers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 184596083}
+    - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
+      propertyPath: '_playerRenderers.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1256017631}
+    - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
+      propertyPath: '_playerRenderers.Array.data[2]'
+      value: 
+      objectReference: {fileID: 20251844}
+    - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
+      propertyPath: '_playerRenderers.Array.data[3]'
+      value: 
+      objectReference: {fileID: 483704838}
     - target: {fileID: 7815852850590496739, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -6563,6 +6593,11 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!137 &483704838 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4963341999350925154, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
+  m_PrefabInstance: {fileID: 342631771}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &492454765
 GameObject:
   m_ObjectHideFlags: 0
@@ -13080,6 +13115,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1237507584}
   m_Mesh: {fileID: 933901382}
+--- !u!137 &1256017631 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 9056379975455805807, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
+  m_PrefabInstance: {fileID: 342631771}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1310728300 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100004, guid: 05a81c3d5091440058129444d28322f3, type: 3}
