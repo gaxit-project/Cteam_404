@@ -28,6 +28,11 @@ public partial class Player
                 owner.ChangeState(new StateRailMove());
             }));
         }
+
+        public override void OnExit(Player owner, PlayerStateBase nextState)
+        {
+            owner.isJumping = !owner.isJumping;
+        }
     }
 
     /// <summary>
