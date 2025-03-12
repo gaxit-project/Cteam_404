@@ -34,7 +34,7 @@ public class BossSpecialAttack : MonoBehaviour
                 attackRigidBody = attackCollider.gameObject.AddComponent<Rigidbody>();
             }
 
-            attackRigidBody.isKinematic = true;
+            attackRigidBody.isKinematic = false;
             attackRigidBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
         }
 
@@ -97,7 +97,7 @@ public class BossSpecialAttack : MonoBehaviour
         Vector3 right = bossObject.right;
 
         Vector3 attackPos = bossObject.position+ (forward * forwardOffset) + (right * sideOffset);
-        attackPos.y += 7f;
+        attackPos.y -= 20f;
         return attackPos;
     }
 
@@ -134,14 +134,16 @@ public class BossSpecialAttack : MonoBehaviour
         }
     }   
     // パーティクルのコライダーにプレイヤーが触れたときの処理
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("Triggerでダメージ");
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage();
+                
             }
             else
             {
@@ -153,4 +155,27 @@ public class BossSpecialAttack : MonoBehaviour
             Debug.Log("PlayerTagがないよ");
         }
     }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            PlayerHealth playerHealth = other.gameObject.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage();
+                Debug.Log("Collitionでダメージ");
+            }
+            else
+            {
+                Debug.Log("PlayerHealthがないよ");
+            }
+        }
+        else
+        {
+            Debug.Log("PlayerTagがないよ");
+        }
+    }
+
+
 }
