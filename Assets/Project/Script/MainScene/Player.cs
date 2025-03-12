@@ -164,8 +164,6 @@ public partial class  Player : MonoBehaviour
 
         AudioManager.GetInstance().PlayBGM(2);
 
-        MinSpeed = Speed * 0.25f;
-        MaxSpeed = Speed * 1.5f;
 
         ChangeState(stateRailMove);
     }
@@ -175,14 +173,20 @@ public partial class  Player : MonoBehaviour
         if (bossHealth.isPhaseSecond && !bossHealth.isPhaseThird)
         {
             Speed = 13f;
+            MinSpeed = Speed * 0.25f;
+            MaxSpeed = Speed * 1.5f;
         }
         else if(!bossHealth.isPhaseSecond && bossHealth.isPhaseThird)
         {
             Speed = 17f;
+            MinSpeed = Speed * 0.25f;
+            MaxSpeed = Speed * 1.5f;
         }
         else
         {
             Speed = 10f;
+            MinSpeed = Speed * 0.25f;
+            MaxSpeed = Speed * 1.5f;
         }
         currentState.OnUpdate(this);
         Debug.Log("現在の状態 : " +  currentState);
