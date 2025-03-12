@@ -75,11 +75,11 @@ public partial class Player
                     {
                         progress += Time.deltaTime / 2.0f; // 2•bŠÔ‚Å100%‚É‚È‚é
                         progress = Mathf.Clamp01(progress);
-                        Debug.Log($"ƒQ[ƒWi’»: {progress * 100}%");
+                        Debug.Log($"ƒQ[ƒWi’»: {progress}%");
                     }
 
 
-                    progress = owner._holdAction.GetTimeoutCompletionPercentage();
+                    //progress = owner._holdAction.GetTimeoutCompletionPercentage();
                     if (progress >= 1 && !gaugeActivated)
                     {
                         /*
