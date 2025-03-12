@@ -18,7 +18,8 @@ public class BossStateAI : MonoBehaviour
 
     [Header("必殺技")]
     [InspectorName("必殺技スクリプト")]
-    [SerializeField] private BossSpecialAttack specialAttackScript;
+    [SerializeField] private BossSpecialAttackFront specialAttackFrontScript;
+    [SerializeField] private BossSpecialAttackBack specialAttackBackScript;
     [InspectorName("チャージSE")]
     [SerializeField] private AudioSource chargeSound;
     [InspectorName("チャージエフェクト")]
@@ -262,15 +263,35 @@ public class BossStateAI : MonoBehaviour
 
     private void ExecuteSpecialAttack()
     {
-        if (specialAttackScript != null)
+        int rnd = Random.Range(0, 2);
+        switch (rnd)
         {
-            specialAttackScript.ExecuteAttack();
-        }
+            case 0:
+                if (specialAttackFrontScript != null)
+                {
+                    Debug.Log("FrontBeeeeeeeeeeeeeM");
+                    specialAttackFrontScript.ExecuteAttack();
+                }
 
-        if (chargeEffect != null)
-        {
-            chargeEffect.Stop();
+                if (chargeEffect != null)
+                {       
+                    chargeEffect.Stop();
+                }
+                break;
+            case 1:
+                if (specialAttackBackScript != null)
+                {
+                    Debug.Log("BackBeeeeeeeeeeeeeeeeeeeM");
+                    specialAttackBackScript.ExecuteAttack();
+                }
+
+                if (chargeEffect != null)
+                {
+                    chargeEffect.Stop();
+                }
+                break;
         }
+        
     }
 
     public void SpecialAttackFinished()

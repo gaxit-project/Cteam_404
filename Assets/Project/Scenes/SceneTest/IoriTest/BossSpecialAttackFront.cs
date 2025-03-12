@@ -3,7 +3,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
 
-public class BossSpecialAttack : MonoBehaviour
+public class BossSpecialAttackFront : MonoBehaviour
 {
     [SerializeField] private ParticleSystem specialEffect;
     [SerializeField] private Collider attackCollider;
@@ -34,7 +34,8 @@ public class BossSpecialAttack : MonoBehaviour
                 attackRigidBody = attackCollider.gameObject.AddComponent<Rigidbody>();
             }
 
-            attackRigidBody.isKinematic = false;
+            attackRigidBody.useGravity = false;
+            attackRigidBody.isKinematic = true;
             attackRigidBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
         }
 
@@ -96,7 +97,7 @@ public class BossSpecialAttack : MonoBehaviour
         Vector3 forward = bossObject.forward;
         Vector3 right = bossObject.right;
 
-        Vector3 attackPos = bossObject.position+ (forward * forwardOffset) + (right * sideOffset);
+        Vector3 attackPos = bossObject.position + (forward * forwardOffset) + (right * sideOffset);
         return attackPos;
     }
 
