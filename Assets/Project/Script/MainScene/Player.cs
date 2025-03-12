@@ -77,6 +77,8 @@ public partial class  Player : MonoBehaviour
     [SerializeField]
     protected GameObject _bossCenter;
 
+    private BossHealth bossHealth;
+
     public int _mobCounter = 0;      // 倒したモブの数
     public int prevMobCounter = 0;
 
@@ -158,6 +160,7 @@ public partial class  Player : MonoBehaviour
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
         _playerEmpty = GameObject.Find("PlayerEmpty").GetComponent<PlayerEmpty>();
+        bossHealth = _boss.GetComponent<BossHealth>();
 
         AudioManager.GetInstance().PlayBGM(2);
 
@@ -169,6 +172,18 @@ public partial class  Player : MonoBehaviour
 
     private void Update()
     {
+        if (bossHealth.isPhaseSecond && !bossHealth.isPhaseThird)
+        {
+            Speed = 13f;
+        }
+        else if(!bossHealth.isPhaseSecond && bossHealth.isPhaseThird)
+        {
+            Speed = 17f;
+        }
+        else
+        {
+            Speed = 10f;
+        }
         currentState.OnUpdate(this);
         Debug.Log("現在の状態 : " +  currentState);
 
@@ -181,7 +196,6 @@ public partial class  Player : MonoBehaviour
         }
 
         UltGaugeVolume();
-        Debug.Log("ゲージ　；　" + UltGauge);
 
 
 

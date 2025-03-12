@@ -11,8 +11,8 @@ public class BossHealth : EnemyHealth
     [SerializeField] private int phaseThreeThreshold;
     [Header("爆発エフェクト")]
     [SerializeField] private GameObject[] explosionObject;
-    private bool isPhaseSecond = false;
-    private bool isPhaseThird = false;
+    public bool isPhaseSecond = false;
+    public bool isPhaseThird = false;
     private BossStateAI bossStateAI;
     private BossHealthUI bossHealthUI;
     private BossFace bossFace;
