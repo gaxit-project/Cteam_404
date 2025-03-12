@@ -1964,7 +1964,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ca5b00138a3a17428ea6b2e644b7ad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sceneName: MainScene
+  _sceneName: TutorialScene
   _seNumber: 1
   Canvas: {fileID: 0}
 --- !u!1001 &4422147810230005331

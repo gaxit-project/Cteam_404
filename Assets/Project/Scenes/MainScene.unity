@@ -6241,7 +6241,7 @@ PrefabInstance:
       objectReference: {fileID: 1891298159}
     - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _blinkSpeed
-      value: 3
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _invincibilityTime
@@ -6249,7 +6249,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _damageCooldownTime
-      value: 3
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _playerRenderers.Array.size
@@ -16389,6 +16389,8 @@ MonoBehaviour:
   - {fileID: 471610548}
   - {fileID: 471610547}
   - {fileID: 471610546}
+  isPhaseSecond: 0
+  isPhaseThird: 0
 --- !u!114 &2027227764
 MonoBehaviour:
   m_ObjectHideFlags: 0
