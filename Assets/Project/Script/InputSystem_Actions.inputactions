@@ -92,7 +92,7 @@
                     "id": "950bee9d-7f09-488c-b6ea-e79ea3ff5238",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Hold",
                     "initialStateCheck": false
                 },
                 {
@@ -273,17 +273,6 @@
                 },
                 {
                     "name": "",
-                    "id": "143bb1cd-cc10-4eca-a2f0-a3664166fe91",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "05f6913d-c316-48b2-a6bb-e225f14c7960",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
@@ -328,6 +317,17 @@
                 },
                 {
                     "name": "",
+                    "id": "b92e693c-01fc-42cf-b8a6-c6eea4935e67",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "b3c1c7f0-bd20-4ee7-a0f1-899b24bca6d7",
                     "path": "<Keyboard>/enter",
                     "interactions": "",
@@ -339,8 +339,8 @@
                 },
                 {
                     "name": "",
-                    "id": "f982f12a-2344-4521-8c6d-2a6c535a7110",
-                    "path": "<XInputController>/buttonSouth",
+                    "id": "143bb1cd-cc10-4eca-a2f0-a3664166fe91",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -361,6 +361,39 @@
                 },
                 {
                     "name": "",
+                    "id": "0884017f-6e4e-45a2-9e50-3a5251e3d3e7",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "996e0cbc-d08d-494a-882a-de6bd783c5d2",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f982f12a-2344-4521-8c6d-2a6c535a7110",
+                    "path": "<XInputController>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "83fc29e1-56d4-4680-b2ed-4f414794f04e",
                     "path": "<XInputController>/buttonEast",
                     "interactions": "",
@@ -372,11 +405,22 @@
                 },
                 {
                     "name": "",
-                    "id": "b92e693c-01fc-42cf-b8a6-c6eea4935e67",
-                    "path": "<Keyboard>/h",
+                    "id": "b0926061-d798-4ac0-9d1b-e45449d321d3",
+                    "path": "<XInputController>/buttonNorth",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
+                    "groups": ";Gamepad",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0972a0ba-602c-4fdd-af1d-53181ac7cf00",
+                    "path": "<XInputController>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
                     "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -537,11 +581,55 @@
                 },
                 {
                     "name": "",
+                    "id": "c902ef1e-f92e-4a1d-ae87-7883058f3cbb",
+                    "path": "<Keyboard>/j",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "ULTAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "0cc39edd-41bf-469f-b87b-09dca6651715",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "Hold",
                     "processors": "",
                     "groups": ";Gamepad",
+                    "action": "ULTAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b32ce33b-ae12-4222-818e-e9c0dbef8c59",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "ULTAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b4f17261-9e21-472f-a302-98d17c8ff4c7",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "ULTAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "24014e9a-500b-4c9a-b1d2-2826dea6064f",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "ULTAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -559,17 +647,6 @@
                 },
                 {
                     "name": "",
-                    "id": "c902ef1e-f92e-4a1d-ae87-7883058f3cbb",
-                    "path": "<Keyboard>/j",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "ULTAttack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "7454e645-1e80-46a4-be7e-a5af7a23fccc",
                     "path": "<XInputController>/buttonEast",
                     "interactions": "",
@@ -581,8 +658,19 @@
                 },
                 {
                     "name": "",
-                    "id": "b32ce33b-ae12-4222-818e-e9c0dbef8c59",
-                    "path": "<Gamepad>/buttonSouth",
+                    "id": "2babf9d5-f627-4e97-a473-8b4816cf2fc3",
+                    "path": "<XInputController>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "ULTAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "12d6cd6a-6784-4624-9942-40b5738327b8",
+                    "path": "<XInputController>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",

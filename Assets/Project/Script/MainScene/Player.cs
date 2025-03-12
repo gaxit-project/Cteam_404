@@ -121,16 +121,6 @@ public partial class  Player : MonoBehaviour
 
     #endregion
 
-    public void OnAttack(InputAction.CallbackContext context)
-    {
-
-        // Performedフェーズの判定を行う
-        if (context.phase == InputActionPhase.Performed)
-        {
-            isAttacking = true;
-        }
-    }
-
 
     private void Awake()
     {
@@ -138,6 +128,10 @@ public partial class  Player : MonoBehaviour
 
         _holdAction = _hold.action;
         _holdAction.Enable();
+
+        // イベント登録
+        _holdAction.performed += OnHoldPerformed;
+        _holdAction.canceled += OnHoldCanceled;
     }
 
     private void Start()
@@ -189,7 +183,7 @@ public partial class  Player : MonoBehaviour
             MaxSpeed = Speed * 1.5f;
         }
         currentState.OnUpdate(this);
-        Debug.Log("現在の状態 : " +  currentState);
+        //Debug.Log("現在の状態 : " +  currentState);
 
         //　モブ撃破数が必要数に達した場合、Enterキーでビームを発射できる
 
@@ -211,6 +205,18 @@ public partial class  Player : MonoBehaviour
         newState.OnEnter(this, currentState);
         currentState = newState;
     }
+
+    #region InputSystem_Callback
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+
+        // Performedフェーズの判定を行う
+        if (context.phase == InputActionPhase.Performed)
+        {
+            isAttacking = true;
+        }
+    }
+    #endregion
 
     /// <summary>
     /// モブにヒットした回数を加算するメソッド
