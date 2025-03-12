@@ -24,7 +24,7 @@ public partial class Player
 
             owner.MoveAlongRail();
             owner.UpdateReferencePositions(_currentSpeed);
-
+            owner.arms.SetActive(false);
             #region プレイヤーレール操作
 
             _currentSpeed = owner.Speed;
