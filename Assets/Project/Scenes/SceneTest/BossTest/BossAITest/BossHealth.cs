@@ -67,6 +67,7 @@ public class BossHealth : EnemyHealth
             bossHealthUI.DestroyHealthBar();
         }
         BossFace.Instance.ChangeFace(8);
+        Ending.Instance.StartDissolve();
         StartCoroutine(PlayExplosions());
 
         //SceneManager.LoadScene("GameClear");
