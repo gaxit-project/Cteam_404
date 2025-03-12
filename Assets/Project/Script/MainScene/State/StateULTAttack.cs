@@ -17,7 +17,7 @@ public partial class Player
             owner._mobCounter = 0; //撃破カウントをリセット
             owner.canULT = false;
             owner.isULT = true;
-            owner.UltStay.Stop();
+            //owner.UltStay.Stop();
             owner.particle.Play();  //ビームエフェクトを再生
             time = 0f;
             AudioManager.GetInstance().PlaySound(7);
