@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using SplineMesh;
 using static UnityEngine.UI.GridLayoutGroup;
+using static UnityEditor.PlayerSettings;
 
 
 public partial class Player
@@ -129,7 +130,11 @@ public partial class Player
                     owner._railPosition = 0f; // ƒ‹[ƒvˆ—
                 }
             }
-            owner._railPosition = Mathf.Clamp(owner._railPosition, owner._playerEmpty._railPosition - owner._playerEmpty.MinPos, owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos);
+
+            if (!(owner._railPosition >= 0.9999f || owner._railPosition <= 0f))
+            {
+                owner._railPosition = Mathf.Clamp(owner._railPosition, owner._playerEmpty._railPosition - owner._playerEmpty.MinPos, owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos);
+            }
         }
     }
 
