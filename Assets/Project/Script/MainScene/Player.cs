@@ -80,7 +80,6 @@ public partial class  Player : MonoBehaviour
     private BossHealth bossHealth;
 
     public int _mobCounter = 0;      // 倒したモブの数
-    public int prevMobCounter = 0;
 
     public static float UltGauge = 0;
 
@@ -136,28 +135,19 @@ public partial class  Player : MonoBehaviour
 
     private void Start()
     {
-        //パーティクルシステムを取得
-        main = UltStay.main;
-        emission = UltStay.emission;
-        main.startSpeed = 0f;
-        emission.rateOverTime = 0f;
-
-        particle.Stop();
-        arms.SetActive(false);
-
-        //スライダーUIを管理するスクリプトを取得
-        //sliderPlayerBeam = GetComponentInChildren<SliderPlayerBeam>();
-        _mobCounter = 0;
-        UltGauge = 0f;
-
+        // コンポーネント取得
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
         _playerEmpty = GameObject.Find("PlayerEmpty").GetComponent<PlayerEmpty>();
         bossHealth = _boss.GetComponent<BossHealth>();
 
-        AudioManager.GetInstance().PlayBGM(2);
+        main = UltStay.main;
+        emission = UltStay.emission;
 
+        InitProperties();
+
+        AudioManager.GetInstance().PlayBGM(2);
 
         ChangeState(stateRailMove);
     }
@@ -225,7 +215,6 @@ public partial class  Player : MonoBehaviour
     {
         if (_mobCounter < _attackMob)
         {
-            prevMobCounter = _mobCounter;
             _mobCounter++;//撃破数を増やす
             UltGauge += 1.0f / _attackMob;
         }
@@ -240,10 +229,36 @@ public partial class  Player : MonoBehaviour
         }
         if(UltGauge >= 1f)
         {
+            Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             canULT = true;
             UltGauge = 1f;
             main.startSpeed = 1f;
         }
+        //Debug.Log($"ULTゲージ進捗: {UltGauge * 100}%");
         emission.rateOverTime = UltGauge * 10f;
     }
+
+    #region 初期化
+    public void InitProperties()
+    {
+        canULT = false;
+        isULT = false;
+        canFall = false;
+        isRide = true;
+        isAttacking = false;
+        canRide = false;
+        isJumping = false;
+
+        _railPosition = 0f;
+
+        _mobCounter = 0;
+        UltGauge = 0f;
+
+        main.startSpeed = 0f;
+        emission.rateOverTime = 0f;
+
+        particle.Stop();
+        arms.SetActive(false);
+    }
+    #endregion
 }

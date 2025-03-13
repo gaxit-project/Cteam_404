@@ -65,14 +65,6 @@ public class PlayerGauge : MonoBehaviour
         _holdImage.fillAmount = Player.progress;
         _energyImage.fillAmount = Player.UltGauge;
 
-
-
-
-
-
-
-
-
         // ULTゲージが最大になったら GIF を一度だけ起動
         if (_energyImage.fillAmount >= 1f)
         {
@@ -106,37 +98,5 @@ public class PlayerGauge : MonoBehaviour
             _isUltAvailable = canUseUlt;
         }
 
-
-
-        /*
-        if (_energyImage.fillAmount >= 1f)
-        {
-            _gifAni.SetActive(true);
-            _buttonImage.color = _color1;
-            _text.color = _color1;
-        }
-        else if (_energyImage.fillAmount <= 0f)
-        {
-            _gifAni.SetActive(false);
-            _buttonImage.color = _color2;
-            _text.color = _color2;
-            _text.text = _text2;
-        }
-        else
-        {
-            _buttonImage.color = _color2;
-            _text.color = _color2;
-            _text.text = _text2;
-        }
-
-        if (_holdImage.fillAmount >= 1f)
-        {
-            _text.text = _text1;
-        }
-        else
-        {
-            _text.text = _text2;
-        }
-        */
     }
 }
