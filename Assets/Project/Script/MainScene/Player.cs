@@ -216,25 +216,24 @@ public partial class  Player : MonoBehaviour
         if (_mobCounter < _attackMob)
         {
             _mobCounter++;//撃破数を増やす
-            UltGauge += 1.0f / _attackMob;
+            UltGauge = Mathf.Clamp01(UltGauge += 1.0f / _attackMob);
         }
         Debug.Log("モブヒット回数: " + _mobCounter);
     }
 
     public void UltGaugeVolume()
     {
-        if(currentState != stateUltAttack && UltGauge <= 1f)
+        if (currentState != stateUltAttack && UltGauge <= 1f)
         {
             UltGauge += Time.deltaTime / UltChargeTime;
         }
-        if(UltGauge >= 1f)
+        UltGauge = Mathf.Clamp01(UltGauge);
+        if (UltGauge >= 1f)
         {
-            Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             canULT = true;
             UltGauge = 1f;
             main.startSpeed = 1f;
         }
-        //Debug.Log($"ULTゲージ進捗: {UltGauge * 100}%");
         emission.rateOverTime = UltGauge * 10f;
     }
 

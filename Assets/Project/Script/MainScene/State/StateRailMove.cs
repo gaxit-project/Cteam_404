@@ -146,6 +146,12 @@ public partial class Player
     {
         Debug.Log("’·‰Ÿ‚µ‚ð—£‚µ‚½uŠÔ");
 
+        if(UltGauge >= 1f && progress >= 1f)
+        {
+            canULT = true;
+        }
+
+
         // ˆê’èŽžŠÔˆÈã’·‰Ÿ‚µ‚µ‚Ä‚¢‚½‚çULT”­“®
         if (progress >= 1.0f && canULT)
         {
