@@ -122,7 +122,7 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage()
     {
 
-        if (_isInvincible || _isDamaged)
+        if (_isInvincible)
         {
             return;
         }

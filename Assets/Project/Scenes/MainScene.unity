@@ -6255,11 +6255,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _invincibilityTime
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _damageCooldownTime
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _playerRenderers.Array.size
@@ -16680,7 +16680,6 @@ MonoBehaviour:
   attackScripts:
   - {fileID: 777212109}
   - {fileID: 143869382}
-  - {fileID: 1717559530}
   specialAttackFrontScript: {fileID: 749350269}
   specialAttackBackScript: {fileID: 1686426209}
   chargeSound: {fileID: 1128220525}

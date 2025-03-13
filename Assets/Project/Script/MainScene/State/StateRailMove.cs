@@ -73,7 +73,7 @@ public partial class Player
 
                     if (owner._holdAction.IsPressed())
                     {
-                        progress += Time.deltaTime / 2.0f; // 2ïbä‘Ç≈100%Ç…Ç»ÇÈ
+                        progress += Time.deltaTime / 1.0f; // 2ïbä‘Ç≈100%Ç…Ç»ÇÈ
                         progress = Mathf.Clamp01(progress);
                     }
 
