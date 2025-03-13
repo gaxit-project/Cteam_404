@@ -45,6 +45,7 @@ public class Missile : MonoBehaviour
             yield return null;
         }
 
+        transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         Explode();
     }
 
@@ -80,7 +81,9 @@ public class Missile : MonoBehaviour
     private void LookAtTarget(Vector3 target)
     {
         Vector3 direction = (target - transform.position).normalized;
-        transform.rotation = Quaternion.LookRotation(direction);
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = targetRotation * Quaternion.Euler(90f, 0f, 0f);
     }
 
     /// <summary>
