@@ -82,7 +82,7 @@ public partial class  Player : MonoBehaviour
     public int _mobCounter = 0;      // 倒したモブの数
     public int prevMobCounter = 0;
 
-    public float UltGauge = 0;
+    public static float UltGauge = 0;
 
     protected bool canULT = false;
     public bool isULT = false;
@@ -227,7 +227,7 @@ public partial class  Player : MonoBehaviour
         {
             prevMobCounter = _mobCounter;
             _mobCounter++;//撃破数を増やす
-            UltGauge += 1 / _attackMob;
+            UltGauge += 1.0f / _attackMob;
         }
         Debug.Log("モブヒット回数: " + _mobCounter);
     }

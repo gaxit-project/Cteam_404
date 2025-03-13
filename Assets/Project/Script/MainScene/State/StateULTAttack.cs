@@ -45,7 +45,7 @@ public partial class Player
             #endregion
             // UŒ‚’†‚Ì“Á•Ê‚È“®ì‚ª‚ ‚éê‡‚Í‚±‚±‚É’Ç‰Á
 
-            owner.UltGauge -= (1f / owner._ultTime) * Time.deltaTime;
+            UltGauge -= (1f / owner._ultTime) * Time.deltaTime;
             time += Time.deltaTime;
 
             if(time >= owner._ultTime - (owner._ultTime / 4))
@@ -53,7 +53,7 @@ public partial class Player
                 owner.particle.Stop();
             }
 
-            if (owner.UltGauge <= 0f)
+            if (UltGauge <= 0f)
             {
                 owner.main.startSpeed = 0f;
                 owner.emission.rateOverTime = 0f;

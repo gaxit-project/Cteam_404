@@ -6,6 +6,7 @@ using UnityEngine.UI;
 /// </summary>
 public class SliderPlayerBeam : MonoBehaviour
 {
+    /*
     private Slider ULTGauge; // スライダーのUI
     private Player playerScript; // Playerスクリプトの参照
     private float sliderTargetValue; // 目標値
@@ -33,7 +34,7 @@ public class SliderPlayerBeam : MonoBehaviour
     {
 
         ULTGauge.value = playerScript.UltGauge;
-        /*
+        
 
         // モブの撃破数が増えたらスライダーを更新
         if (playerScript._mobCounter > playerScript.prevMobCounter)
@@ -52,6 +53,7 @@ public class SliderPlayerBeam : MonoBehaviour
 
         ULTGauge.value = Mathf.Lerp(ULTGauge.value, sliderTargetValue, Time.deltaTime * changeSpeed);
         playerScript.prevMobCounter = playerScript._mobCounter;
-        */
+        
     }
+    */
 }
