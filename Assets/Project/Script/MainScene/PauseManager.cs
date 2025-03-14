@@ -50,15 +50,6 @@ public class PauseManager : MonoBehaviour
                 Canvas.SetActive(false);  //取得してから非アクティブに変更
             }
 
-            GameObject player = GameObject.FindWithTag("Player");
-            if(player != null)
-            {
-                PlayerInput newplayerInput = player.GetComponent<PlayerInput>();
-                if(newplayerInput != null)
-                {
-                       
-                }
-            }
         }
     }
 
