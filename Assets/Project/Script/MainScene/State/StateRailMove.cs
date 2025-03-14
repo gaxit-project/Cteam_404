@@ -2,8 +2,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using SplineMesh;
-using static UnityEngine.UI.GridLayoutGroup;
-using static UnityEditor.PlayerSettings;
+using TMPro;
 
 
 public partial class Player
@@ -14,10 +13,13 @@ public partial class Player
     public class StateRailMove : PlayerStateBase
     {
         private float _currentSpeed;
+        float dis;
 
         public override void OnEnter(Player owner, PlayerStateBase prevState)
         {
             _currentSpeed = owner.Speed;
+            var splineSample = owner.CurrentRail.GetSampleAtDistance((owner._railPosition + owner._playerEmpty.MinPos) * owner.CurrentRail.Length);
+            dis = Vector3.Distance(owner._emptyPlayer.transform.position, splineSample.location);
         }
 
         public override void OnUpdate(Player owner)
@@ -25,6 +27,7 @@ public partial class Player
 
             owner.MoveAlongRail();
             owner.UpdateReferencePositions(_currentSpeed);
+
             owner.arms.SetActive(false);
             #region プレイヤーレール操作
 
@@ -111,12 +114,35 @@ public partial class Player
 
             #endregion
 
-
+            /*
             if (owner._railPosition >= owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos)
             {
                 _currentSpeed = owner.MinSpeed;
             }
+            */
             owner._railPosition += _currentSpeed * Time.deltaTime / owner.CurrentRail.Length;
+
+            Debug.Log("現在の速度 : " + _currentSpeed);
+
+            
+            if ((0f <= owner._railPosition && owner._railPosition >= 0.9999f) || owner._playerEmpty._railPosition <= 0.9999f - owner._playerEmpty.MinPos + owner._playerEmpty.MaxPos)
+            {
+                float minLimit = owner._playerEmpty._railPosition - owner._playerEmpty.MinPos;
+                float maxLimit = owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos;
+                float disRail = Mathf.Abs(owner._playerEmpty._railPosition - owner._railPosition);
+                if (disRail < 0.5f)
+                {
+                    // Lerpを使って滑らかに制限を適用
+                    owner._railPosition = Mathf.Lerp(owner._railPosition, Mathf.Clamp(owner._railPosition, minLimit, maxLimit), 2f);
+                    //owner._railPosition = Mathf.Clamp(owner._railPosition, owner._playerEmpty._railPosition - owner._playerEmpty.MinPos, owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos);
+                }
+
+            }
+            owner.MoveAlongRail();
+
+
+
+
             if (owner._railPosition >= 0.9999f)
             {
                 if (owner.canFall)
@@ -131,10 +157,6 @@ public partial class Player
                 }
             }
 
-            if (!(owner._railPosition >= 0.9999f || owner._railPosition <= 0f))
-            {
-                owner._railPosition = Mathf.Clamp(owner._railPosition, owner._playerEmpty._railPosition - owner._playerEmpty.MinPos, owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos);
-            }
         }
     }
 
@@ -282,4 +304,5 @@ public partial class Player
         return splineSample.location;
     }
     #endregion
+
 }

@@ -31,6 +31,7 @@ public partial class  Player : MonoBehaviour
     #endregion
 
     protected Camera mainCamera;
+    protected GameObject _emptyPlayer;
     protected PlayerEmpty _playerEmpty;
 
     protected float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
@@ -139,7 +140,8 @@ public partial class  Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
-        _playerEmpty = GameObject.Find("PlayerEmpty").GetComponent<PlayerEmpty>();
+        _emptyPlayer = GameObject.Find("PlayerEmpty");
+        _playerEmpty = _emptyPlayer.GetComponent<PlayerEmpty>();
         bossHealth = _boss.GetComponent<BossHealth>();
 
         main = UltStay.main;

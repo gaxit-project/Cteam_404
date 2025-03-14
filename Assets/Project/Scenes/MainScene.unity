@@ -6263,15 +6263,15 @@ PrefabInstance:
       objectReference: {fileID: 1891298159}
     - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _blinkSpeed
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _invincibilityTime
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _damageCooldownTime
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6803324902184924405, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _playerRenderers.Array.size
@@ -14903,15 +14903,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: b6a1cf4e3eeaf9a4ca38bf8acb910a6d, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: b6a1cf4e3eeaf9a4ca38bf8acb910a6d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: b6a1cf4e3eeaf9a4ca38bf8acb910a6d, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22400008, guid: b6a1cf4e3eeaf9a4ca38bf8acb910a6d, type: 3}
       propertyPath: m_Pivot.x
@@ -15666,7 +15666,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1862989186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17016,15 +17016,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: b6a1cf4e3eeaf9a4ca38bf8acb910a6d, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: b6a1cf4e3eeaf9a4ca38bf8acb910a6d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: b6a1cf4e3eeaf9a4ca38bf8acb910a6d, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22400008, guid: b6a1cf4e3eeaf9a4ca38bf8acb910a6d, type: 3}
       propertyPath: m_Pivot.x
@@ -17556,7 +17556,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6117615679721881920, guid: 128075d8b26497c46849da492cbdb25d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -748
+      value: -838
       objectReference: {fileID: 0}
     - target: {fileID: 6117615679721881920, guid: 128075d8b26497c46849da492cbdb25d, type: 3}
       propertyPath: m_AnchoredPosition.y
