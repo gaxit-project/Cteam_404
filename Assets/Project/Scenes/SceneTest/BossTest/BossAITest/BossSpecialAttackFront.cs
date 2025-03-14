@@ -7,6 +7,7 @@ public class BossSpecialAttackFront : MonoBehaviour
     [SerializeField] private Collider attackCollider;
     [SerializeField] private Transform bossObject;
     [SerializeField] private Transform firePoint;
+    [SerializeField] private Transform playerEmpty;
 
     [Header("攻撃位置オフセット")]
     [SerializeField] private float forwardOffset = 5f;//ボスの前方の距離
@@ -28,6 +29,7 @@ public class BossSpecialAttackFront : MonoBehaviour
     {
         if (isAttacking)
         {
+            Debug.Log("IsAttacking作動");
             UpdateAttackPosition();
         }
     }
@@ -65,11 +67,21 @@ public class BossSpecialAttackFront : MonoBehaviour
         {
             attackCollider.transform.position = attackPos;
             attackCollider.transform.rotation = attackRotation;
+            Debug.Log("ATP:" + attackPos);
+            Debug.Log("ATR：" + attackRotation);
         }
+
+        if (specialEffect != null)
+        {
+            specialEffect.transform.position = attackPos;
+            specialEffect.transform.rotation = attackRotation;
+        }
+
     }
 
     private Vector3 GetAttackPosition()
     {
+        
         Vector3 forward = bossObject.forward;
         Vector3 right = bossObject.right;
 

@@ -26,14 +26,16 @@ public class BossSpecialAttack : MonoBehaviour
 
     private void Update()
     {
-        if (isAttacking)
+        /*if (isAttacking)
         {
+            Debug.Log("IsAttacking作動中");
             UpdateAttackPosition();
-        }
+        }*/
     }
 
     public void ExecuteAttack()
-    {
+    {   
+        isAttacking = true;
         if (specialEffect != null)
         {
             specialEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -46,7 +48,7 @@ public class BossSpecialAttack : MonoBehaviour
                 attackCollider.enabled = true;
             }
 
-            isAttacking = true;
+            
             BossFace.Instance.ChangeFace(4);
             StartCoroutine(StopSpecialEffect(3f));
             bossStateAI.BossFacePhase();
