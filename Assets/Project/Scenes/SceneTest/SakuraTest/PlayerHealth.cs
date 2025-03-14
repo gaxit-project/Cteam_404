@@ -60,7 +60,10 @@ public class PlayerHealth : MonoBehaviour
     private void Start()
     {
         playerCol = GetComponent<PlayerCol>();
-    }
+        _isDamaged = false;
+        _isInvincible = false;
+        _isDebug = false;
+}
 
     void Update()
     {
@@ -209,6 +212,11 @@ public class PlayerHealth : MonoBehaviour
     private void ToggleDebugMode()
     {
         _isDebug = !_isDebug;
+    }
+
+    public void SetIsInvincible()
+    {
+        _isInvincible = true;
     }
 
 

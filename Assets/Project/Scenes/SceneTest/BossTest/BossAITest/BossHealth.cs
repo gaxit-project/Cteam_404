@@ -14,15 +14,16 @@ public class BossHealth : EnemyHealth
     public bool isPhaseSecond = false;
     public bool isPhaseThird = false;
     private BossStateAI bossStateAI;
-    private BossHealthUI bossHealthUI;
-    private BossFace bossFace;
+    private PlayerHealth _pHealth;
 
     protected override void Start()
     {
         base.Start();
         bossStateAI =  GetComponent<BossStateAI>();
-        bossHealthUI = FindObjectOfType<BossHealthUI>();
-    }
+        _pHealth = GameObject.Find("Player").GetComponent<PlayerHealth>();
+        isPhaseSecond = false;
+        isPhaseThird = false;
+}
 
     /// <summary>
     /// テスト用のため後日削除
@@ -61,13 +62,9 @@ public class BossHealth : EnemyHealth
 
     protected override void Die()
     {
-        //base.Die();
-        if(bossHealthUI != null)
-        {
-            bossHealthUI.DestroyHealthBar();
-        }
+        _pHealth.SetIsInvincible();//無敵化
         BossFace.Instance.ChangeFace(8);
-        Ending.Instance.StartDissolve();
+        //Ending.Instance.StartDissolve();
         StartCoroutine(PlayExplosions());
 
         //SceneManager.LoadScene("GameClear");
@@ -77,20 +74,29 @@ public class BossHealth : EnemyHealth
     {
         GameObject[] shuffledExplosions = (GameObject[])explosionObject.Clone();
         System.Random rng = new System.Random();
+        BossFace.Instance.ChangeFace(8);
 
         // Fisher-Yates シャッフルでランダム化
-        for (int i = shuffledExplosions.Length - 1; i > 0; i--)
+        for (int i = explosionObject.Length - 1; i > 0; i--)
         {
             int j = rng.Next(i + 1);
-            (shuffledExplosions[i], shuffledExplosions[j]) = (shuffledExplosions[j], shuffledExplosions[i]);
+            (explosionObject[i], explosionObject[j]) = (explosionObject[j], explosionObject[i]);
         }
 
-        foreach (GameObject explosion in shuffledExplosions)
+        int triggerPoint = (int)(explosionObject.Length * 0.9f); // 3/4 のタイミングを計算
+
+        for (int i = 0; i < explosionObject.Length; i++)
         {
-            explosion.SetActive(true);
+            explosionObject[i].SetActive(true);
             AudioManager.GetInstance().PlaySound(18);
-            StartCoroutine(DeactivateAfterDelay(explosion, 1f)); // 1秒後に非実体化
-            yield return new WaitForSeconds(0.5f); // 次のオブジェクトを0.5秒後に実体化
+            StartCoroutine(DeactivateAfterDelay(explosionObject[i], 1f));
+
+            if (i == triggerPoint) // 3/4 のタイミングで実行
+            {
+                Ending.Instance.StartDissolve();
+            }
+
+            yield return new WaitForSeconds(0.5f);
         }
 
         yield return new WaitForSeconds(0.5f); // 最後の爆発の処理待機
@@ -100,7 +106,8 @@ public class BossHealth : EnemyHealth
     private IEnumerator DeactivateAfterDelay(GameObject obj, float delay)
     {
         yield return new WaitForSeconds(delay);
-        obj.SetActive(false);
+        BossFace.Instance.ChangeFace(8);
+        //obj.SetActive(false);
     }
 
     private void EnterPhaseSecond()
