@@ -11,6 +11,9 @@ public class BossHealth : EnemyHealth
     [SerializeField] private int phaseThreeThreshold;
     [Header("爆発エフェクト")]
     [SerializeField] private GameObject[] explosionObject;
+
+    [Header("最終爆発エフェクト")]
+    [SerializeField] private ParticleSystem lastExplosion;
     public bool isPhaseSecond = false;
     public bool isPhaseThird = false;
     private BossStateAI bossStateAI;
@@ -21,6 +24,7 @@ public class BossHealth : EnemyHealth
         base.Start();
         bossStateAI =  GetComponent<BossStateAI>();
         _pHealth = GameObject.Find("Player").GetComponent<PlayerHealth>();
+        lastExplosion.Stop();
         isPhaseSecond = false;
         isPhaseThird = false;
 }
@@ -83,7 +87,7 @@ public class BossHealth : EnemyHealth
             (explosionObject[i], explosionObject[j]) = (explosionObject[j], explosionObject[i]);
         }
 
-        int triggerPoint = (int)(explosionObject.Length * 0.9f); // 3/4 のタイミングを計算
+        int triggerPoint = (int)(explosionObject.Length * 0.98f); // 3/4 のタイミングを計算
 
         for (int i = 0; i < explosionObject.Length; i++)
         {
