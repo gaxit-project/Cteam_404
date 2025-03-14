@@ -365,4 +365,9 @@ public class BossStateAI : MonoBehaviour
             BossFace.Instance.ChangeFace(2);
         }
     }
+
+    public void SetDoNothing()
+    {
+        currentState = State.doNothing;
+    }
 }
