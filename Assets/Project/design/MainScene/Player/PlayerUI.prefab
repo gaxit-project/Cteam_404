@@ -689,7 +689,7 @@ MonoBehaviour:
   _energyImage: {fileID: 3816582762572173845}
   _buttonImage: {fileID: 4870948489720049696}
   _text: {fileID: 3461985126951071150}
-  _text1: "\u767A\u52D5"
+  _text1: "\u306F\u306A\u305B"
   _text2: "\u9577\u62BC\u3057"
   _color1: {r: 1, g: 1, b: 1, a: 1}
   _color2: {r: 0.39215687, g: 0.39215687, b: 0.39215687, a: 1}
