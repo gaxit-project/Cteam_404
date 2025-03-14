@@ -10,16 +10,16 @@ public partial class Player
     /// <summary>
     /// レール上の移動ステート
     /// </summary>
+    /// 
+    private bool _isCharging = false;
     public class StateRailMove : PlayerStateBase
     {
         private float _currentSpeed;
-        float dis;
 
         public override void OnEnter(Player owner, PlayerStateBase prevState)
         {
             _currentSpeed = owner.Speed;
-            var splineSample = owner.CurrentRail.GetSampleAtDistance((owner._railPosition + owner._playerEmpty.MinPos) * owner.CurrentRail.Length);
-            dis = Vector3.Distance(owner._emptyPlayer.transform.position, splineSample.location);
+            owner._isCharging = false;
         }
 
         public override void OnUpdate(Player owner)
@@ -38,7 +38,7 @@ public partial class Player
 
             if (input.magnitude > 0.1f) // 適当な閾値
             {
-                if (!owner.isAttacking) // 攻撃中はジャンプ不可
+                if (!owner.isAttacking && !owner._isCharging) // 攻撃中はジャンプ不可
                 {
                     if (angle >= 45 && angle < 135) // 上
                     {
@@ -114,12 +114,6 @@ public partial class Player
 
             #endregion
 
-            /*
-            if (owner._railPosition >= owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos)
-            {
-                _currentSpeed = owner.MinSpeed;
-            }
-            */
             owner._railPosition += _currentSpeed * Time.deltaTime / owner.CurrentRail.Length;
 
             Debug.Log("現在の速度 : " + _currentSpeed);
@@ -165,6 +159,7 @@ public partial class Player
     private void OnHoldPerformed(InputAction.CallbackContext context)
     {
         Debug.Log("長押し開始");
+        _isCharging = true;
         progress = 0.0f;
     }
 
@@ -172,6 +167,7 @@ public partial class Player
     private void OnHoldCanceled(InputAction.CallbackContext context)
     {
         Debug.Log("長押しを離した瞬間");
+        _isCharging = false;
 
         if(UltGauge >= 1f && progress >= 1f)
         {

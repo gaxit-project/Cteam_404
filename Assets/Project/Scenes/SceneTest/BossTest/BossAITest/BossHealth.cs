@@ -66,6 +66,7 @@ public class BossHealth : EnemyHealth
 
     protected override void Die()
     {
+        bossStateAI.SetDoNothing();
         _pHealth.SetIsInvincible();//–³“G‰»
         BossFace.Instance.ChangeFace(8);
         //Ending.Instance.StartDissolve();

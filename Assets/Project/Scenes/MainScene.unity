@@ -6187,7 +6187,7 @@ PrefabInstance:
       objectReference: {fileID: 1792968297}
     - target: {fileID: 2018563370638114747, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: UltChargeTime
-      value: 40
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 2018563370638114747, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: _snapDistance
