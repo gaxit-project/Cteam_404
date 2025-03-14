@@ -263,7 +263,8 @@ public class BossStateAI : MonoBehaviour
 
     private void ExecuteSpecialAttack()
     {
-        int rnd = Random.Range(0, 2);
+        //int rnd = Random.Range(0, 2);
+        int rnd = 0;
         switch (rnd)
         {
             case 0:

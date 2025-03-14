@@ -66,6 +66,12 @@ public class BossSpecialAttackBack : MonoBehaviour
             attackCollider.transform.position = attackPos;
             attackCollider.transform.rotation = attackRotation;
         }
+
+        if(specialEffect != null)
+        {
+            specialEffect.transform.position = attackPos;
+            specialEffect.transform.rotation = attackRotation;
+        }
     }
 
     private Vector3 GetAttackPosition()
