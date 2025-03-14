@@ -4900,11 +4900,11 @@ MonoBehaviour:
   UltStay: {fileID: 542657564707576506}
   particle: {fileID: 9013031806884710724}
   _ultTime: 5
+  UltChargeTime: 25
   _damegeULT: 50
   _boss: {fileID: 0}
   _bossCenter: {fileID: 0}
   _mobCounter: 0
-  prevMobCounter: 0
   isULT: 0
   _hold: {fileID: -5047846092849895973, guid: 289c1b55c9541489481df5cc06664110, type: 3}
 --- !u!114 &6803324902184924405
@@ -4924,6 +4924,8 @@ MonoBehaviour:
   _invincibilityTime: 2
   _damageImg: {fileID: 0}
   _blinkSpeed: 10
+  _playerBlinkSpeed: 0.2
+  _playerRenderers: []
 --- !u!114 &506543896210513844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5003,13 +5005,13 @@ MonoBehaviour:
     m_ActionName: Player/ULTAttack
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1238605832036620193, guid: 0824162a52a74704c9a39d5af1527554, type: 3}
+        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
+        m_MethodName: OnPause
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
