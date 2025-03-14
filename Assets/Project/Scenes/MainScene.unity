@@ -6144,10 +6144,10 @@ PrefabInstance:
     - target: {fileID: 506543896210513844, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1333169264}
+      objectReference: {fileID: 732653404}
     - target: {fileID: 506543896210513844, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnPausu
+      value: OnPause
       objectReference: {fileID: 0}
     - target: {fileID: 506543896210513844, guid: 3782b4cc6f05602409312a42382c747b, type: 3}
       propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -6850,7 +6850,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1238605832036620193, guid: 0824162a52a74704c9a39d5af1527554, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -7244,6 +7245,7 @@ GameObject:
   m_Component:
   - component: {fileID: 732653403}
   - component: {fileID: 732653402}
+  - component: {fileID: 732653404}
   m_Layer: 0
   m_Name: MainAdmin
   m_TagString: Untagged
@@ -7290,6 +7292,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &732653404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732653401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a517581a6e60904abbebdc57a81374e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Canvas: {fileID: 0}
 --- !u!1001 &744301564
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13500,17 +13515,6 @@ MonoBehaviour:
   _sceneName: TitleScene
   _seNumber: 1
   Canvas: {fileID: 0}
---- !u!114 &1333169264 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7709410441404712890, guid: 0824162a52a74704c9a39d5af1527554, type: 3}
-  m_PrefabInstance: {fileID: 498696224}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a517581a6e60904abbebdc57a81374e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1333658501
 GameObject:
   m_ObjectHideFlags: 0

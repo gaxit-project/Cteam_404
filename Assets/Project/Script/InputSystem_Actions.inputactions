@@ -96,7 +96,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Puasu",
+                    "name": "Pause",
                     "type": "Button",
                     "id": "18bdd743-b822-46c3-9b6d-db4171c0f322",
                     "expectedControlType": "",
@@ -685,7 +685,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Puasu",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -696,7 +696,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Puasu",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -707,7 +707,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Puasu",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
