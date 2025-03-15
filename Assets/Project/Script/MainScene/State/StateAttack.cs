@@ -40,7 +40,7 @@ public partial class Player
             // UŒ‚’†‚Ì“Á•Ê‚È“®ì‚ª‚ ‚éê‡‚Í‚±‚±‚É’Ç‰Á
 
             time += Time.deltaTime;
-            if(time >= 1f)
+            if(time >= 1f / 2f)
             {
                 owner.arms.SetActive(false);
                 owner.ChangeState(stateRailMove);

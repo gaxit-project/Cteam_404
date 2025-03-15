@@ -10,7 +10,7 @@ public class PauseManager : MonoBehaviour
     {
         return Instance;
     }
-    
+
     public GameObject Canvas;
 
     private PlayerInput playerInput;
@@ -41,13 +41,18 @@ public class PauseManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         BuildIndex = scene.buildIndex; // ビルド番号を取得
-        
+
         if (BuildIndex == 2)
         {
+            Canvas = GameObject.Find("Canvs");
             if (Canvas == null) // Canvasがnullなら
             {
                 Canvas = GameObject.Find("Canvas");  //Canvasを取得
                 Canvas.SetActive(false);  //取得してから非アクティブに変更
+            }
+            else
+            {
+                Canvas.SetActive(false);
             }
 
         }
@@ -55,17 +60,17 @@ public class PauseManager : MonoBehaviour
 
     public void RegisterPlayerInput(PlayerInput newPlayerInput)
     {
-        if(playerInput == null)
+        if (playerInput == null)
         {
             //古いPlayerInputのリスナーを解除
             playerInput.actions.FindActionMap("Player").FindAction("Pause").performed -= OnPause;
         }
 
         playerInput = newPlayerInput;
-        if(playerInput != null)
+        if (playerInput != null)
         {
             InputAction pauseAction = playerInput.actions.FindActionMap("Player").FindAction("Pause");
-            if(pauseAction != null)
+            if (pauseAction != null)
             {
                 pauseAction.performed += OnPause;
             }
@@ -113,7 +118,7 @@ public class PauseManager : MonoBehaviour
                 }
             }
         }
-    } 
+    }
 
     /// <summary>
     /// Canvasを見つけたいときのメソッド
@@ -125,3 +130,4 @@ public class PauseManager : MonoBehaviour
         return Canvas;
     }
 }
+
