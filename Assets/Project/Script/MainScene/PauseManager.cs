@@ -26,6 +26,12 @@ public class PauseManager : MonoBehaviour
         BuildIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
+    private void Start()
+    {
+        Canvas = GameObject.Find("Canvas");  //Canvasを取得
+        Canvas.SetActive(false);  //取得してから非アクティブに変更
+    }
+
 
     #region Sceneを移動したときの処理
     private void OnEnable()
