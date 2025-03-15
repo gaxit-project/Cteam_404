@@ -263,8 +263,8 @@ public class BossStateAI : MonoBehaviour
 
     private void ExecuteSpecialAttack()
     {
-        //int rnd = Random.Range(0, 2);
-        int rnd = 0;
+        int rnd = Random.Range(0, 2);
+        
         switch (rnd)
         {
             case 0:
@@ -272,6 +272,7 @@ public class BossStateAI : MonoBehaviour
                 {
                     Debug.Log("FrontBeeeeeeeeeeeeeM");
                     specialAttackFrontScript.ExecuteAttack();
+                    BossFace.Instance.ChangeFace(5);
                 }
 
                 if (chargeEffect != null)
@@ -284,6 +285,7 @@ public class BossStateAI : MonoBehaviour
                 {
                     Debug.Log("BackBeeeeeeeeeeeeeeeeeeeM");
                     specialAttackBackScript.ExecuteAttack();
+                    BossFace.Instance.ChangeFace(6);
                 }
 
                 if (chargeEffect != null)

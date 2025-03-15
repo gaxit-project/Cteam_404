@@ -29,8 +29,7 @@ public class LaserHit : MonoBehaviour
         PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
         if (playerHealth != null)
         {
-            //SceneChangeManager.GetInstance().GameOver();
-            Debug.Log("LaserHit!!");
+            playerHealth.TakeDamage();
         }
     }
 }
