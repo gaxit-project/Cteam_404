@@ -85,7 +85,6 @@ public class PauseManager : MonoBehaviour
         // Performedフェーズの判定を行う
         if (context.phase == InputActionPhase.Performed)
         {
-
             IsPaused = true;
         }
     }

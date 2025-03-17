@@ -29,7 +29,7 @@ public class LaserHit : MonoBehaviour
         PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
         if (playerHealth != null)
         {
-            playerHealth.TakeDamage();
+            SceneChangeManager.GetInstance().GameOver();
         }
     }
 }

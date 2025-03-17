@@ -272,7 +272,7 @@ public class BossStateAI : MonoBehaviour
                 {
                     Debug.Log("FrontBeeeeeeeeeeeeeM");
                     specialAttackFrontScript.ExecuteAttack();
-                    BossFace.Instance.ChangeFace(5);
+                    
                 }
 
                 if (chargeEffect != null)
@@ -285,7 +285,7 @@ public class BossStateAI : MonoBehaviour
                 {
                     Debug.Log("BackBeeeeeeeeeeeeeeeeeeeM");
                     specialAttackBackScript.ExecuteAttack();
-                    BossFace.Instance.ChangeFace(6);
+                    
                 }
 
                 if (chargeEffect != null)

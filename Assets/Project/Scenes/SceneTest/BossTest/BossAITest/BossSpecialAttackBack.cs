@@ -47,7 +47,7 @@ public class BossSpecialAttackBack : MonoBehaviour
             }
 
             isAttacking = true;
-            BossFace.Instance.ChangeFace(4);
+            BossFace.Instance.ChangeFace(6);
             StartCoroutine(StopSpecialEffect(3f));
             bossStateAI.BossFacePhase();
         }

@@ -36,6 +36,7 @@ public class BossSpecialAttackFront : MonoBehaviour
 
     public void ExecuteAttack()
     {
+        
         if (specialEffect != null)
         {
             specialEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -49,7 +50,7 @@ public class BossSpecialAttackFront : MonoBehaviour
             }
 
             isAttacking = true;
-            BossFace.Instance.ChangeFace(4);
+            BossFace.Instance.ChangeFace(5);
             StartCoroutine(StopSpecialEffect(3f));
             bossStateAI.BossFacePhase();
         }
