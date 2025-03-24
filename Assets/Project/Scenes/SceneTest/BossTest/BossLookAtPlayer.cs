@@ -12,7 +12,7 @@ public class BossLookAtPlayer : MonoBehaviour
 
     private void Start()
     {
-        playerObject = GameObject.Find("Player");
+        playerObject = GameObject.Find("PlayerEmpty");
         if (playerObject != null)
         {
             playerTransform = playerObject.transform;

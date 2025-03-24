@@ -5,38 +5,27 @@ using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
 {
-    public static PauseManager Instance;
-    
+    private static PauseManager Instance;
+    public static PauseManager GetInstance()
+    {
+        return Instance;
+    }
+
     public GameObject Canvas;
+
+    private PlayerInput playerInput;
 
     private int BuildIndex;
 
     private bool IsPaused = false;
 
-
-    #region シングルトン
-
-    public static PauseManager GetInstance()
+    void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = FindObjectOfType<PauseManager>();
-        }
-        return Instance;
-    }
-    private void Awake()
-    {
+        Instance = this;
+
         BuildIndex = SceneManager.GetActiveScene().buildIndex;
-        
-        if (this != GetInstance())
-        {
-            Destroy(this.gameObject);
-            return;
-        }
-        DontDestroyOnLoad(this.gameObject);
-
     }
-    #endregion
+
 
     #region Sceneを移動したときの処理
     private void OnEnable()
@@ -52,26 +41,50 @@ public class PauseManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         BuildIndex = scene.buildIndex; // ビルド番号を取得
-        
+
         if (BuildIndex == 2)
         {
+            Canvas = GameObject.Find("Canvas");
             if (Canvas == null) // Canvasがnullなら
             {
                 Canvas = GameObject.Find("Canvas");  //Canvasを取得
                 Canvas.SetActive(false);  //取得してから非アクティブに変更
+            }
+            else
+            {
+                Canvas.SetActive(false);
+            }
+
+        }
+    }
+
+    public void RegisterPlayerInput(PlayerInput newPlayerInput)
+    {
+        if (playerInput == null)
+        {
+            //古いPlayerInputのリスナーを解除
+            playerInput.actions.FindActionMap("Player").FindAction("Pause").performed -= OnPause;
+        }
+
+        playerInput = newPlayerInput;
+        if (playerInput != null)
+        {
+            InputAction pauseAction = playerInput.actions.FindActionMap("Player").FindAction("Pause");
+            if (pauseAction != null)
+            {
+                pauseAction.performed += OnPause;
             }
         }
     }
 
     #endregion
 
-    public void OnPausu(InputAction.CallbackContext context)
+    public void OnPause(InputAction.CallbackContext context)
     {
 
         // Performedフェーズの判定を行う
         if (context.phase == InputActionPhase.Performed)
         {
-
             IsPaused = true;
         }
     }
@@ -104,7 +117,7 @@ public class PauseManager : MonoBehaviour
                 }
             }
         }
-    } 
+    }
 
     /// <summary>
     /// Canvasを見つけたいときのメソッド
@@ -116,3 +129,4 @@ public class PauseManager : MonoBehaviour
         return Canvas;
     }
 }
+

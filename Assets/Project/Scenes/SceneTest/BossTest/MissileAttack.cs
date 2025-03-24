@@ -17,14 +17,15 @@ public class MissileAttack : MonoBehaviour
     [Header("目標地点設定")]
     [SerializeField] private float targetHeightOffset = 7f;
 
-
     private Player player;
+    private BossStateAI bossStateAI;
     private GameObject[] warningAreaInstances;
     private AudioSource audioSource;
 
     void Start()
     {
         player = FindObjectOfType<Player>();
+        bossStateAI = FindObjectOfType<BossStateAI>();
         if (player == null)
         {
             return;
@@ -41,6 +42,10 @@ public class MissileAttack : MonoBehaviour
 
     private IEnumerator LaunchMissiles()
     {
+        BossFace.Instance.ChangeFace(7);
+        yield return new WaitForSeconds(0.7f);
+        bossStateAI.BossFacePhase();
+
         for (int i = 0; i < missileCount; i++)
         {
             Vector3 playerForwardDirection = player.transform.forward;
@@ -63,7 +68,7 @@ public class MissileAttack : MonoBehaviour
             }
 
             yield return new WaitForSeconds(0.4f);
-
+            
             AudioManager.GetInstance().PlaySound(11);
 
             yield return new WaitForSeconds(missileLaunchInterval);

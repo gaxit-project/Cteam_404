@@ -25,8 +25,14 @@ public partial class Player
             {
                 owner.CurrentRail = targetRail;
                 owner._railPosition = targetPosition;
+                owner.isJumping = false;
                 owner.ChangeState(new StateRailMove());
             }));
+        }
+
+        public override void OnExit(Player owner, PlayerStateBase nextState)
+        {
+            owner.isJumping = false;
         }
     }
 

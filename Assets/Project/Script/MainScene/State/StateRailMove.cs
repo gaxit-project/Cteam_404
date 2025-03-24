@@ -2,6 +2,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using SplineMesh;
+using TMPro;
 
 
 public partial class Player
@@ -9,59 +10,55 @@ public partial class Player
     /// <summary>
     /// レール上の移動ステート
     /// </summary>
+    /// 
+    private bool _isCharging = false;
     public class StateRailMove : PlayerStateBase
     {
         private float _currentSpeed;
 
         public override void OnEnter(Player owner, PlayerStateBase prevState)
         {
-            //owner.animator.SetBool("isRide", true);
             _currentSpeed = owner.Speed;
+            owner._isCharging = false;
         }
 
         public override void OnUpdate(Player owner)
         {
 
             owner.MoveAlongRail();
-            owner.UpdateReferencePositions();
+            owner.UpdateReferencePositions(_currentSpeed);
 
+            owner.arms.SetActive(false);
             #region プレイヤーレール操作
 
             _currentSpeed = owner.Speed;
 
             Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             float angle = Mathf.Atan2(input.y, input.x) * Mathf.Rad2Deg;
+
             if (input.magnitude > 0.1f) // 適当な閾値
             {
-                if (angle >= 45 && angle < 135) // 上
+                if (!owner.isAttacking && !owner._isCharging) // 攻撃中はジャンプ不可
                 {
-                    if (owner._leftPosition)
+                    if (angle >= 45 && angle < 135) // 上
                     {
-                        /*
-                        if(owner._playerEmpty._leftRailPosition + owner._playerEmpty.MaxPos > owner._leftRailPosition)
+                        if (owner._leftPosition)
                         {
-                            owner._leftRailPosition = owner._playerEmpty._leftRailPosition + owner._playerEmpty.MaxPos;
-                            owner.left = owner.PosRail(owner._playerEmpty._leftRailPosition + owner._playerEmpty.MaxPos, owner._leftRail);
+                            owner.isJumping = !owner.isJumping;
+                            owner.ChangeState(new StateJump(owner._leftRail, owner._leftRailPosition, owner.left));
                         }
-                        */
-                        owner.ChangeState(new StateJump(owner._leftRail, owner._leftRailPosition, owner.left));
+                    }
+                    else if (angle >= -135 && angle < -45) // 下
+                    {
+                        if (owner._rightPosition)
+                        {
+                            owner.isJumping = !owner.isJumping;
+                            owner.ChangeState(new StateJump(owner._rightRail, owner._rightRailPosition, owner.right));
+                        }
                     }
                 }
-                else if (angle >= -135 && angle < -45) // 下
-                {
-                    if (owner._rightPosition)
-                    {
-                        /*
-                        if (owner._playerEmpty._rightRailPosition + owner._playerEmpty.MaxPos > owner._rightRailPosition)
-                        {
-                            owner._rightRailPosition = owner._playerEmpty._rightRailPosition + owner._playerEmpty.MaxPos;
-                            owner.right = owner.PosRail(owner._playerEmpty._rightRailPosition + owner._playerEmpty.MaxPos, owner._rightRail);
-                        }
-                        */
-                        owner.ChangeState(new StateJump(owner._rightRail, owner._rightRailPosition, owner.right));
-                    }
-                }
-                else if (angle >= -45 && angle < 45) // 右
+
+                if (angle >= -45 && angle < 45) // 右
                 {
                     _currentSpeed = owner.MaxSpeed;
                 }
@@ -71,21 +68,39 @@ public partial class Player
                 }
             }
 
-
             // 攻撃
-            if (owner.canULT)
+            if (!owner.isJumping) // ジャンプ中は攻撃不可
             {
-                // 長押しの進捗を取得
-                progress = owner._holdAction.GetTimeoutCompletionPercentage();
-                // 進捗が1以上になったときの処理
-                if (progress >= 1 && !gaugeActivated)
+                if (owner.canULT)
                 {
-                    owner._holdAction.Disable();  // Actionを一旦無効化
-                    owner._holdAction.Enable();   // すぐに有効化して次の入力に備える
-                    progress = 0.0f;
 
-                    Debug.Log("ULT発動");
-                    owner.ChangeState(stateUltAttack);
+
+                    if (owner._holdAction.IsPressed())
+                    {
+                        progress += Time.deltaTime / 1.0f; // 2秒間で100%になる
+                        progress = Mathf.Clamp01(progress);
+                    }
+
+
+                    if (progress >= 1 && !gaugeActivated)
+                    {
+                        /*
+                        owner._holdAction.Disable();
+                        owner._holdAction.Enable();
+                        progress = 0.0f;
+
+                        Debug.Log("ULT発動");
+                        owner.ChangeState(stateUltAttack);
+                        */
+                    }
+                    else
+                    {
+                        if (owner.isAttacking)
+                        {
+                            owner.isAttacking = !owner.isAttacking;
+                            owner.ChangeState(stateAttack);
+                        }
+                    }
                 }
                 else
                 {
@@ -96,24 +111,32 @@ public partial class Player
                     }
                 }
             }
-            else
-            {
-                if (owner.isAttacking)
-                {
-                    owner.isAttacking = !owner.isAttacking;
-                    owner.ChangeState(stateAttack);
-                }
-            }
 
             #endregion
 
-            Debug.Log("現在の速度:" + _currentSpeed);
-
-            if(owner._railPosition >= owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos)
-            {
-                _currentSpeed = owner.MinSpeed;
-            }
             owner._railPosition += _currentSpeed * Time.deltaTime / owner.CurrentRail.Length;
+
+            Debug.Log("現在の速度 : " + _currentSpeed);
+
+            
+            if ((0f <= owner._railPosition && owner._railPosition >= 0.9999f) || owner._playerEmpty._railPosition <= 0.9999f - owner._playerEmpty.MinPos + owner._playerEmpty.MaxPos)
+            {
+                float minLimit = owner._playerEmpty._railPosition - owner._playerEmpty.MinPos;
+                float maxLimit = owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos;
+                float disRail = Mathf.Abs(owner._playerEmpty._railPosition - owner._railPosition);
+                if (disRail < 0.5f)
+                {
+                    // Lerpを使って滑らかに制限を適用
+                    owner._railPosition = Mathf.Lerp(owner._railPosition, Mathf.Clamp(owner._railPosition, minLimit, maxLimit), 2f);
+                    //owner._railPosition = Mathf.Clamp(owner._railPosition, owner._playerEmpty._railPosition - owner._playerEmpty.MinPos, owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos);
+                }
+
+            }
+            owner.MoveAlongRail();
+
+
+
+
             if (owner._railPosition >= 0.9999f)
             {
                 if (owner.canFall)
@@ -127,9 +150,45 @@ public partial class Player
                     owner._railPosition = 0f; // ループ処理
                 }
             }
-            owner._railPosition = Mathf.Clamp(owner._railPosition, owner._playerEmpty._railPosition - owner._playerEmpty.MinPos, owner._playerEmpty._railPosition + owner._playerEmpty.MaxPos);
+
         }
     }
+
+    #region InputSystem_Callback
+    // 長押し開始
+    private void OnHoldPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log("長押し開始");
+        _isCharging = true;
+        progress = 0.0f;
+    }
+
+    // 長押しを離した瞬間
+    private void OnHoldCanceled(InputAction.CallbackContext context)
+    {
+        Debug.Log("長押しを離した瞬間");
+        _isCharging = false;
+
+        if(UltGauge >= 1f && progress >= 1f)
+        {
+            canULT = true;
+        }
+
+
+        // 一定時間以上長押ししていたらULT発動
+        if (progress >= 1.0f && canULT)
+        {
+            Debug.Log("ULT発動！");
+            isULT = true;
+
+            // ULT発動処理
+            ChangeState(stateUltAttack);
+        }
+
+        // 長押しゲージリセット
+        progress = 0.0f;
+    }
+    #endregion
 
     /// <summary>
     /// レール上の現在の位置と向きを更新
@@ -165,7 +224,7 @@ public partial class Player
     /// 他のレールの参照用オブジェクトを調査して左右のレールポジションを更新
     /// </summary>
     #region 他のレールの参照用オブジェクトを調査して左右のレールポジションを更新
-    void UpdateReferencePositions()
+    void UpdateReferencePositions(float _currentSpeed)
     {
         try
         {
@@ -186,6 +245,7 @@ public partial class Player
                 if (closestIndex == -1) continue; // 有効な参照がない場合スキップ
 
                 Vector3 referenceObject = manager.GetNearPosition(closestIndex);
+                float tmpRailposition = manager.GetNearRailPosition(closestIndex);
                 float distance = Vector3.Distance(transform.position, referenceObject);
 
                 if (distance > _snapDistance) continue; // スナップ距離外の場合スキップ
@@ -197,15 +257,29 @@ public partial class Player
                 {
                     _leftPosition = true;
                     _leftRail = manager.TargetRail;
-                    _leftRailPosition = manager.GetJumpRailPosition(closestIndex);
-                    left = manager.GetJumpPosition(closestIndex);
+
+                    float futureRailPosition = tmpRailposition + _currentSpeed * JumpDuration / _leftRail.Length;
+
+                    var splineSample = _leftRail.GetSampleAtDistance(futureRailPosition * _leftRail.Length);
+                    Vector3 target = splineSample.location;
+
+                    int jumpIndex = manager.GetNearPositionIndex(target);
+                    _leftRailPosition = manager.GetNearRailPosition(jumpIndex);
+                    left = manager.GetNearPosition(jumpIndex);
                 }
                 else if (dot > 0.5f && !_rightPosition) // 右側
                 {
                     _rightPosition = true;
                     _rightRail = manager.TargetRail;
-                    _rightRailPosition = manager.GetJumpRailPosition(closestIndex);
-                    right = manager.GetJumpPosition(closestIndex);
+
+                    float futureRailPosition = tmpRailposition + _currentSpeed * JumpDuration / _rightRail.Length;
+
+                    var splineSample = _rightRail.GetSampleAtDistance(futureRailPosition * _rightRail.Length);
+                    Vector3 target = splineSample.location;
+
+                    int jumpIndex = manager.GetNearPositionIndex(target);
+                    _rightRailPosition = manager.GetNearRailPosition(jumpIndex);
+                    right = manager.GetNearPosition(jumpIndex);
                 }
             }
         }
@@ -226,4 +300,5 @@ public partial class Player
         return splineSample.location;
     }
     #endregion
+
 }

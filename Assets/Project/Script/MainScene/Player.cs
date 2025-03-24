@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using SplineMesh;
 using UnityEngine.UIElements;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine.InputSystem;
 
 public partial class  Player : MonoBehaviour
 {
+    //プレイヤー設定
+    #region レール移動
     [Header("現在のレール")]
     public  Spline CurrentRail;
     [Header("レール上スピード")]
@@ -18,13 +18,20 @@ public partial class  Player : MonoBehaviour
     [Header("ジャンプ時間")]
     public float JumpDuration = 0.5f;
     [Header("レールへの吸着が発生する距離")]
-    public float _snapDistance = 8f; // 吸着が有効となる距離
+    public float _snapDistance = 15f; // 吸着が有効となる距離
+    #endregion
+
+    #region 通常攻撃
+
     [Header("武器")]
     public GameObject arms;
     [Header("攻撃エフェクト")]
     public ParticleSystem Slash;
 
+    #endregion
+
     protected Camera mainCamera;
+    protected GameObject _emptyPlayer;
     protected PlayerEmpty _playerEmpty;
 
     protected float _railPosition = 0f;       // レール上の現在位置 (0〜1で表現)
@@ -37,7 +44,7 @@ public partial class  Player : MonoBehaviour
     private float _leftRailPosition = 0f;   // 左レールの位置 (0〜1で表現)
     private float _rightRailPosition = 0f;  // 右レールの位置 (0〜1で表現)
 
-    #region ULT
+    #region ULT攻撃
     [Header("ビームチャージに必要なモブ数")]
     [SerializeField]
     public int _attackMob = 5; //ビームを発射するために必要なモブの撃破数
@@ -45,6 +52,8 @@ public partial class  Player : MonoBehaviour
     [Header("ULT待機エフェクト")]
     [SerializeField]
     protected ParticleSystem UltStay; //ビームを発射待機状態
+    protected ParticleSystem.MainModule main;
+    protected ParticleSystem.EmissionModule emission;
 
     [Header("ビームエフェクト")]
     [SerializeField]
@@ -53,6 +62,10 @@ public partial class  Player : MonoBehaviour
     [Header("ULT時間")]
     [SerializeField]
     public float _ultTime = 5f; //ビームの発射時間
+
+    [Header("ULTたまる時間")]
+    [SerializeField]
+    protected float UltChargeTime = 25f; // ULTがたまる時間
 
     [Header("ULT攻撃力")]
     [SerializeField]
@@ -65,13 +78,15 @@ public partial class  Player : MonoBehaviour
     [SerializeField]
     protected GameObject _bossCenter;
 
+    private BossHealth bossHealth;
+
     public int _mobCounter = 0;      // 倒したモブの数
-    public int prevMobCounter = 0;
+
+    public static float UltGauge = 0;
 
     protected bool canULT = false;
     public bool isULT = false;
     
-    private SliderPlayerBeam sliderPlayerBeam;　//ビームチャージ用スライダーの管理スクリプト
     #endregion
 
     protected bool canFall = false;
@@ -90,7 +105,7 @@ public partial class  Player : MonoBehaviour
     private Rigidbody rb;
     private Animator animator;
 
-
+    #region InputAction
 
 
     [SerializeField] private InputActionReference _hold;
@@ -104,15 +119,7 @@ public partial class  Player : MonoBehaviour
 
     float lockTime = 0;
 
-    public void OnAttack(InputAction.CallbackContext context)
-    {
-
-        // Performedフェーズの判定を行う
-        if (context.phase == InputActionPhase.Performed)
-        {
-            isAttacking = true;
-        }
-    }
+    #endregion
 
 
     private void Awake()
@@ -121,43 +128,64 @@ public partial class  Player : MonoBehaviour
 
         _holdAction = _hold.action;
         _holdAction.Enable();
+
+        // イベント登録
+        _holdAction.performed += OnHoldPerformed;
+        _holdAction.canceled += OnHoldCanceled;
     }
 
     private void Start()
     {
-        //パーティクルシステムを取得
-        particle.Stop();
-        UltStay.Stop();
-        arms.SetActive(false);
-
-        //スライダーUIを管理するスクリプトを取得
-        //sliderPlayerBeam = GetComponentInChildren<SliderPlayerBeam>();
-        _mobCounter = 0;
-
+        // コンポーネント取得
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
-        _playerEmpty = GameObject.Find("PlayerEmpty").GetComponent<PlayerEmpty>();
+        _emptyPlayer = GameObject.Find("PlayerEmpty");
+        _playerEmpty = _emptyPlayer.GetComponent<PlayerEmpty>();
+        bossHealth = _boss.GetComponent<BossHealth>();
+
+        main = UltStay.main;
+        emission = UltStay.emission;
+
+        InitProperties();
 
         AudioManager.GetInstance().PlayBGM(2);
-
-        MinSpeed = Speed * 0.25f;
-        MaxSpeed = Speed * 1.5f;
 
         ChangeState(stateRailMove);
     }
 
     private void Update()
     {
+        if (bossHealth.isPhaseSecond && !bossHealth.isPhaseThird)
+        {
+            Speed = 13f;
+            MinSpeed = Speed * 0.25f;
+            MaxSpeed = Speed * 1.5f;
+        }
+        else if(!bossHealth.isPhaseSecond && bossHealth.isPhaseThird)
+        {
+            Speed = 17f;
+            MinSpeed = Speed * 0.25f;
+            MaxSpeed = Speed * 1.5f;
+        }
+        else
+        {
+            Speed = 10f;
+            MinSpeed = Speed * 0.25f;
+            MaxSpeed = Speed * 1.5f;
+        }
         currentState.OnUpdate(this);
-        Debug.Log("現在の状態 : " +  currentState);
+        //Debug.Log("現在の状態 : " +  currentState);
 
         //　モブ撃破数が必要数に達した場合、Enterキーでビームを発射できる
-        if (_mobCounter >= _attackMob)
+
+        if (Input.GetKeyDown("n"))
         {
-            canULT = true;
+            AddMobHit();
             UltStay.Play();
         }
+
+        UltGaugeVolume();
 
 
 
@@ -170,6 +198,18 @@ public partial class  Player : MonoBehaviour
         currentState = newState;
     }
 
+    #region InputSystem_Callback
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+
+        // Performedフェーズの判定を行う
+        if (context.phase == InputActionPhase.Performed)
+        {
+            isAttacking = true;
+        }
+    }
+    #endregion
+
     /// <summary>
     /// モブにヒットした回数を加算するメソッド
     /// </summary>
@@ -177,9 +217,49 @@ public partial class  Player : MonoBehaviour
     {
         if (_mobCounter < _attackMob)
         {
-            prevMobCounter = _mobCounter;
             _mobCounter++;//撃破数を増やす
+            UltGauge = Mathf.Clamp01(UltGauge += 1.0f / _attackMob);
         }
         Debug.Log("モブヒット回数: " + _mobCounter);
     }
+
+    public void UltGaugeVolume()
+    {
+        if (currentState != stateUltAttack && UltGauge <= 1f)
+        {
+            UltGauge += Time.deltaTime / UltChargeTime;
+        }
+        UltGauge = Mathf.Clamp01(UltGauge);
+        if (UltGauge >= 1f)
+        {
+            canULT = true;
+            UltGauge = 1f;
+            main.startSpeed = 1f;
+        }
+        emission.rateOverTime = UltGauge * 10f;
+    }
+
+    #region 初期化
+    public void InitProperties()
+    {
+        canULT = false;
+        isULT = false;
+        canFall = false;
+        isRide = true;
+        isAttacking = false;
+        canRide = false;
+        isJumping = false;
+
+        _railPosition = 0f;
+
+        _mobCounter = 0;
+        UltGauge = 0f;
+
+        main.startSpeed = 0f;
+        emission.rateOverTime = 0f;
+
+        particle.Stop();
+        arms.SetActive(false);
+    }
+    #endregion
 }

@@ -17,7 +17,7 @@ public partial class Player
             owner._mobCounter = 0; //撃破カウントをリセット
             owner.canULT = false;
             owner.isULT = true;
-            owner.UltStay.Stop();
+            //owner.UltStay.Stop();
             owner.particle.Play();  //ビームエフェクトを再生
             time = 0f;
             AudioManager.GetInstance().PlaySound(7);
@@ -25,6 +25,7 @@ public partial class Player
 
         public override void OnUpdate(Player owner)
         {
+            #region レール移動
             owner._railPosition += owner.Speed * Time.deltaTime / owner.CurrentRail.Length;
             if (owner._railPosition >= 0.9999f)
             {
@@ -41,8 +42,10 @@ public partial class Player
             }
 
             owner.MoveAlongRail();
+            #endregion
             // 攻撃中の特別な動作がある場合はここに追加
 
+            UltGauge -= (1f / owner._ultTime) * Time.deltaTime;
             time += Time.deltaTime;
 
             if(time >= owner._ultTime - (owner._ultTime / 4))
@@ -50,8 +53,10 @@ public partial class Player
                 owner.particle.Stop();
             }
 
-            if (time >= owner._ultTime)
+            if (UltGauge <= 0f)
             {
+                owner.main.startSpeed = 0f;
+                owner.emission.rateOverTime = 0f;
                 health.TakeDamage(owner._damegeULT);
                 owner.isULT = false;
                 owner.arms.SetActive(false);

@@ -60,23 +60,6 @@ public class SceneChangeManager : MonoBehaviour
     #endregion
 
     #region クリア判定
-    private void Update()
-    {
-        int BuildIndex = SceneManager.GetActiveScene().buildIndex;
-        
-
-        if(BuildIndex == 2)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                GameOver();
-            }
-            else if (Input.GetKeyDown(KeyCode.RightShift))
-            {
-                GameClear();
-            }
-        }
-    }
 
     public void GameOver()
     {
@@ -92,6 +75,13 @@ public class SceneChangeManager : MonoBehaviour
 
     #endregion
     public void SceneChange(string sceneName) // startボタンを押すとメインシーンに遷移
+    {
+        SceneManager.LoadScene(sceneName);
+        AudioManager.GetInstance().StopBGM();
+        Time.timeScale = 1.0f;
+    }
+
+    public void SceneChangeAsync(string sceneName)
     {
         SceneManager.LoadSceneAsync(sceneName);
         AudioManager.GetInstance().StopBGM();
